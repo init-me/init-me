@@ -27,6 +27,8 @@
     "init": "bin/index.js"
   },
   "dependencies": {
+    "chalk": "^2.4.2",
+    "init-me-seed-rollup": "^0.1.0",
     "yyl-os": "^0.8.1",
     "yyl-print": "^0.7.3",
     "yyl-util": "^2.3.3"
