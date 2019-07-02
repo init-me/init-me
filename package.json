@@ -1,0 +1,35 @@
+{
+  "name": "init-me",
+  "version": "0.0.1",
+  "description": "init program",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jackness1208/init-me.git"
+  },
+  "keywords": [
+    "init"
+  ],
+  "author": "jackness",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jackness1208/init-me/issues"
+  },
+  "homepage": "https://github.com/jackness1208/init-me#readme",
+  "preferGlobal": true,
+  "engines": {
+    "node": ">= 8.0.0"
+  },
+  "bin": {
+    "init": "bin/index.js"
+  },
+  "dependencies": {
+    "yyl-os": "^0.8.1",
+    "yyl-print": "^0.7.3",
+    "yyl-util": "^2.3.3"
+  },
+  "devDependencies": {}
+}
