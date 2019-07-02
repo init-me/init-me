@@ -6,7 +6,6 @@
 * [ADD] `init --help`
 * [ADD] `init -p`
 * [ADD] `init --path`
-* [ADD] `init --path`
 * [ADD] `init install`
 * [ADD] `init uninstall`
 * [ADD] `init reset`
