@@ -128,7 +128,7 @@ const task = {
       }
 
 
-      const files = await extOs.readFilePaths(seedSourcePath);
+      const files = await extFs.readFilePaths(seedSourcePath);
       files.forEach((iPath) => {
         fileMap[iPath] = [path.resolve(targetPath, path.relative(seedSourcePath, iPath))];
       });
@@ -309,6 +309,10 @@ const task = {
       }
       return Promise.resolve({});
     }
+  },
+  async reset({ env }) {
+    task.preRun({ env });
+    await task.config.reset();
   }
 };
 module.exports = task;

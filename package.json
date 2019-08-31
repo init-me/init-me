@@ -2,9 +2,10 @@
   "name": "init-me",
   "version": "0.1.0",
   "description": "init program",
-  "main": "index.js",
+  "main": "task/index.js",
+  "types": "task/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest ./test"
   },
   "repository": {
     "type": "git",
@@ -31,9 +32,10 @@
     "commander": "^3.0.1",
     "inquirer": "^7.0.0",
     "yyl-fs": "^0.3.2",
-    "yyl-os": "^0.8.1",
-    "yyl-print": "^0.7.3",
-    "yyl-util": "^2.3.3"
+    "yyl-os": "^0.9.1",
+    "yyl-print": "^0.7.3"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "jest": "^24.9.0"
+  }
 }

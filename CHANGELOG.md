@@ -1,14 +1,18 @@
 # 更新日志
-## 0.1.0 (*)
-* [ADD] `init -v`
-* [ADD] `init --version`
-* [ADD] `init -h`
-* [ADD] `init --help`
-* [ADD] `init -p`
-* [ADD] `init --path`
-* [ADD] `init install`
-* [ADD] `init uninstall`
-* [ADD] `init reset`
+## 0.1.0 (2019-08-31)
+* feat: 新增 `init -v`
+* feat: 新增 `init --version`
+* feat: 新增 `init -h`
+* feat: 新增 `init --help`
+* feat: 新增 `init -p`
+* feat: 新增 `init --path`
+* feat: 新增 `init -q`
+* feat: 新增 `init --silent`
+* feat: 新增 `init install <pkgName>`
+* feat: 新增 `init i <pkgName>`
+* feat: 新增 `init uninstall <pkgName>`
+* feat: 新增 `init reset`
+* feat: 新增 `init list`
 
 ## 0.0.1 (2019-07-02)
-* [ADD] 诞生
+* feat: 诞生

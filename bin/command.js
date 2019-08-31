@@ -84,8 +84,7 @@ cmder
   .action((cmd) => {
     const env = cmd.parent;
     fn.printHeader({ env });
-    task.preRun({ env });
-    task.config.reset({ env }).catch((er) => {
+    task.reset({ env }).catch((er) => {
       throw er;
     });
   });
