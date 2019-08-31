@@ -12,26 +12,6 @@ const CONFIG_SETTIN_PATH = path.join(CONFIG_PATH, 'config.json');
 const CONFIG_PLUGIN_PATH = path.join(CONFIG_PATH, 'plugins');
 const CONFIG_PLUGIN_PKG_PATH = path.join(CONFIG_PLUGIN_PATH, 'package.json');
 
-const fn = {
-  printHeader() {
-    print.log.ver(`init-me ${chalk.yellow.bold(pkg.version)}`);
-  }
-};
-
-const isPath = function(ctx) {
-  if (typeof ctx === 'string') {
-    const rPath = path.resolve(process.cwd(), ctx);
-    if (fs.existsSync(rPath)) {
-      return true;
-    } else {
-      return false;
-    }
-  } else {
-    return false;
-  }
-};
-
-
 print.log.init({
   type: {
     ver: {
@@ -52,25 +32,6 @@ print.log.init({
 });
 
 const task = {
-  help({ env }) {
-    const h = {
-      usage: 'init',
-      commands: {
-        'install': 'install extend seed plugins',
-        'uninstall': 'uninstall extend seed plugins',
-        'reset': 'reset plugins'
-      },
-      options: {
-        '-h, --help': 'print usage information',
-        '-v, --version': 'print version',
-        '-p, --path': 'show init-me path'
-      }
-    };
-    if (!env.silent) {
-      print.help(h);
-    }
-    return Promise.resolve(h);
-  },
   async version({ env }) {
     await print.borderBox([
       `init-me ${chalk.yellow.bold(pkg.version)}`
@@ -80,7 +41,12 @@ const task = {
   path({ env }) {
     const r = path.join(__dirname, '../');
     if (!env.silent) {
-      print.log.info(`init-me path: ${chalk.yellow.bold(r)}`);
+      console.log([
+        '',
+        'App path:',
+        `  ${chalk.yellow.bold(r)}`,
+        ''
+      ].join('\r\n'));
       extOs.openPath(r);
     }
     return Promise.resolve(r);
@@ -88,39 +54,53 @@ const task = {
   init() {
     // TODO:
   },
-  async install(names) {
+  async install(names, { env }) {
+    task.preRun({ env });
     print.log.info('install start');
     await task.config.init();
 
     await extOs.runCMD(`npm install ${names.join(' ')} --save`, CONFIG_PLUGIN_PATH);
 
-    // update config
-    const setting = task.config.read();
-    const pluginPkg = require(CONFIG_PLUGIN_PKG_PATH);
-    setting.seeds = Object.keys(pluginPkg.dependencies);
-    task.config.rewrite(setting);
+    task.config.updateSeedInfo();
 
     print.log.success('install finished');
   },
-  async uninstall(names) {
+  async uninstall(names, { env }) {
+    task.preRun({ env });
     print.log.info('uninstall start');
     await task.config.init();
 
     await extOs.runCMD(`npm uninstall ${names.join(' ')} --save`, CONFIG_PLUGIN_PATH);
 
-    // update config
-    const setting = task.config.read();
-    const pluginPkg = require(CONFIG_PLUGIN_PKG_PATH);
-    setting.seeds = Object.keys(pluginPkg.dependencies);
-    task.config.rewrite(setting);
+    task.config.updateSeedInfo();
 
     print.log.success('uninstall finished');
   },
   config: {
     async init() {
       if (!fs.existsSync(CONFIG_PATH)) {
-        await task.reset();
+        await task.config.reset();
       }
+    },
+    updateSeedInfo() {
+      // update config
+      const setting = task.config.read();
+      const pluginPkg = require(CONFIG_PLUGIN_PKG_PATH);
+      setting.seeds = Object.keys(pluginPkg.dependencies);
+      setting.seedMap = {};
+      setting.seeds.forEach((seedName) => {
+        const seedPath = path.join(CONFIG_PLUGIN_PATH, 'node_modules', seedName);
+        const seedPkgPath = path.join( seedPath, 'package.json');
+        if (fs.existsSync(seedPkgPath)) {
+          const pkg = require(seedPkgPath);
+          setting.seedMap[seedName] = {
+            version: pkg.version,
+            main: path.resolve(seedPath, pkg.main)
+          };
+        }
+      });
+
+      task.config.rewrite(setting);
     },
     read() {
       try {
@@ -169,63 +149,45 @@ const task = {
 
       print.log.success('init-me config reset finished');
     }
+  },
+
+  preRun({ env }) {
+    if (env.silent) {
+      print.log.setLogLevel(0);
+    } else if (env.logLevel) {
+      print.log.setLogLevel(env.logLevel);
+    } else {
+      print.log.setLogLevel(1);
+    }
+  },
+  list({ env }) {
+    task.preRun({ env });
+    const iPkg = task.config.read();
+    let keys = [];
+    if (typeof iPkg.seedMap === 'object') {
+      keys = Object.keys(iPkg.seedMap);
+    }
+    if (keys.length) {
+      const logs = [
+        '',
+        'Seed list:'
+      ];
+      keys.forEach((key) => {
+        const info = iPkg.seedMap[key];
+        logs.push(`  ${chalk.green(key)} : ${chalk.yellow(info.version)}`);
+      });
+      logs.push('');
+      if (!env.silent) {
+        console.log(logs.join('\r\n'));
+      }
+      return Promise.resolve(iPkg.seedMap);
+    } else {
+      if (!env.silent) {
+        console.log('  no seed.');
+      }
+      console.log(iPkg);
+      return Promise.resolve({});
+    }
   }
 };
-async function runner ({ cmds, env, shortEnv }) {
-  const PROJECT_PATH = process.cwd();
-  const cmd = cmds[0];
-
-  if (env.silent) {
-    print.log.setLogLevel(0);
-  } else if (env.logLevel) {
-    print.log.setLogLevel(env.logLevel);
-  } else {
-    print.log.setLogLevel(1);
-  }
-
-  if (cmd) {
-    if (isPath(cmd)) {
-      const targetPath = path.resolve(PROJECT_PATH, cmd);
-      fn.printHeader(env);
-      return await task.init(targetPath, { env, shortEnv });
-    } else {
-      switch (cmd) {
-        case 'install':
-          if (cmds.length > 1) {
-            fn.printHeader(env);
-            return await task.install(cmds.slice(1), { env, shortEnv });
-          } else {
-            return await task.help({ env, shortEnv });
-          }
-
-        case 'uninstall':
-          if (cmds.length > 1) {
-            fn.printHeader(env);
-            return await task.uninstall(cmds.slice(1), { env, shortEnv });
-          } else {
-            return await task.help({ env, shortEnv });
-          }
-
-        case 'reset':
-          fn.printHeader(env);
-          return await task.config.reset({ env, shortEnv });
-
-        default:
-          return await task.help({ env, shortEnv });
-      }
-    }
-  } else {
-    if (env.path || shortEnv.p) {
-      fn.printHeader(env);
-      return await task.path({ env, shortEnv });
-    } else if (env.version || shortEnv.v) {
-      return await task.version({ env, shortEnv });
-    } else if (env.help || shortEnv.h) {
-      return await task.help({ env, shortEnv });
-    } else {
-      return await task.help({ env, shortEnv });
-    }
-  }
-}
-
-module.exports = runner;
+module.exports = task;
