@@ -171,8 +171,8 @@ const task = {
     } else {
       print.log.error(
         lang.INIT.BLANK_SEED,
-        `${chalk.yellow('examples:')}`,
-        `${chalk.yellow.bold('init install init-me-seed-rollup')}`
+        `${chalk.green('examples:')}`,
+        `${chalk.yellow('init install init-me-seed-rollup')}`
       );
     }
   },
@@ -307,7 +307,6 @@ const task = {
       if (!env.silent) {
         console.log(`  ${lang.LIST.BLANK}`);
       }
-      console.log(iPkg);
       return Promise.resolve({});
     }
   }
