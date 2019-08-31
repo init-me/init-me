@@ -21,8 +21,22 @@ const isPath = function(ctx) {
 };
 
 const fn = {
-  printHeader() {
+  printHeader({ env }) {
+    if (env.silent) {
+      return;
+    }
     print.log.ver(`init-me ${chalk.yellow.bold(pkg.version)}`);
+
+    let keyIndex = -1;
+    process.argv.forEach((str, index) => {
+      if (str.match(/bin[/\\]init$/)) {
+        keyIndex = index;
+      }
+    });
+    if (keyIndex != -1) {
+      const cmds = process.argv.slice(keyIndex + 1);
+      print.log.cmd(`init ${cmds.join(' ')}`);
+    }
   }
 };
 
@@ -40,12 +54,15 @@ cmder
   .option('--silent', lang.DESCRIPTION.SILENT);
 
 cmder
+  .option('--seed', lang.DESCRIPTION.SEED);
+
+cmder
   .command('install [pkgName]')
   .alias('i')
   .description(lang.DESCRIPTION.INSTALL)
   .action((pkgName, cmd) => {
     const env = cmd.parent;
-    fn.printHeader();
+    fn.printHeader({ env });
     task.install(pkgName.split(/\s+/), { env }).catch((er) => {
       throw er;
     });
@@ -56,7 +73,7 @@ cmder
   .description(lang.DESCRIPTION.UNINSTALL)
   .action((pkgName, cmd) => {
     const env = cmd.parent;
-    fn.printHeader();
+    fn.printHeader({ env });
     task.uninstall(pkgName.split(/\s+/), { env }).catch((er) => {
       throw er;
     });
@@ -67,7 +84,8 @@ cmder
   .description(lang.DESCRIPTION.RESET)
   .action((cmd) => {
     const env = cmd.parent;
-    fn.printHeader();
+    fn.printHeader({ env });
+    task.preRun({ env });
     task.config.reset({ env }).catch((er) => {
       throw er;
     });
@@ -106,7 +124,9 @@ if (
     targetPath = cmder.args[0];
   }
   if (isPath(targetPath)) {
-    task.init(targetPath, { env: cmder });
+    task.init(targetPath, { env: cmder }).catch((er) => {
+      throw er;
+    });
   } else {
     cmder.outputHelp();
   }

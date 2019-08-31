@@ -4,7 +4,9 @@ const fs = require('fs');
 const extOs = require('yyl-os');
 const chalk = require('chalk');
 const pkg = require('../package.json');
+const inquirer = require('inquirer');
 const extFs = require('yyl-fs');
+const lang = require('../const/lang');
 
 const USERPROFILE = process.env[process.platform == 'win32'? 'USERPROFILE': 'HOME'];
 const CONFIG_PATH = path.join(USERPROFILE, '.init-me');
@@ -51,30 +53,134 @@ const task = {
     }
     return Promise.resolve(r);
   },
-  init() {
-    // TODO:
+  async init(targetPath, { env }) {
+    task.preRun({ env });
+    print.log.info(lang.INIT.START);
+    const config = task.config.read();
+    if (config.seeds && config.seeds.length) {
+      let iSeed = '';
+      if (env.seed) {
+        if (config.seeds.indexOf(env.seed) !== -1) {
+          iSeed = env.seed;
+        } else {
+          print.log.error(lang.INIT.SEED_NOT_EXISTS);
+          return;
+        }
+      } else {
+        const r = await inquirer.prompt([{
+          type: 'list',
+          name: 'seed',
+          message: lang.INIT.QUEATION_SELECT_TYPE,
+          default: config.seeds[0],
+          choices: config.seeds
+        }]);
+        iSeed = r.seed;
+      }
+      if (!iSeed) {
+        return;
+      }
+      if (!env.silent) {
+        console.log(`${chalk.yellow('!')} ${lang.INIT.SEED_LOADING}: ${chalk.green(iSeed)}`);
+      }
+      const iSeedConfig = config.seedMap[iSeed];
+      if (!iSeedConfig) {
+        print.log.error(`${lang.INIT.SEED_MAP_NOT_EXISTS}: ${iSeed}`);
+        return;
+      }
+
+      if (!fs.existsSync(iSeedConfig.main)) {
+        print.log.error(`${lang.INIT.SEED_MAP_MAIN_NOT_EXISTS}: ${iSeed}`);
+        return;
+      }
+
+      const iSeedPack = require(iSeedConfig.main);
+
+      if (!env.silent) {
+        console.log(`${chalk.green('√')} ${lang.INIT.SEED_LOAD_FINISHED}`);
+      }
+
+      // 启动前 hooks
+      if (iSeedPack.hooks && iSeedPack.hooks.beforeStart) {
+        try {
+          await iSeedPack.hooks.beforeStart({ env, targetPath });
+        } catch (er) {
+          print.log.error(er);
+          return;
+        }
+      }
+
+      // 准备需要复制的文件
+      if (!iSeedPack.path) {
+        print.log.error(lang.INIT.SEED_COPY_PATH_UNDEFINED);
+        return;
+      }
+      let fileMap = {};
+      const seedSourcePath = path.resolve(iSeedConfig.main, iSeedPack.path);
+
+      if (!fs.existsSync(seedSourcePath)) {
+        print.log.error(`${lang.INIT.SEED_COPY_PATH_NOT_EXISTS}: ${seedSourcePath}`);
+        return;
+      }
+
+      const files = await extOs.readFilePaths(seedSourcePath);
+      files.forEach((iPath) => {
+        fileMap[iPath] = [path.resolve(targetPath, path.relative(seedSourcePath, iPath))];
+      });
+
+      // 复制前 hooks
+      if (iSeedPack.hooks && iSeedPack.hooks.beforeCopy) {
+        const rMap = await iSeedPack.hooks.beforeCopy({ fileMap, env, targetPath });
+        if (typeof rMap === 'object') {
+          fileMap = rMap;
+        }
+      }
+
+      // 复制
+      const iLog = await extFs.copyFiles(fileMap);
+
+      iLog.add.forEach((iPath) => {
+        print.log.add(iPath);
+      });
+
+      iLog.update.forEach((iPath) => {
+        print.log.update(iPath);
+      });
+
+      // 复制后 hooks
+      if (iSeedPack.hooks && iSeedPack.hooks.afterCopy) {
+        await iSeedPack.hooks.afterCopy({ fileMap, env, targetPath });
+      }
+
+      print.log.success(lang.INIT.FINISHED);
+    } else {
+      print.log.error(
+        lang.INIT.BLANK_SEED,
+        `${chalk.yellow('examples:')}`,
+        `${chalk.yellow.bold('init install init-me-seed-rollup')}`
+      );
+    }
   },
   async install(names, { env }) {
     task.preRun({ env });
-    print.log.info('install start');
+    print.log.info(lang.INSTALL.START);
     await task.config.init();
 
     await extOs.runCMD(`npm install ${names.join(' ')} --save`, CONFIG_PLUGIN_PATH);
 
     task.config.updateSeedInfo();
 
-    print.log.success('install finished');
+    print.log.success(lang.INSTALL.FINISHED);
   },
   async uninstall(names, { env }) {
     task.preRun({ env });
-    print.log.info('uninstall start');
+    print.log.info(lang.UNINSTALL.START);
     await task.config.init();
 
     await extOs.runCMD(`npm uninstall ${names.join(' ')} --save`, CONFIG_PLUGIN_PATH);
 
     task.config.updateSeedInfo();
 
-    print.log.success('uninstall finished');
+    print.log.success(lang.UNINSTALL.FINISHED);
   },
   config: {
     async init() {
@@ -107,7 +213,7 @@ const task = {
         const r = require(CONFIG_SETTIN_PATH);
         return r;
       } catch (er) {
-        print.log.warn('parse config error', er);
+        print.log.warn(lang.ERROR.CONFIG_PARSE, er);
         return {};
       }
     },
@@ -115,7 +221,7 @@ const task = {
       fs.writeFileSync(CONFIG_SETTIN_PATH, JSON.stringify(obj, null, 2));
     },
     async reset() {
-      print.log.info('config reset start');
+      print.log.info(lang.CONFIG.RESET_START);
       if (!fs.existsSync(CONFIG_PATH)) {
         await extFs.mkdirSync(CONFIG_PATH);
         print.log.create(CONFIG_PATH);
@@ -147,7 +253,7 @@ const task = {
       print.log.create(CONFIG_PLUGIN_PKG_PATH);
 
 
-      print.log.success('init-me config reset finished');
+      print.log.success(lang.CONFIG.RESET_FINISHED);
     }
   },
 
@@ -183,7 +289,7 @@ const task = {
       return Promise.resolve(iPkg.seedMap);
     } else {
       if (!env.silent) {
-        console.log('  no seed.');
+        console.log(`  ${lang.LIST.BLANK}`);
       }
       console.log(iPkg);
       return Promise.resolve({});
