@@ -70,7 +70,7 @@ const task = {
         const r = await inquirer.prompt([{
           type: 'list',
           name: 'seed',
-          message: lang.INIT.QUEATION_SELECT_TYPE,
+          message: `${lang.INIT.QUEATION_SELECT_TYPE}:`,
           default: config.seeds[0],
           choices: config.seeds
         }]);
@@ -101,17 +101,19 @@ const task = {
 
       // 启动前 hooks
       if (iSeedPack.hooks && iSeedPack.hooks.beforeStart) {
+        print.log.info(lang.INIT.HOOKS_BEFORE_START_RUN);
         try {
           await iSeedPack.hooks.beforeStart({ env, targetPath });
         } catch (er) {
           print.log.error(er);
           return;
         }
+        print.log.info(lang.INIT.HOOKS_BEFORE_START_FINISHED);
       }
 
       // 准备需要复制的文件
       if (!iSeedPack.path) {
-        print.log.error(lang.INIT.SEED_COPY_PATH_UNDEFINED);
+        print.log.error(`${lang.INIT.SEED_COPY_PATH_UNDEFINED}: ${chalk.green(iSeed)}`);
         return;
       }
       let fileMap = {};
@@ -129,10 +131,12 @@ const task = {
 
       // 复制前 hooks
       if (iSeedPack.hooks && iSeedPack.hooks.beforeCopy) {
+        print.log.info(lang.INIT.HOOKS_BEFORE_COPY_RUN);
         const rMap = await iSeedPack.hooks.beforeCopy({ fileMap, env, targetPath });
         if (typeof rMap === 'object') {
           fileMap = rMap;
         }
+        print.log.info(lang.INIT.HOOKS_BEFORE_COPY_FINISHED);
       }
 
       // 复制
@@ -148,7 +152,9 @@ const task = {
 
       // 复制后 hooks
       if (iSeedPack.hooks && iSeedPack.hooks.afterCopy) {
+        print.log.info(lang.INIT.HOOKS_AFTER_COPY_RUN);
         await iSeedPack.hooks.afterCopy({ fileMap, env, targetPath });
+        print.log.info(lang.INIT.HOOKS_AFTER_COPY_FINISHED);
       }
 
       print.log.success(lang.INIT.FINISHED);

@@ -1,6 +1,6 @@
 {
   "name": "init-me",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "init program",
   "main": "index.js",
   "scripts": {

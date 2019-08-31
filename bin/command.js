@@ -57,6 +57,9 @@ cmder
   .option('--seed', lang.DESCRIPTION.SEED);
 
 cmder
+  .option('--logLevel <level>', lang.DESCRIPTION.LOG_LEVEL);
+
+cmder
   .command('install [pkgName]')
   .alias('i')
   .description(lang.DESCRIPTION.INSTALL)
@@ -124,6 +127,7 @@ if (
     targetPath = cmder.args[0];
   }
   if (isPath(targetPath)) {
+    fn.printHeader({ env: cmder });
     task.init(targetPath, { env: cmder }).catch((er) => {
       throw er;
     });
