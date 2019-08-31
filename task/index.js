@@ -88,6 +88,7 @@ const task = {
         return;
       }
 
+      print.log.info(`${lang.INIT.SEED_MAIN_PRINT}: ${iSeedConfig.main}`);
       if (!fs.existsSync(iSeedConfig.main)) {
         print.log.error(`${lang.INIT.SEED_MAP_MAIN_NOT_EXISTS}: ${iSeed}`);
         return;
@@ -119,10 +120,13 @@ const task = {
       let fileMap = {};
       const seedSourcePath = path.resolve(iSeedConfig.main, iSeedPack.path);
 
+      print.log.info(`${lang.INIT.SEED_COPY_PATH_PRINT}: ${seedSourcePath}`);
+
       if (!fs.existsSync(seedSourcePath)) {
         print.log.error(`${lang.INIT.SEED_COPY_PATH_NOT_EXISTS}: ${seedSourcePath}`);
         return;
       }
+
 
       const files = await extOs.readFilePaths(seedSourcePath);
       files.forEach((iPath) => {
@@ -136,8 +140,14 @@ const task = {
         if (typeof rMap === 'object') {
           fileMap = rMap;
         }
+
         print.log.info(lang.INIT.HOOKS_BEFORE_COPY_FINISHED);
       }
+
+      print.log.info(`${lang.INIT.SEED_COPY_MAP_PRINT}:`);
+      Object.keys(fileMap).forEach((iPath) => {
+        print.log.info(`${chalk.yellow(iPath)} => ${chalk.green(fileMap[iPath].join(','))}`);
+      });
 
       // 复制
       const iLog = await extFs.copyFiles(fileMap);
