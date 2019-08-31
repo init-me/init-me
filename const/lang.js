@@ -43,12 +43,10 @@ module.exports = {
   },
   CONFIG: {
     RESET_START: '配置重置开始',
-    RESET_FINISHED: '配置重置完成'
+    RESET_FINISHED: '配置重置完成',
+    PARSE_ERROR: '配置解析错误'
   },
   LIST: {
     BLANK: 'seed 列表为空'
-  },
-  ERROR: {
-    CONFIG_PARSE: '配置解析错误'
   }
 };

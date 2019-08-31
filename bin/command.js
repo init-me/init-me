@@ -51,16 +51,12 @@ cmder
   });
 
 cmder
-  .option('--silent', lang.DESCRIPTION.SILENT);
-
-cmder
-  .option('--seed', lang.DESCRIPTION.SEED);
-
-cmder
+  .option('-q, --silent', lang.DESCRIPTION.SILENT)
+  .option('--seed <name>', lang.DESCRIPTION.SEED)
   .option('--logLevel <level>', lang.DESCRIPTION.LOG_LEVEL);
 
 cmder
-  .command('install [pkgName]')
+  .command('install <pkgName>')
   .alias('i')
   .description(lang.DESCRIPTION.INSTALL)
   .action((pkgName, cmd) => {
@@ -72,7 +68,7 @@ cmder
   });
 
 cmder
-  .command('uninstall [pkgName]')
+  .command('uninstall <pkgName>')
   .description(lang.DESCRIPTION.UNINSTALL)
   .action((pkgName, cmd) => {
     const env = cmd.parent;
@@ -109,7 +105,7 @@ cmder
     console.log([
       '',
       'Examples:',
-      '  $ init --silent',
+      '  $ init --logLevel 2',
       '  $ init path/to/dir',
       ''
     ].join('\r\n'));

@@ -88,7 +88,7 @@ const task = {
         return;
       }
 
-      print.log.info(`${lang.INIT.SEED_MAIN_PRINT}: ${iSeedConfig.main}`);
+      print.log.info(`${lang.INIT.SEED_MAIN_PRINT}: ${chalk.yellow(iSeedConfig.main)}`);
       if (!fs.existsSync(iSeedConfig.main)) {
         print.log.error(`${lang.INIT.SEED_MAP_MAIN_NOT_EXISTS}: ${iSeed}`);
         return;
@@ -120,10 +120,10 @@ const task = {
       let fileMap = {};
       const seedSourcePath = path.resolve(iSeedConfig.main, iSeedPack.path);
 
-      print.log.info(`${lang.INIT.SEED_COPY_PATH_PRINT}: ${seedSourcePath}`);
+      print.log.info(`${lang.INIT.SEED_COPY_PATH_PRINT}: ${chalk.yellow(seedSourcePath)}`);
 
       if (!fs.existsSync(seedSourcePath)) {
-        print.log.error(`${lang.INIT.SEED_COPY_PATH_NOT_EXISTS}: ${seedSourcePath}`);
+        print.log.error(`${lang.INIT.SEED_COPY_PATH_NOT_EXISTS}: ${chalk.yellow(seedSourcePath)}`);
         return;
       }
 
@@ -229,7 +229,7 @@ const task = {
         const r = require(CONFIG_SETTIN_PATH);
         return r;
       } catch (er) {
-        print.log.warn(lang.ERROR.CONFIG_PARSE, er);
+        print.log.warn(lang.CONFIG.PARSE_ERROR, er);
         return {};
       }
     },
