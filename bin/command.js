@@ -5,6 +5,7 @@ const lang = require('../const/lang');
 const task = require('../task/index');
 const pkg = require('../package.json');
 const path = require('path');
+const util = require('yyl-util');
 const fs = require('fs');
 
 const isPath = function(ctx) {
@@ -19,6 +20,9 @@ const isPath = function(ctx) {
     return false;
   }
 };
+
+let isBlock = false;
+const env = util.envParse(process.argv);
 
 const fn = {
   printHeader({ env }) {
@@ -42,12 +46,14 @@ const fn = {
 
 cmder
   .option('-p, --path', lang.DESCRIPTION.PATH, () => {
-    task.path({ env: cmder });
+    task.path({ env });
+    isBlock = true;
   });
 
 cmder
   .option('-v, --version', lang.DESCRIPTION.VERSION, () => {
-    task.version({ env: cmder });
+    task.version({ env });
+    isBlock = true;
   });
 
 cmder
@@ -65,6 +71,7 @@ cmder
     task.install(pkgName.split(/\s+/), { env }).catch((er) => {
       throw er;
     });
+    isBlock = true;
   });
 
 cmder
@@ -76,6 +83,7 @@ cmder
     task.uninstall(pkgName.split(/\s+/), { env }).catch((er) => {
       throw er;
     });
+    isBlock = true;
   });
 
 cmder
@@ -87,16 +95,17 @@ cmder
     task.reset({ env }).catch((er) => {
       throw er;
     });
+    isBlock = true;
   });
 
 cmder
   .command('list')
   .description(lang.DESCRIPTION.LIST)
-  .action((cmd) => {
-    const env = cmd.parent;
+  .action(() => {
     task.list({ env }).catch((er) => {
       throw er;
     });
+    isBlock = true;
   });
 
 cmder
@@ -108,22 +117,25 @@ cmder
       '  $ init path/to/dir',
       ''
     ].join('\r\n'));
+    isBlock = true;
   });
 
 
 cmder.parse(process.argv);
 
 if (
-  !cmder.args.length ||
-  typeof cmder.args[cmder.args.length - 1] !== 'object'
+  !isBlock && (
+    !cmder.args.length ||
+    typeof cmder.args[cmder.args.length - 1] !== 'object'
+  )
 ) {
   let targetPath = process.cwd();
   if (cmder.args[0]) {
     targetPath = cmder.args[0];
   }
   if (isPath(targetPath)) {
-    fn.printHeader({ env: cmder });
-    task.init(targetPath, { env: cmder }).catch((er) => {
+    fn.printHeader({ env });
+    task.init(targetPath, { env }).catch((er) => {
       throw er;
     });
   } else {
