@@ -8,12 +8,12 @@ npm install init-me -g
 
 ### seed 包安装
 ```
-init install init-me-seed-helloworld
+init install init-me-seed-initialize
 ```
 
 ### seed 包卸载
 ```
-init uninstall init-me-seed-helloworld
+init uninstall init-me-seed-initialize
 ```
 
 ### seed 包列表
@@ -52,6 +52,7 @@ init -h
 
 ## seed 包开发
 * 参考例子 [init-me-seed-hellowrold](http://www.github.com/jackness1208/init-me-seed-helloworld)
+* seed包初始化 [init-me-seed-initialize](http://www.github.com/jackness1208/init-me-seed-initialize)
 
 
 ## node 模式
