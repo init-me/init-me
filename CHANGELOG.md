@@ -3,6 +3,7 @@
 * feat: `init list` 命令新增 已安装 和 未安装 列表
 * feat: `init install` 在不输入 包名情况下 出 下拉列表让用户选择
 * feat: `init uninstall` 在不输入 包名情况下 出 下拉列表让用户选择
+* feat: `init link` 可以让 cwd 所在项目接入配置项 (方便开发)
 
 ## 0.1.1 (2019-09-16)
 * fix: 修复 `env` 参数不对问题
