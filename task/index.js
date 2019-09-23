@@ -3,16 +3,18 @@ const path = require('path');
 const fs = require('fs');
 const extOs = require('yyl-os');
 const chalk = require('chalk');
-const pkg = require('../package.json');
 const inquirer = require('inquirer');
 const extFs = require('yyl-fs');
+
+const pkg = require('../package.json');
 const lang = require('../const/lang');
+const LocalConfig = require('../lib/localConfig');
 
 const USERPROFILE = process.env[process.platform == 'win32'? 'USERPROFILE': 'HOME'];
 const CONFIG_PATH = path.join(USERPROFILE, '.init-me');
-const CONFIG_SETTIN_PATH = path.join(CONFIG_PATH, 'config.json');
 const CONFIG_PLUGIN_PATH = path.join(CONFIG_PATH, 'plugins');
-const CONFIG_PLUGIN_PKG_PATH = path.join(CONFIG_PLUGIN_PATH, 'package.json');
+
+const localConfig = new LocalConfig();
 
 print.log.init({
   type: {
@@ -32,6 +34,19 @@ print.log.init({
     }
   }
 });
+
+// + fn
+const preRun = ({ env }) => {
+  if (env.silent) {
+    print.log.setLogLevel(0);
+  } else if (env.logLevel) {
+    print.log.setLogLevel(env.logLevel);
+  } else {
+    print.log.setLogLevel(1);
+  }
+};
+// - fn
+
 
 const task = {
   async version({ env }) {
@@ -54,9 +69,9 @@ const task = {
     return Promise.resolve(r);
   },
   async init(targetPath, { env }) {
-    task.preRun({ env });
+    preRun({ env });
     print.log.info(lang.INIT.START);
-    const config = task.config.read();
+    const config = await localConfig.get();
     if (config.seeds && config.seeds.length) {
       let iSeed = '';
       if (env.seed) {
@@ -177,142 +192,141 @@ const task = {
     }
   },
   async install(names, { env }) {
-    task.preRun({ env });
+    preRun({ env });
     print.log.info(lang.INSTALL.START);
-    await task.config.init();
-
     await extOs.runCMD(`npm install ${names.join(' ')} --save`, CONFIG_PLUGIN_PATH);
 
-    task.config.updateSeedInfo();
+    await localConfig.updateSeedInfo();
 
     print.log.success(lang.INSTALL.FINISHED);
   },
   async uninstall(names, { env }) {
-    task.preRun({ env });
+    preRun({ env });
     print.log.info(lang.UNINSTALL.START);
-    await task.config.init();
 
     await extOs.runCMD(`npm uninstall ${names.join(' ')} --save`, CONFIG_PLUGIN_PATH);
 
-    task.config.updateSeedInfo();
+    await localConfig.updateSeedInfo();
 
     print.log.success(lang.UNINSTALL.FINISHED);
   },
-  config: {
-    async init() {
-      if (!fs.existsSync(CONFIG_PATH)) {
-        await task.config.reset();
-      }
-    },
-    updateSeedInfo() {
-      // update config
-      const setting = task.config.read();
-      const pluginPkg = require(CONFIG_PLUGIN_PKG_PATH);
-      setting.seeds = Object.keys(pluginPkg.dependencies);
-      setting.seedMap = {};
-      setting.seeds.forEach((seedName) => {
-        const seedPath = path.join(CONFIG_PLUGIN_PATH, 'node_modules', seedName);
-        const seedPkgPath = path.join( seedPath, 'package.json');
-        if (fs.existsSync(seedPkgPath)) {
-          const pkg = require(seedPkgPath);
-          setting.seedMap[seedName] = {
-            version: pkg.version,
-            main: path.resolve(seedPath, pkg.main)
-          };
-        }
-      });
 
-      task.config.rewrite(setting);
-    },
-    read() {
-      try {
-        const r = require(CONFIG_SETTIN_PATH);
-        return r;
-      } catch (er) {
-        print.log.warn(lang.CONFIG.PARSE_ERROR, er);
-        return {};
-      }
-    },
-    rewrite(obj) {
-      fs.writeFileSync(CONFIG_SETTIN_PATH, JSON.stringify(obj, null, 2));
-    },
-    async reset() {
-      print.log.info(lang.CONFIG.RESET_START);
-      if (!fs.existsSync(CONFIG_PATH)) {
-        await extFs.mkdirSync(CONFIG_PATH);
-        print.log.create(CONFIG_PATH);
-      }
-
-
-      // build config.json
-      const configObj = {
-        seeds: []
-      };
-      fs.writeFileSync(CONFIG_SETTIN_PATH, JSON.stringify(configObj, null, 2));
-      print.log.create(CONFIG_SETTIN_PATH);
-
-      //  build plugins/
-      await extFs.mkdirSync(CONFIG_PLUGIN_PATH);
-      print.log.create(CONFIG_PLUGIN_PATH);
-
-      // build plugins/package.json
-      const iPkg = {
-        name: 'init-me-plugins',
-        version: pkg.version,
-        description: 'plugin manage',
-        license: 'ISC',
-        repository: {},
-        dependencies: {},
-        devDependencies: {}
-      };
-      fs.writeFileSync(CONFIG_PLUGIN_PKG_PATH, JSON.stringify(iPkg, null, 2));
-      print.log.create(CONFIG_PLUGIN_PKG_PATH);
-
-
-      print.log.success(lang.CONFIG.RESET_FINISHED);
-    }
-  },
-
-  preRun({ env }) {
-    if (env.silent) {
-      print.log.setLogLevel(0);
-    } else if (env.logLevel) {
-      print.log.setLogLevel(env.logLevel);
-    } else {
-      print.log.setLogLevel(1);
-    }
-  },
-  list({ env }) {
-    task.preRun({ env });
-    const iPkg = task.config.read();
+  async list({ env }) {
+    preRun({ env });
+    const iPkg = await localConfig.get();
     let keys = [];
     if (typeof iPkg.seedMap === 'object') {
       keys = Object.keys(iPkg.seedMap);
     }
     if (keys.length) {
-      const logs = [
-        '',
-        'Seed list:'
-      ];
+      const logs = [];
+
+      const pkgs = [];
+      const locals = [];
       keys.forEach((key) => {
         const info = iPkg.seedMap[key];
-        logs.push(`  ${chalk.green(key)} : ${chalk.yellow(info.version)}`);
+        info.name = key;
+        if (info.dev) {
+          locals.push(info);
+        } else {
+          pkgs.push(info);
+        }
       });
+
+      if (pkgs.length) {
+        logs.push('');
+        logs.push(`${chalk.cyan(lang.LIST.PKG_LIST)}:`);
+        pkgs.forEach((info) => {
+          logs.push(`  ${chalk.green(info.name)} : ${chalk.yellow(info.version)}`);
+        });
+      }
+
+      if (locals.length) {
+        logs.push('');
+        logs.push(`${chalk.cyan(lang.LIST.LOCAL_LIST)}:`);
+        locals.forEach((info) => {
+          logs.push(`  ${chalk.green(info.name)}(${info.version}) : ${chalk.yellow(info.main)}`);
+        });
+      }
+
       logs.push('');
       if (!env.silent) {
         console.log(logs.join('\r\n'));
       }
-      return Promise.resolve(iPkg.seedMap);
+      return iPkg.seedMap;
     } else {
       if (!env.silent) {
         console.log(`  ${lang.LIST.BLANK}`);
       }
-      return Promise.resolve({});
+      return {};
     }
   },
   async reset({ env }) {
-    task.preRun({ env });
-    await task.config.reset();
+    preRun({ env });
+    print.log.info(lang.RESET.START);
+    await localConfig.reset();
+    print.log.success(lang.RESET.FINISHED);
+  },
+
+  async link({ targetPath, env }) {
+    preRun({ env });
+    print.log.info(lang.LINK.START);
+    const pkgPath = path.join(targetPath, 'package.json');
+    if (!fs.existsSync(pkgPath)) {
+      print.log.error(lang.LINK.PKG_NOT_FOUND);
+      return;
+    }
+    const pkg = require(pkgPath);
+
+    if (!pkg.name) {
+      print.log.error(lang.LINK.PKG_NAME_IS_BLANK);
+      return;
+    }
+
+    if (!pkg.version) {
+      print.log.error(lang.LINK.PKG_VERSION_IS_BLANK);
+      return;
+    }
+
+    if (!pkg.main) {
+      print.log.error(lang.LINK.PKG_ENTRY_IS_BLANK);
+      return;
+    }
+
+    const entryPath = path.resolve(targetPath, pkg.main);
+
+    if (!fs.existsSync(entryPath)) {
+      print.log.error(`${lang.LINK.PKG_ENTRY_NOT_EXISTS}: ${entryPath}`);
+      return;
+    }
+
+
+    await localConfig.addlocalSeed(pkg.name, {
+      main: entryPath,
+      version: pkg.version,
+      dev: true
+    });
+
+    print.log.success(`${lang.LINK.FINISHED}: ${pkg.name}`);
+  },
+  async unlink({ targetPath, env }) {
+    preRun({ env });
+    print.log.info(lang.UNLINK.START);
+    const pkgPath = path.join(targetPath, 'package.json');
+    if (!fs.existsSync(pkgPath)) {
+      print.log.error(lang.UNLINK.PKG_NOT_FOUND);
+      return;
+    }
+    const pkg = require(pkgPath);
+
+    if (!pkg.name) {
+      print.log.error(lang.UNLINK.PKG_NAME_IS_BLANK);
+      return;
+    }
+
+    await localConfig.removeLocalSeed(pkg.name);
+
+    print.log.success(`${lang.UNLINK.FINISHED}: ${pkg.name}`);
   }
 };
 module.exports = task;

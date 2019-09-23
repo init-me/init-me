@@ -109,6 +109,32 @@ cmder
   });
 
 cmder
+  .command('link')
+  .description(lang.DESCRIPTION.LINK)
+  .action(() => {
+    task.link({
+      targetPath: process.cwd(),
+      env
+    }).catch((er) => {
+      throw er;
+    });
+    isBlock = true;
+  });
+
+cmder
+  .command('unlink')
+  .description(lang.DESCRIPTION.UNLINK)
+  .action(() => {
+    task.unlink({
+      targetPath: process.cwd(),
+      env
+    }).catch((er) => {
+      throw er;
+    });
+    isBlock = true;
+  });
+
+cmder
   .on('--help', () => {
     console.log([
       '',

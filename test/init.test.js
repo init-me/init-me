@@ -4,7 +4,7 @@ const fs = require('fs');
 const extFs = require('yyl-fs');
 
 const SEED_NAME = 'init-me-seed-rollup';
-const FRAG_PATH = path.join(__dirname, '../__frag');
+const FRAG_PATH = path.join(__dirname, '../../__frag');
 const env = { silent: true };
 
 jest.setTimeout(30000);

@@ -9,6 +9,8 @@ module.exports = {
     SILENT: '静默输出',
     LIST: '显示 init-me 已安装的 seed 包',
     SEED: 'seed 包名称',
+    LINK: '安装本地 seed 包',
+    UNLINK: '卸载本地 seed 包',
     LOG_LEVEL: 'log 类型: 0|1|2'
   },
   INIT: {
@@ -47,6 +49,30 @@ module.exports = {
     PARSE_ERROR: '配置解析错误'
   },
   LIST: {
-    BLANK: 'seed 列表为空'
+    BLANK: 'seed 列表为空',
+    PKG_LIST: '已安装 Seed 列表',
+    LOCAL_LIST: '本  地 Seed 列表'
+  },
+  LINK: {
+    START: '安装本地 seed 包 开始',
+    FINISHED: '安装本地 seed 包 完成',
+    PKG_NOT_FOUND: '当前目录下 package.json 不存在',
+    PKG_NAME_IS_BLANK: 'pkg.name 为空',
+    PKG_VERSION_IS_BLANK: 'pkg.version 为空',
+    PKG_ENTRY_IS_BLANK: 'pkg.main 为空',
+    PKG_ENTRY_NOT_EXISTS: 'pkg.main 路径不存在'
+  },
+  UNLINK: {
+    START: '卸载本地 seed 包 开始',
+    FINISHED: '卸载本地 seed 包 完成',
+    PKG_NOT_FOUND: '当前目录下 package.json 不存在',
+    PKG_NAME_IS_BLANK: 'pkg.name 为空'
+  },
+  LOCAL_STORAGE: {
+    PARSE_ERROR: '配置解析错误'
+  },
+  RESET: {
+    START: '重置 init-me 开始',
+    FINISHED: '重置 init-me 完成'
   }
 };

@@ -7,13 +7,8 @@ interface ITask {
   list({ env: IEnv }): Promise<ISeedMap>
   reset({ env: IEnv }): Promise<any>
   preRun({ env: IEnv }): void
-  config: {
-    init(): Promise<any>
-    updateSeedInfo(): void
-    read(): void
-    rewrite(obj: ISeedConfig): void
-    reset(): Promise<any>
-  }
+  link({ env: IEnv, targetPath: string}): Promise<any>
+  unlink({ env: IEnv, targetPath: string}): Promise<any>
 }
 interface ISeedConfig {
   seeds: string[]
