@@ -194,7 +194,7 @@ const task = {
   async install(names, { env }) {
     preRun({ env });
     print.log.info(lang.INSTALL.START);
-    await extOs.runCMD(`npm install ${names.join(' ')} --save`, CONFIG_PLUGIN_PATH);
+    await extOs.runCMD(`npm install ${names.join(' ')} --save ${env.silent ? '--silent': ''}`, CONFIG_PLUGIN_PATH);
 
     await localConfig.updateSeedInfo();
 
@@ -204,7 +204,7 @@ const task = {
     preRun({ env });
     print.log.info(lang.UNINSTALL.START);
 
-    await extOs.runCMD(`npm uninstall ${names.join(' ')} --save`, CONFIG_PLUGIN_PATH);
+    await extOs.runCMD(`npm uninstall ${names.join(' ')} --save ${env.silent ? '--silent': ''}`, CONFIG_PLUGIN_PATH);
 
     await localConfig.updateSeedInfo();
 

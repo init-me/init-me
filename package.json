@@ -5,7 +5,7 @@
   "main": "task/index.js",
   "types": "task/index.d.ts",
   "scripts": {
-    "test": "jest ./test"
+    "test": "jest ./test/jest"
   },
   "repository": {
     "type": "git",
