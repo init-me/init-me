@@ -1,5 +1,8 @@
 # 更新日志
-## 0.2.0 (*)
+## 0.2.1 (2019-09-24)
+* fix: 修复 初装 `init-me` 时，`init install` 会报错问题
+
+## 0.2.0 (2019-09-24)
 * feat: `init list` 命令新增 已安装 和 本地安装 列表
 * feat: `init link` 可以让 cwd 所在项目接入配置项 (方便开发)
 * feat: `init unlink` 解除 当前 cwd 项目接入 (方便开发)

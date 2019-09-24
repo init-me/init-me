@@ -194,6 +194,7 @@ const task = {
   async install(names, { env }) {
     preRun({ env });
     print.log.info(LANG.INSTALL.START);
+    
     await extOs.runCMD(`npm install ${names.join(' ')} --save ${env.silent ? '--silent': ''}`, CONFIG_PLUGIN_PATH);
 
     await localConfig.updateSeedInfo();
