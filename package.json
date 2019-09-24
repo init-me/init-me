@@ -5,7 +5,15 @@
   "main": "task/index.js",
   "types": "task/index.d.ts",
   "scripts": {
-    "test": "jest ./test/jest"
+    "test": "jest ./test/jest",
+    "test:init": "jest ./test/jest/init.test.js",
+    "test:install": "jest ./test/jest/install.test.js",
+    "test:uninstall": "jest ./test/jest/uninstall.test.js",
+    "test:link": "jest ./test/jest/link.test.js",
+    "test:unlink": "jest ./test/jest/unlink.test.js",
+    "test:version": "jest ./test/jest/version.test.js",
+    "test:reset": "jest ./test/jest/reset.test.js",
+    "test:path": "jest ./test/jest/path.test.js"
   },
   "repository": {
     "type": "git",

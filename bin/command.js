@@ -1,7 +1,7 @@
 const cmder = require('commander');
 const print = require('yyl-print');
 const chalk = require('chalk');
-const lang = require('../const/lang');
+const LANG = require('../lang/index');
 const task = require('../task/index');
 const pkg = require('../package.json');
 const path = require('path');
@@ -45,26 +45,26 @@ const fn = {
 };
 
 cmder
-  .option('-p, --path', lang.DESCRIPTION.PATH, () => {
+  .option('-p, --path', LANG.DESCRIPTION.PATH, () => {
     task.path({ env });
     isBlock = true;
   });
 
 cmder
-  .option('-v, --version', lang.DESCRIPTION.VERSION, () => {
+  .option('-v, --version', LANG.DESCRIPTION.VERSION, () => {
     task.version({ env });
     isBlock = true;
   });
 
 cmder
-  .option('-q, --silent', lang.DESCRIPTION.SILENT)
-  .option('--seed <name>', lang.DESCRIPTION.SEED)
-  .option('--logLevel <level>', lang.DESCRIPTION.LOG_LEVEL);
+  .option('-q, --silent', LANG.DESCRIPTION.SILENT)
+  .option('--seed <name>', LANG.DESCRIPTION.SEED)
+  .option('--logLevel <level>', LANG.DESCRIPTION.LOG_LEVEL);
 
 cmder
   .command('install <pkgName>')
   .alias('i')
-  .description(lang.DESCRIPTION.INSTALL)
+  .description(LANG.DESCRIPTION.INSTALL)
   .action((pkgName, cmd) => {
     const env = cmd.parent;
     fn.printHeader({ env });
@@ -76,7 +76,7 @@ cmder
 
 cmder
   .command('uninstall <pkgName>')
-  .description(lang.DESCRIPTION.UNINSTALL)
+  .description(LANG.DESCRIPTION.UNINSTALL)
   .action((pkgName, cmd) => {
     const env = cmd.parent;
     fn.printHeader({ env });
@@ -88,7 +88,7 @@ cmder
 
 cmder
   .command('reset')
-  .description(lang.DESCRIPTION.RESET)
+  .description(LANG.DESCRIPTION.RESET)
   .action((cmd) => {
     const env = cmd.parent;
     fn.printHeader({ env });
@@ -100,7 +100,7 @@ cmder
 
 cmder
   .command('list')
-  .description(lang.DESCRIPTION.LIST)
+  .description(LANG.DESCRIPTION.LIST)
   .action(() => {
     task.list({ env }).catch((er) => {
       throw er;
@@ -110,7 +110,7 @@ cmder
 
 cmder
   .command('link')
-  .description(lang.DESCRIPTION.LINK)
+  .description(LANG.DESCRIPTION.LINK)
   .action(() => {
     task.link({
       targetPath: process.cwd(),
@@ -123,7 +123,7 @@ cmder
 
 cmder
   .command('unlink')
-  .description(lang.DESCRIPTION.UNLINK)
+  .description(LANG.DESCRIPTION.UNLINK)
   .action(() => {
     task.unlink({
       targetPath: process.cwd(),

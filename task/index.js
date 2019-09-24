@@ -7,7 +7,7 @@ const inquirer = require('inquirer');
 const extFs = require('yyl-fs');
 
 const pkg = require('../package.json');
-const lang = require('../const/lang');
+const LANG = require('../lang/index');
 const LocalConfig = require('../lib/localConfig');
 
 const USERPROFILE = process.env[process.platform == 'win32'? 'USERPROFILE': 'HOME'];
@@ -70,7 +70,7 @@ const task = {
   },
   async init(targetPath, { env }) {
     preRun({ env });
-    print.log.info(lang.INIT.START);
+    print.log.info(LANG.INIT.START);
     const config = await localConfig.get();
     if (config.seeds && config.seeds.length) {
       let iSeed = '';
@@ -78,14 +78,14 @@ const task = {
         if (config.seeds.indexOf(env.seed) !== -1) {
           iSeed = env.seed;
         } else {
-          print.log.error(lang.INIT.SEED_NOT_EXISTS);
+          print.log.error(LANG.INIT.SEED_NOT_EXISTS);
           return;
         }
       } else {
         const r = await inquirer.prompt([{
           type: 'list',
           name: 'seed',
-          message: `${lang.INIT.QUEATION_SELECT_TYPE}:`,
+          message: `${LANG.INIT.QUEATION_SELECT_TYPE}:`,
           default: config.seeds[0],
           choices: config.seeds
         }]);
@@ -95,50 +95,50 @@ const task = {
         return;
       }
       if (!env.silent) {
-        console.log(`${chalk.yellow('!')} ${lang.INIT.SEED_LOADING}: ${chalk.green(iSeed)}`);
+        console.log(`${chalk.yellow('!')} ${LANG.INIT.SEED_LOADING}: ${chalk.green(iSeed)}`);
       }
       const iSeedConfig = config.seedMap[iSeed];
       if (!iSeedConfig) {
-        print.log.error(`${lang.INIT.SEED_MAP_NOT_EXISTS}: ${iSeed}`);
+        print.log.error(`${LANG.INIT.SEED_MAP_NOT_EXISTS}: ${iSeed}`);
         return;
       }
 
-      print.log.info(`${lang.INIT.SEED_MAIN_PRINT}: ${chalk.yellow(iSeedConfig.main)}`);
+      print.log.info(`${LANG.INIT.SEED_MAIN_PRINT}: ${chalk.yellow(iSeedConfig.main)}`);
       if (!fs.existsSync(iSeedConfig.main)) {
-        print.log.error(`${lang.INIT.SEED_MAP_MAIN_NOT_EXISTS}: ${iSeed}`);
+        print.log.error(`${LANG.INIT.SEED_MAP_MAIN_NOT_EXISTS}: ${iSeed}`);
         return;
       }
 
       const iSeedPack = require(iSeedConfig.main);
 
       if (!env.silent) {
-        console.log(`${chalk.green('√')} ${lang.INIT.SEED_LOAD_FINISHED}`);
+        console.log(`${chalk.green('√')} ${LANG.INIT.SEED_LOAD_FINISHED}`);
       }
 
       // 启动前 hooks
       if (iSeedPack.hooks && iSeedPack.hooks.beforeStart) {
-        print.log.info(lang.INIT.HOOKS_BEFORE_START_RUN);
+        print.log.info(LANG.INIT.HOOKS_BEFORE_START_RUN);
         try {
           await iSeedPack.hooks.beforeStart({ env, targetPath });
         } catch (er) {
           print.log.error(er);
           return;
         }
-        print.log.info(lang.INIT.HOOKS_BEFORE_START_FINISHED);
+        print.log.info(LANG.INIT.HOOKS_BEFORE_START_FINISHED);
       }
 
       // 准备需要复制的文件
       if (!iSeedPack.path) {
-        print.log.error(`${lang.INIT.SEED_COPY_PATH_UNDEFINED}: ${chalk.green(iSeed)}`);
+        print.log.error(`${LANG.INIT.SEED_COPY_PATH_UNDEFINED}: ${chalk.green(iSeed)}`);
         return;
       }
       let fileMap = {};
       const seedSourcePath = path.resolve(iSeedConfig.main, iSeedPack.path);
 
-      print.log.info(`${lang.INIT.SEED_COPY_PATH_PRINT}: ${chalk.yellow(seedSourcePath)}`);
+      print.log.info(`${LANG.INIT.SEED_COPY_PATH_PRINT}: ${chalk.yellow(seedSourcePath)}`);
 
       if (!fs.existsSync(seedSourcePath)) {
-        print.log.error(`${lang.INIT.SEED_COPY_PATH_NOT_EXISTS}: ${chalk.yellow(seedSourcePath)}`);
+        print.log.error(`${LANG.INIT.SEED_COPY_PATH_NOT_EXISTS}: ${chalk.yellow(seedSourcePath)}`);
         return;
       }
 
@@ -150,16 +150,16 @@ const task = {
 
       // 复制前 hooks
       if (iSeedPack.hooks && iSeedPack.hooks.beforeCopy) {
-        print.log.info(lang.INIT.HOOKS_BEFORE_COPY_RUN);
+        print.log.info(LANG.INIT.HOOKS_BEFORE_COPY_RUN);
         const rMap = await iSeedPack.hooks.beforeCopy({ fileMap, env, targetPath });
         if (typeof rMap === 'object') {
           fileMap = rMap;
         }
 
-        print.log.info(lang.INIT.HOOKS_BEFORE_COPY_FINISHED);
+        print.log.info(LANG.INIT.HOOKS_BEFORE_COPY_FINISHED);
       }
 
-      print.log.info(`${lang.INIT.SEED_COPY_MAP_PRINT}:`);
+      print.log.info(`${LANG.INIT.SEED_COPY_MAP_PRINT}:`);
       Object.keys(fileMap).forEach((iPath) => {
         print.log.info(`${chalk.yellow(iPath)} => ${chalk.green(fileMap[iPath].join(','))}`);
       });
@@ -177,15 +177,15 @@ const task = {
 
       // 复制后 hooks
       if (iSeedPack.hooks && iSeedPack.hooks.afterCopy) {
-        print.log.info(lang.INIT.HOOKS_AFTER_COPY_RUN);
+        print.log.info(LANG.INIT.HOOKS_AFTER_COPY_RUN);
         await iSeedPack.hooks.afterCopy({ fileMap, env, targetPath });
-        print.log.info(lang.INIT.HOOKS_AFTER_COPY_FINISHED);
+        print.log.info(LANG.INIT.HOOKS_AFTER_COPY_FINISHED);
       }
 
-      print.log.success(lang.INIT.FINISHED);
+      print.log.success(LANG.INIT.FINISHED);
     } else {
       print.log.error(
-        lang.INIT.BLANK_SEED,
+        LANG.INIT.BLANK_SEED,
         `${chalk.green('examples:')}`,
         `${chalk.yellow('init install init-me-seed-rollup')}`
       );
@@ -193,22 +193,22 @@ const task = {
   },
   async install(names, { env }) {
     preRun({ env });
-    print.log.info(lang.INSTALL.START);
+    print.log.info(LANG.INSTALL.START);
     await extOs.runCMD(`npm install ${names.join(' ')} --save ${env.silent ? '--silent': ''}`, CONFIG_PLUGIN_PATH);
 
     await localConfig.updateSeedInfo();
 
-    print.log.success(lang.INSTALL.FINISHED);
+    print.log.success(LANG.INSTALL.FINISHED);
   },
   async uninstall(names, { env }) {
     preRun({ env });
-    print.log.info(lang.UNINSTALL.START);
+    print.log.info(LANG.UNINSTALL.START);
 
     await extOs.runCMD(`npm uninstall ${names.join(' ')} --save ${env.silent ? '--silent': ''}`, CONFIG_PLUGIN_PATH);
 
     await localConfig.updateSeedInfo();
 
-    print.log.success(lang.UNINSTALL.FINISHED);
+    print.log.success(LANG.UNINSTALL.FINISHED);
   },
 
   async list({ env }) {
@@ -235,7 +235,7 @@ const task = {
 
       if (pkgs.length) {
         logs.push('');
-        logs.push(`${chalk.cyan(lang.LIST.PKG_LIST)}:`);
+        logs.push(`${chalk.cyan(LANG.LIST.PKG_LIST)}:`);
         pkgs.forEach((info) => {
           logs.push(`  ${chalk.green(info.name)} : ${chalk.yellow(info.version)}`);
         });
@@ -243,7 +243,7 @@ const task = {
 
       if (locals.length) {
         logs.push('');
-        logs.push(`${chalk.cyan(lang.LIST.LOCAL_LIST)}:`);
+        logs.push(`${chalk.cyan(LANG.LIST.LOCAL_LIST)}:`);
         locals.forEach((info) => {
           logs.push(`  ${chalk.green(info.name)}(${info.version}) : ${chalk.yellow(info.main)}`);
         });
@@ -256,47 +256,47 @@ const task = {
       return iPkg.seedMap;
     } else {
       if (!env.silent) {
-        console.log(`  ${lang.LIST.BLANK}`);
+        console.log(`  ${LANG.LIST.BLANK}`);
       }
       return {};
     }
   },
   async reset({ env }) {
     preRun({ env });
-    print.log.info(lang.RESET.START);
+    print.log.info(LANG.RESET.START);
     await localConfig.reset();
-    print.log.success(lang.RESET.FINISHED);
+    print.log.success(LANG.RESET.FINISHED);
   },
 
   async link({ targetPath, env }) {
     preRun({ env });
-    print.log.info(lang.LINK.START);
+    print.log.info(LANG.LINK.START);
     const pkgPath = path.join(targetPath, 'package.json');
     if (!fs.existsSync(pkgPath)) {
-      print.log.error(lang.LINK.PKG_NOT_FOUND);
+      print.log.error(LANG.LINK.PKG_NOT_FOUND);
       return;
     }
     const pkg = require(pkgPath);
 
     if (!pkg.name) {
-      print.log.error(lang.LINK.PKG_NAME_IS_BLANK);
+      print.log.error(LANG.LINK.PKG_NAME_IS_BLANK);
       return;
     }
 
     if (!pkg.version) {
-      print.log.error(lang.LINK.PKG_VERSION_IS_BLANK);
+      print.log.error(LANG.LINK.PKG_VERSION_IS_BLANK);
       return;
     }
 
     if (!pkg.main) {
-      print.log.error(lang.LINK.PKG_ENTRY_IS_BLANK);
+      print.log.error(LANG.LINK.PKG_ENTRY_IS_BLANK);
       return;
     }
 
     const entryPath = path.resolve(targetPath, pkg.main);
 
     if (!fs.existsSync(entryPath)) {
-      print.log.error(`${lang.LINK.PKG_ENTRY_NOT_EXISTS}: ${entryPath}`);
+      print.log.error(`${LANG.LINK.PKG_ENTRY_NOT_EXISTS}: ${entryPath}`);
       return;
     }
 
@@ -307,26 +307,26 @@ const task = {
       dev: true
     });
 
-    print.log.success(`${lang.LINK.FINISHED}: ${pkg.name}`);
+    print.log.success(`${LANG.LINK.FINISHED}: ${pkg.name}`);
   },
   async unlink({ targetPath, env }) {
     preRun({ env });
-    print.log.info(lang.UNLINK.START);
+    print.log.info(LANG.UNLINK.START);
     const pkgPath = path.join(targetPath, 'package.json');
     if (!fs.existsSync(pkgPath)) {
-      print.log.error(lang.UNLINK.PKG_NOT_FOUND);
+      print.log.error(LANG.UNLINK.PKG_NOT_FOUND);
       return;
     }
     const pkg = require(pkgPath);
 
     if (!pkg.name) {
-      print.log.error(lang.UNLINK.PKG_NAME_IS_BLANK);
+      print.log.error(LANG.UNLINK.PKG_NAME_IS_BLANK);
       return;
     }
 
     await localConfig.removeLocalSeed(pkg.name);
 
-    print.log.success(`${lang.UNLINK.FINISHED}: ${pkg.name}`);
+    print.log.success(`${LANG.UNLINK.FINISHED}: ${pkg.name}`);
   }
 };
 module.exports = task;
