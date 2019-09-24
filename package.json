@@ -13,7 +13,8 @@
     "test:unlink": "jest ./test/jest/unlink.test.js",
     "test:version": "jest ./test/jest/version.test.js",
     "test:reset": "jest ./test/jest/reset.test.js",
-    "test:path": "jest ./test/jest/path.test.js"
+    "test:path": "jest ./test/jest/path.test.js",
+    "test:recommend": "jest ./test/jest/recommend.test.js"
   },
   "repository": {
     "type": "git",
