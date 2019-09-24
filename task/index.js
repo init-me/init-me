@@ -327,6 +327,49 @@ const task = {
     await localConfig.removeLocalSeed(pkg.name);
 
     print.log.success(`${LANG.UNLINK.FINISHED}: ${pkg.name}`);
+  },
+  async recommend({ env }) {
+    if (env.silent) {
+      print.log.setLogLevel(0);
+    }
+    const keyword = 'init-me-seed-';
+    const { searchNpm, searchYyNpm } = require('../lib/search');
+    print.log.info(LANG.RECOMMEND.SEARCH_NPM_START);
+
+    const r1 = await searchNpm(keyword);
+
+    let r2 = [];
+    if (env.yy) {
+      r2 = await searchYyNpm(keyword);
+    }
+    print.log.success(LANG.RECOMMEND.SEARCH_NPM_FINISHED);
+
+    const { seedMap } = await localConfig.get();
+
+    const r = r1.concat(r2)
+      .map((item) => item.name)
+      .filter((name) => {
+        if (seedMap[name]) {
+          return false;
+        }
+        return true;
+      });
+
+    if (!env.silent) {
+      const logArr = [''];
+      if (r.length) {
+        logArr.push(` ${chalk.yellow(LANG.RECOMMEND.TITLE)}:`);
+        r.forEach((name) => {
+          logArr.push(` ${chalk.gray('*')} ${chalk.green(name)}`);
+        });
+      } else {
+        logArr.push(` ${LANG.RECOMMEND.RESULT_BLANK}`);
+      }
+      logArr.push('');
+
+      console.log(logArr.join('\r\n'));
+    }
+    return r;
   }
 };
 module.exports = task;

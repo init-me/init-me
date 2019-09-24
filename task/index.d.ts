@@ -9,6 +9,7 @@ interface ITask {
   preRun({ env: IEnv }): void
   link({ env: IEnv, targetPath: string}): Promise<any>
   unlink({ env: IEnv, targetPath: string}): Promise<any>
+  recommend({ env: IEnv }): Promise<string[]>
 }
 interface ISeedConfig {
   seeds: string[]

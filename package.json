@@ -42,6 +42,7 @@
     "yyl-fs": "0.3.2",
     "yyl-os": "0.9.1",
     "yyl-print": "0.7.3",
+    "yyl-request": "^0.1.1",
     "yyl-util": "^2.3.5"
   },
   "devDependencies": {

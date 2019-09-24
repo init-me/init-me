@@ -58,6 +58,7 @@ cmder
 
 cmder
   .option('-q, --silent', LANG.DESCRIPTION.SILENT)
+  .option('--yy', LANG.DESCRIPTION.YY)
   .option('--seed <name>', LANG.DESCRIPTION.SEED)
   .option('--logLevel <level>', LANG.DESCRIPTION.LOG_LEVEL);
 
@@ -77,8 +78,7 @@ cmder
 cmder
   .command('uninstall <pkgName>')
   .description(LANG.DESCRIPTION.UNINSTALL)
-  .action((pkgName, cmd) => {
-    const env = cmd.parent;
+  .action((pkgName) => {
     fn.printHeader({ env });
     task.uninstall(pkgName.split(/\s+/), { env }).catch((er) => {
       throw er;
@@ -89,10 +89,19 @@ cmder
 cmder
   .command('reset')
   .description(LANG.DESCRIPTION.RESET)
-  .action((cmd) => {
-    const env = cmd.parent;
+  .action(() => {
     fn.printHeader({ env });
     task.reset({ env }).catch((er) => {
+      throw er;
+    });
+    isBlock = true;
+  });
+
+cmder
+  .command('recommend')
+  .description(LANG.DESCRIPTION.RECOMMEND)
+  .action(() => {
+    task.recommend({ env }).catch((er) => {
       throw er;
     });
     isBlock = true;
