@@ -9,7 +9,11 @@ module.exports = {
     SILENT: '静默输出',
     LIST: '显示 init-me 已安装的 seed 包',
     SEED: 'seed 包名称',
-    LOG_LEVEL: 'log 类型: 0|1|2'
+    LINK: '安装本地 seed 包',
+    UNLINK: '卸载本地 seed 包',
+    LOG_LEVEL: 'log 类型: 0|1|2',
+    YY: '设置 当前处于 YY 环境下',
+    RECOMMEND: '显示未安装的推荐 seed 包'
   },
   INIT: {
     BLANK_SEED: 'init 运行失败，seed 列表为空，请先安装 seed 再运行',
@@ -41,12 +45,39 @@ module.exports = {
     START: 'uninstall 运行开始',
     FINISHED: 'uninstall 运行完成'
   },
-  CONFIG: {
-    RESET_START: '配置重置开始',
-    RESET_FINISHED: '配置重置完成',
+  LIST: {
+    BLANK: 'seed 列表为空',
+    PKG_LIST: '已安装 Seed 列表',
+    LOCAL_LIST: '本  地 Seed 列表'
+  },
+  LINK: {
+    START: '安装本地 seed 包 开始',
+    FINISHED: '安装本地 seed 包 完成',
+    PKG_NOT_FOUND: '当前目录下 package.json 不存在',
+    PKG_NAME_IS_BLANK: 'pkg.name 为空',
+    PKG_VERSION_IS_BLANK: 'pkg.version 为空',
+    PKG_ENTRY_IS_BLANK: 'pkg.main 为空',
+    PKG_ENTRY_NOT_EXISTS: 'pkg.main 路径不存在'
+  },
+  UNLINK: {
+    START: '卸载本地 seed 包 开始',
+    FINISHED: '卸载本地 seed 包 完成',
+    PKG_NOT_FOUND: '当前目录下 package.json 不存在',
+    PKG_NAME_IS_BLANK: 'pkg.name 为空'
+  },
+  LOCAL_STORAGE: {
     PARSE_ERROR: '配置解析错误'
   },
-  LIST: {
-    BLANK: 'seed 列表为空'
+  RESET: {
+    START: '重置 init-me 开始',
+    FINISHED: '重置 init-me 完成'
+  },
+  RECOMMEND: {
+    SEARCH_NPM_START: '查找 npm 相关信息 开始',
+    SEARCH_NPM_FINISHED: '查找 npm 相关信息 完成',
+    SEARCH_YY_NPM_START: '查找 yy npm 相关信息 开始',
+    SEARCH_YY_NPM_FINISHED: '查找 yy npm 相关信息 完成',
+    TITLE: '推荐 seed 包 列表',
+    RESULT_BLANK: '暂无推荐信息'
   }
 };

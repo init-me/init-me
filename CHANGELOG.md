@@ -1,4 +1,10 @@
 # 更新日志
+## 0.2.0 (*)
+* feat: `init list` 命令新增 已安装 和 本地安装 列表
+* feat: `init link` 可以让 cwd 所在项目接入配置项 (方便开发)
+* feat: `init unlink` 解除 当前 cwd 项目接入 (方便开发)
+* feat: `init recommend` 新增， 显示线上未安装的 seed 包列表
+
 ## 0.1.1 (2019-09-16)
 * fix: 修复 `env` 参数不对问题
 

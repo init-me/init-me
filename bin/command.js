@@ -1,7 +1,7 @@
 const cmder = require('commander');
 const print = require('yyl-print');
 const chalk = require('chalk');
-const lang = require('../const/lang');
+const LANG = require('../lang/index');
 const task = require('../task/index');
 const pkg = require('../package.json');
 const path = require('path');
@@ -45,26 +45,27 @@ const fn = {
 };
 
 cmder
-  .option('-p, --path', lang.DESCRIPTION.PATH, () => {
+  .option('-p, --path', LANG.DESCRIPTION.PATH, () => {
     task.path({ env });
     isBlock = true;
   });
 
 cmder
-  .option('-v, --version', lang.DESCRIPTION.VERSION, () => {
+  .option('-v, --version', LANG.DESCRIPTION.VERSION, () => {
     task.version({ env });
     isBlock = true;
   });
 
 cmder
-  .option('-q, --silent', lang.DESCRIPTION.SILENT)
-  .option('--seed <name>', lang.DESCRIPTION.SEED)
-  .option('--logLevel <level>', lang.DESCRIPTION.LOG_LEVEL);
+  .option('-q, --silent', LANG.DESCRIPTION.SILENT)
+  .option('--yy', LANG.DESCRIPTION.YY)
+  .option('--seed <name>', LANG.DESCRIPTION.SEED)
+  .option('--logLevel <level>', LANG.DESCRIPTION.LOG_LEVEL);
 
 cmder
   .command('install <pkgName>')
   .alias('i')
-  .description(lang.DESCRIPTION.INSTALL)
+  .description(LANG.DESCRIPTION.INSTALL)
   .action((pkgName, cmd) => {
     const env = cmd.parent;
     fn.printHeader({ env });
@@ -76,9 +77,8 @@ cmder
 
 cmder
   .command('uninstall <pkgName>')
-  .description(lang.DESCRIPTION.UNINSTALL)
-  .action((pkgName, cmd) => {
-    const env = cmd.parent;
+  .description(LANG.DESCRIPTION.UNINSTALL)
+  .action((pkgName) => {
     fn.printHeader({ env });
     task.uninstall(pkgName.split(/\s+/), { env }).catch((er) => {
       throw er;
@@ -88,9 +88,8 @@ cmder
 
 cmder
   .command('reset')
-  .description(lang.DESCRIPTION.RESET)
-  .action((cmd) => {
-    const env = cmd.parent;
+  .description(LANG.DESCRIPTION.RESET)
+  .action(() => {
     fn.printHeader({ env });
     task.reset({ env }).catch((er) => {
       throw er;
@@ -99,10 +98,46 @@ cmder
   });
 
 cmder
+  .command('recommend')
+  .description(LANG.DESCRIPTION.RECOMMEND)
+  .action(() => {
+    task.recommend({ env }).catch((er) => {
+      throw er;
+    });
+    isBlock = true;
+  });
+
+cmder
   .command('list')
-  .description(lang.DESCRIPTION.LIST)
+  .description(LANG.DESCRIPTION.LIST)
   .action(() => {
     task.list({ env }).catch((er) => {
+      throw er;
+    });
+    isBlock = true;
+  });
+
+cmder
+  .command('link')
+  .description(LANG.DESCRIPTION.LINK)
+  .action(() => {
+    task.link({
+      targetPath: process.cwd(),
+      env
+    }).catch((er) => {
+      throw er;
+    });
+    isBlock = true;
+  });
+
+cmder
+  .command('unlink')
+  .description(LANG.DESCRIPTION.UNLINK)
+  .action(() => {
+    task.unlink({
+      targetPath: process.cwd(),
+      env
+    }).catch((er) => {
       throw er;
     });
     isBlock = true;
