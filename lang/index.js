@@ -13,7 +13,8 @@ module.exports = {
     UNLINK: '卸载本地 seed 包',
     LOG_LEVEL: 'log 类型: 0|1|2',
     YY: '设置 当前处于 YY 环境下',
-    RECOMMEND: '显示未安装的推荐 seed 包'
+    RECOMMEND: '显示未安装的推荐 seed 包',
+    CLEAR: '清除 init-me 配置文件'
   },
   INIT: {
     BLANK_SEED: 'init 运行失败，seed 列表为空，请先安装 seed 再运行',
@@ -79,5 +80,10 @@ module.exports = {
     SEARCH_YY_NPM_FINISHED: '查找 yy npm 相关信息 完成',
     TITLE: '推荐 seed 包 列表',
     RESULT_BLANK: '暂无推荐信息'
+  },
+  CLEAR: {
+    START: '清理 init-me 配置文件 开始',
+    FINISHED: '清理 init-me 配置文件 完成',
+
   }
 };

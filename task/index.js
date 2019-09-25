@@ -17,6 +17,12 @@ const CONFIG_PLUGIN_PATH = path.join(CONFIG_PATH, 'plugins');
 const localConfig = new LocalConfig();
 
 print.log.init({
+  keyword: {
+    '开始': chalk.cyan,
+    '完成': chalk.green,
+    '为空': chalk.red,
+    '不存在': chalk.red
+  },
   type: {
     ver: {
       name: 'INIT',
@@ -31,6 +37,10 @@ print.log.init({
     create: {
       name: 'ADD>',
       color: chalk.bgGreen.white
+    },
+    del: {
+      name: 'DEL>',
+      color: chalk.bgWhite.black
     }
   }
 });
@@ -49,6 +59,15 @@ const preRun = ({ env }) => {
 
 
 const task = {
+  async clear ({ env }) {
+    preRun({ env });
+    print.log.info(LANG.CLEAR.START);
+    const removes = await extFs.removeFiles(CONFIG_PATH, true);
+    removes.forEach((iPath) => {
+      print.log.del(iPath);
+    });
+    print.log.success(LANG.CLEAR.FINISHED);
+  },
   async version({ env }) {
     await print.borderBox([
       `init-me ${chalk.yellow.bold(pkg.version)}`

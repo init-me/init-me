@@ -1,5 +1,6 @@
 # 更新日志
 ## 0.2.2 (*)
+* feat: 新增 `init clear` 用于 清除 init-me 配置文件
 * feat: 补充 install 时 没有 `.init-me` 文件时的 test-case
 
 ## 0.2.1 (2019-09-24)

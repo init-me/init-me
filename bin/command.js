@@ -44,6 +44,7 @@ const fn = {
   }
 };
 
+
 cmder
   .option('-p, --path', LANG.DESCRIPTION.PATH, () => {
     task.path({ env });
@@ -62,12 +63,23 @@ cmder
   .option('--seed <name>', LANG.DESCRIPTION.SEED)
   .option('--logLevel <level>', LANG.DESCRIPTION.LOG_LEVEL);
 
+
+cmder
+  .command('clear')
+  .description(LANG.DESCRIPTION.CLEAR)
+  .action(() => {
+    fn.printHeader({ env });
+    task.clear({ env }).catch((er) => {
+      throw er;
+    });
+    isBlock = true;
+  });
+
 cmder
   .command('install <pkgName>')
   .alias('i')
   .description(LANG.DESCRIPTION.INSTALL)
-  .action((pkgName, cmd) => {
-    const env = cmd.parent;
+  .action((pkgName) => {
     fn.printHeader({ env });
     task.install(pkgName.split(/\s+/), { env }).catch((er) => {
       throw er;
