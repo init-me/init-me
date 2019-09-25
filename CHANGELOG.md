@@ -1,4 +1,7 @@
 # 更新日志
+## 0.2.2 (*)
+* feat: 补充 install 时 没有 `.init-me` 文件时的 test-case
+
 ## 0.2.1 (2019-09-24)
 * fix: 修复 初装 `init-me` 时，`init install` 会报错问题
 
