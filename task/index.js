@@ -75,15 +75,22 @@ const task = {
     return pkg.version;
   },
   path({ env }) {
-    const r = path.join(__dirname, '../');
+    const r = {
+      app: path.join(__dirname, '../'),
+      config: CONFIG_PATH
+    };
     if (!env.silent) {
       console.log([
         '',
-        'App path:',
-        `  ${chalk.yellow.bold(r)}`,
+        ' App path:',
+        ` ${chalk.yellow.bold(r.app)}`,
+        '',
+        ' Config path:',
+        ` ${chalk.yellow.bold(r.config)}`,
         ''
       ].join('\r\n'));
-      extOs.openPath(r);
+      extOs.openPath(r.app);
+      extOs.openPath(r.config);
     }
     return Promise.resolve(r);
   },
@@ -213,7 +220,6 @@ const task = {
   async install(names, { env }) {
     preRun({ env });
     print.log.info(LANG.INSTALL.START);
-    
     await extOs.runCMD(`npm install ${names.join(' ')} --save ${env.silent ? '--silent': ''}`, CONFIG_PLUGIN_PATH);
 
     await localConfig.updateSeedInfo();

@@ -8,7 +8,7 @@ interface ITask {
    * 获取工具所在目录
    * @param param0 选项
    */
-  path({ env: IEnv }): Promise<string>
+  path({ env: IEnv }): Promise<{app: string, config: string}>
   /**
    * 项目初始化
    * @param targetPath 初始化路径

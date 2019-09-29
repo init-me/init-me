@@ -83,7 +83,7 @@ module.exports = {
   },
   CLEAR: {
     START: '清理 init-me 配置文件 开始',
-    FINISHED: '清理 init-me 配置文件 完成',
+    FINISHED: '清理 init-me 配置文件 完成'
 
   }
 };
