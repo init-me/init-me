@@ -7,9 +7,14 @@ const SEED_NAME = 'init-me-seed-helloworld';
 const FRAG_PATH = path.join(__dirname, '../../../__frag');
 const env = { silent: true };
 
+const USERPROFILE = process.env[process.platform == 'win32'? 'USERPROFILE': 'HOME'];
+const CONFIG_PATH = path.join(USERPROFILE, '.init-me');
+
 jest.setTimeout(30000);
 
 test('task.init(targetPath, { env })', async () => {
+  await extFs.removeFiles(CONFIG_PATH, true);
+
   await task.reset({ env });
   await task.install([SEED_NAME], { env });
 

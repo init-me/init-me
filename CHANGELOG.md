@@ -1,4 +1,10 @@
 # 更新日志
+## 0.2.2 (2019-09-29)
+* feat: 新增 `init clear` 用于 清除 init-me 配置文件
+* feat: 补充 install 时 没有 `.init-me` 文件时的 test-case
+* feat: `init --path` 会同时返回 `r.app` `r.config` 2 个路径
+* fix: 修复 `init` 输入不存在的命令时， seed 列表会清空 的问题
+
 ## 0.2.1 (2019-09-24)
 * fix: 修复 初装 `init-me` 时，`init install` 会报错问题
 
