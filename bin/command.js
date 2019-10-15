@@ -111,6 +111,7 @@ cmder
 
 cmder
   .command('recommend')
+  .alias('r')
   .description(LANG.DESCRIPTION.RECOMMEND)
   .action(() => {
     task.recommend({ env }).catch((er) => {
