@@ -372,21 +372,31 @@ const task = {
 
     const { seedMap } = await localConfig.get();
 
-    const r = r1.concat(r2)
-      .map((item) => item.name)
-      .filter((name) => {
-        if (seedMap[name]) {
-          return false;
-        }
-        return true;
-      });
+    const r = r1.concat(r2);
+
+    r.forEach((item) => {
+      if (seedMap[item.name]) {
+        item.installed = true;
+      }
+    });
 
     if (!env.silent) {
       const logArr = [''];
       if (r.length) {
         logArr.push(` ${chalk.yellow(LANG.RECOMMEND.TITLE)}:`);
-        r.forEach((name) => {
-          logArr.push(` ${chalk.gray('*')} ${chalk.green(name)}`);
+        r.forEach((item) => {
+          const name = (() => {
+            let color = chalk.green;
+            let vColor = chalk.yellow;
+            if (item.installed) {
+              color = chalk.gray;
+              vColor = chalk.gray;
+            }
+            return item.version
+              ? `${color(item.name)}${vColor(`@${item.version}`)}`
+              : color(item.name);
+          })();
+          logArr.push(` ${chalk.gray('*')} ${name}`);
         });
       } else {
         logArr.push(` ${LANG.RECOMMEND.RESULT_BLANK}`);
