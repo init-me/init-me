@@ -159,7 +159,7 @@ const task = {
         return;
       }
       let fileMap = {};
-      const seedSourcePath = path.resolve(iSeedConfig.main, iSeedPack.path);
+      const seedSourcePath = path.resolve(path.dirname(iSeedConfig.main), iSeedPack.path);
 
       print.log.info(`${LANG.INIT.SEED_COPY_PATH_PRINT}: ${chalk.yellow(seedSourcePath)}`);
 

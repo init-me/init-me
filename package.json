@@ -1,6 +1,6 @@
 {
   "name": "init-me",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "init program",
   "main": "task/index.js",
   "types": "task/index.d.ts",
@@ -14,7 +14,8 @@
     "test:version": "jest ./test/jest/version.test.js",
     "test:reset": "jest ./test/jest/reset.test.js",
     "test:path": "jest ./test/jest/path.test.js",
-    "test:recommend": "jest ./test/jest/recommend.test.js"
+    "test:recommend": "jest ./test/jest/recommend.test.js",
+    "test:case-relative-path": "jest ./test/jest/case-relative-path.test.js"
   },
   "repository": {
     "type": "git",
