@@ -14,12 +14,22 @@ module.exports = {
     LOG_LEVEL: 'log 类型: 0|1|2',
     YY: '设置 当前处于 YY 环境下',
     RECOMMEND: '显示未安装的推荐 seed 包',
-    CLEAR: '清除 init-me 配置文件'
+    CLEAR: '清除 init-me 配置文件',
+    FORCE: '跳过检查 seed 包版本逻辑直接运行初始化'
   },
   INIT: {
     BLANK_SEED: 'init 运行失败，seed 列表为空，请先安装 seed 再运行',
     SEED_NOT_EXISTS: 'seed 不存在',
     QUEATION_SELECT_TYPE: '请选择初始化的 seed 包',
+
+    SKIP_CHECK_VERSION: '跳过检查 seed 包版本',
+    CHECK_VERSION_START: '正在检查 seed 包版本是否最新',
+    CHECK_VERSION_FINISHED: '检查 seed 包版本完成',
+    PKG_IS_LATEST: '已是最新版',
+
+    UPDATE_PKG_VERSION_START: '开始更新 seed 包版本',
+    UPDATE_PKG_VERSION_FINISHED: '更新 seed 包版本完成',
+
     START: 'init 运行开始',
     FINISHED: 'init 完成',
     SEED_LOADING: '正在加载 seed 包',

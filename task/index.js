@@ -10,6 +10,8 @@ const pkg = require('../package.json');
 const LANG = require('../lang/index');
 const LocalConfig = require('../lib/localConfig');
 
+const { getPkgLatestVersion } = require('../lib/search');
+
 const USERPROFILE = process.env[process.platform == 'win32'? 'USERPROFILE': 'HOME'];
 const CONFIG_PATH = path.join(USERPROFILE, '.init-me');
 const CONFIG_PLUGIN_PATH = path.join(CONFIG_PATH, 'plugins');
@@ -55,6 +57,18 @@ const preRun = ({ env }) => {
     print.log.setLogLevel(1);
   }
 };
+
+function printInfo ({ env, str }) {
+  if (!env.silent) {
+    console.log(`${chalk.yellow('!')} ${str}`);
+  }
+}
+
+function printSuccess ({ env, str }) {
+  if (!env.silent) {
+    console.log(`${chalk.green('Y')} ${str}`);
+  }
+}
 // - fn
 
 
@@ -97,6 +111,7 @@ const task = {
   async init(targetPath, { env }) {
     preRun({ env });
     print.log.info(LANG.INIT.START);
+
     const config = await localConfig.get();
     if (config.seeds && config.seeds.length) {
       let iSeed = '';
@@ -120,9 +135,9 @@ const task = {
       if (!iSeed) {
         return;
       }
-      if (!env.silent) {
-        console.log(`${chalk.yellow('!')} ${LANG.INIT.SEED_LOADING}: ${chalk.green(iSeed)}`);
-      }
+
+      printInfo({ env, str: `${LANG.INIT.SEED_LOADING}: ${chalk.green(iSeed)}`});
+      
       const iSeedConfig = config.seedMap[iSeed];
       if (!iSeedConfig) {
         print.log.error(`${LANG.INIT.SEED_MAP_NOT_EXISTS}: ${iSeed}`);
@@ -135,11 +150,25 @@ const task = {
         return;
       }
 
+      // + 非 dev seed 自动安装 最新版
+      if (iSeedConfig.dev || env.force) {
+        printSuccess({ env, str: LANG.INIT.SKIP_CHECK_VERSION});
+      } else {
+        printInfo({ env, str: LANG.INIT.CHECK_VERSION_START});
+        const latestVersion = await getPkgLatestVersion(iSeedConfig.name);
+        if (iSeedConfig.version !== latestVersion) {
+          printInfo({ env, str: LANG.INIT.UPDATE_PKG_VERSION_START});
+          await task.install([`${iSeedConfig.name}@${latestVersion} --silent`], { env });
+          printSuccess({ env, str: `${LANG.INIT.UPDATE_PKG_VERSION_FINISHED}: ${chalk.green(latestVersion)}`});
+        } else {
+          printSuccess({ env, str: `${LANG.INIT.PKG_IS_LATEST}: ${chalk.green(latestVersion)}`});
+        }
+      }
+      // - 非 dev seed 自动安装 最新版
+
       const iSeedPack = require(iSeedConfig.main);
 
-      if (!env.silent) {
-        console.log(`${chalk.green('√')} ${LANG.INIT.SEED_LOAD_FINISHED}`);
-      }
+      printSuccess({ env, str: LANG.INIT.SEED_LOAD_FINISHED});
 
       // 启动前 hooks
       if (iSeedPack.hooks && iSeedPack.hooks.beforeStart) {
@@ -167,7 +196,6 @@ const task = {
         print.log.error(`${LANG.INIT.SEED_COPY_PATH_NOT_EXISTS}: ${chalk.yellow(seedSourcePath)}`);
         return;
       }
-
 
       const files = await extFs.readFilePaths(seedSourcePath);
       files.forEach((iPath) => {
