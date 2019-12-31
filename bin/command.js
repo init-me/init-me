@@ -59,7 +59,6 @@ cmder
 
 cmder
   .option('-q, --silent', LANG.DESCRIPTION.SILENT)
-  .option('--yy', LANG.DESCRIPTION.YY)
   .option('--seed <name>', LANG.DESCRIPTION.SEED)
   .option('--force', LANG.DESCRIPTION.FORCE)
   .option('--logLevel <level>', LANG.DESCRIPTION.LOG_LEVEL);
