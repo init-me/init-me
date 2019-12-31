@@ -436,10 +436,10 @@ const task = {
     let r2 = [];
     if (IN_YY) {
       r2 = await searchYyNpm(keyword);
-      await util.forEach(r2, async (item) => {
-        // eslint-disable-next-line require-atomic-updates
-        item.version = await getPkgLatestVersion(item.name);
-      });
+      // await util.forEach(r2, async (item) => {
+      //   // eslint-disable-next-line require-atomic-updates
+      //   item.version = await getPkgLatestVersion(item.name);
+      // });
     }
     print.log.success(LANG.RECOMMEND.SEARCH_NPM_FINISHED);
 
