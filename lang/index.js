@@ -19,6 +19,8 @@ module.exports = {
   },
   INIT: {
     BLANK_SEED: 'init 运行失败，seed 列表为空，请先安装 seed 再运行',
+    LIST_START: '正在拉取可运行 seed 包',
+    LIST_FINISHED: '拉取可运行 seed 包 完成',
     SEED_NOT_EXISTS: 'seed 不存在',
     QUEATION_SELECT_TYPE: '请选择初始化的 seed 包',
 
@@ -32,6 +34,7 @@ module.exports = {
 
     START: 'init 运行开始',
     FINISHED: 'init 完成',
+    SEED_INSTALLING: '正在安装 seed 包',
     SEED_LOADING: '正在加载 seed 包',
     SEED_LOAD_FINISHED: '加载完成',
     SEED_MAP_NOT_EXISTS: 'seed 配置不存在，请重新安装 seed 包',

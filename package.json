@@ -1,6 +1,6 @@
 {
   "name": "init-me",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "init program",
   "main": "task/index.js",
   "types": "task/index.d.ts",
@@ -48,6 +48,7 @@
     "yyl-util": "2.3.6"
   },
   "devDependencies": {
+    "eslint-plugin-node": "^11.0.0",
     "jest": "24.9.0"
   }
 }

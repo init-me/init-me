@@ -1,5 +1,5 @@
 const task = require('../../task/index');
-const env = { silent: true, yy: true };
+const env = { silent: true };
 
 const SEED_NAME = 'init-me-seed-helloworld';
 
