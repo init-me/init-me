@@ -35,6 +35,7 @@ module.exports = {
     START: 'init 运行开始',
     FINISHED: 'init 完成',
     SEED_INSTALLING: '正在安装 seed 包',
+    SEED_INSTALLED: '安装 seed 包 完成',
     SEED_LOADING: '正在加载 seed 包',
     SEED_LOAD_FINISHED: '加载完成',
     SEED_MAP_NOT_EXISTS: 'seed 配置不存在，请重新安装 seed 包',

@@ -128,7 +128,7 @@ const task = {
         name,
         shortName,
         installed,
-        choice: installed ? chalk.yellow(shortName) : chalk.gray(shortName)
+        choice: installed ? chalk.yellow.bold(shortName) : chalk.gray(shortName)
       };
     });
 
@@ -171,7 +171,8 @@ const task = {
     // 判断选中的 seed 是否已经安装
     if (!seedInfo.installed) {
       printInfo({ env, str: `${LANG.INIT.SEED_INSTALLING}: ${chalk.green(iSeed)}`});
-      await task.install([`${seedInfo.name} --silent`], { env });
+      await task.install([`${seedInfo.name} --silent`], { env, silent: true });
+      printSuccess({ env, str: `${LANG.INIT.SEED_INSTALLED}: ${chalk.green(iSeed)}`});
     }
 
     const seedConfig = (await localConfig.get());
@@ -198,7 +199,7 @@ const task = {
       const latestVersion = await getPkgLatestVersion(iSeedConfig.name);
       if (iSeedConfig.version !== latestVersion) {
         printInfo({ env, str: LANG.INIT.UPDATE_PKG_VERSION_START});
-        await task.install([`${iSeedConfig.name}@${latestVersion} --silent`], { env });
+        await task.install([`${iSeedConfig.name}@${latestVersion} --silent`], { env, silent: true });
         printSuccess({ env, str: `${LANG.INIT.UPDATE_PKG_VERSION_FINISHED}: ${chalk.green(latestVersion)}`});
       } else {
         printSuccess({ env, str: `${LANG.INIT.PKG_IS_LATEST}: ${chalk.green(latestVersion)}`});
@@ -279,14 +280,19 @@ const task = {
 
     print.log.success(LANG.INIT.FINISHED);
   },
-  async install(names, { env }) {
-    preRun({ env });
-    print.log.info(LANG.INSTALL.START);
+  async install(names, { env, silent }) {
+    if (!silent) {
+      preRun({ env });
+      print.log.info(LANG.INSTALL.START);
+    }
+
     await extOs.runCMD(`npm install ${names.join(' ')} --save ${env.silent ? '--silent' : ''}`, CONFIG_PLUGIN_PATH);
 
     await localConfig.updateSeedInfo();
 
-    print.log.success(LANG.INSTALL.FINISHED);
+    if (!silent) {
+      print.log.success(LANG.INSTALL.FINISHED);
+    }
   },
   async uninstall(names, { env }) {
     preRun({ env });
