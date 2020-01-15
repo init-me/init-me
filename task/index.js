@@ -121,22 +121,48 @@ const task = {
     const config = (await localConfig.get()) || {};
     const installedSeeds = config.seeds || [];
 
-    const seedItems = seeds.map((name) => {
-      const installed = installedSeeds.indexOf(name) !== -1;
+    let seedItems = installedSeeds.map((seed) => {
+      const seedItem = config.seedMap[seed];
+      const { version, dev } = seedItem;
+      const name = seed;
       const shortName = seedFull2Short(name);
       return {
         name,
         shortName,
-        installed,
-        choice: installed ? chalk.yellow.bold(shortName) : chalk.gray(shortName)
+        installed: true,
+        dev,
+        choice: `${chalk.yellow.bold(shortName)} ${chalk.gray('(')}${dev ? 'local' : version}${chalk.gray(')')}`
       };
     });
+
+    seedItems = seedItems.concat(
+      seeds
+        .filter(name => installedSeeds.indexOf(name) == -1)
+        .map((name) => {
+          const shortName = seedFull2Short(name);
+          return {
+            name,
+            shortName,
+            installed: false,
+            dev: false,
+            choice: chalk.gray(shortName)
+          };
+        })
+    );
 
     seedItems.sort((a, b) => {
       if (a.installed && !b.installed) {
         return -1;
       } else if (!a.installed && b.installed) {
         return 1;
+      } else if (a.installed && b.installed) {
+        if (a.dev && !b.dev) {
+          return -1;
+        } else if (!a.dev && b.dev) {
+          return 1;
+        } else {
+          return a.name.localeCompare(b.name);
+        }
       } else {
         return a.name.localeCompare(b.name);
       }
