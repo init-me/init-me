@@ -5,7 +5,6 @@ const extOs = require('yyl-os');
 const chalk = require('chalk');
 const inquirer = require('inquirer');
 const extFs = require('yyl-fs');
-const util = require('yyl-util');
 
 const pkg = require('../package.json');
 const LANG = require('../lang/index');
@@ -110,13 +109,18 @@ const task = {
     }
     return Promise.resolve(r);
   },
-  async init(targetPath, { env }) {
+  async init(targetPath, { env, inset }) {
     preRun({ env });
-    print.log.info(LANG.INIT.START);
+    if (!inset) {
+      print.log.info(LANG.INIT.START);
+      print.log.info(LANG.INIT.LIST_START);
+    }
 
-    print.log.info(LANG.INIT.LIST_START);
     const seeds = await listSeed();
-    print.log.success(LANG.INIT.LIST_FINISHED);
+
+    if (!inset) {
+      print.log.success(LANG.INIT.LIST_FINISHED);
+    }
 
     const config = (await localConfig.get()) || {};
     const installedSeeds = config.seeds || [];
@@ -304,7 +308,9 @@ const task = {
       print.log.info(LANG.INIT.HOOKS_AFTER_COPY_FINISHED);
     }
 
-    print.log.success(LANG.INIT.FINISHED);
+    if (!inset) {
+      print.log.success(LANG.INIT.FINISHED);
+    }
   },
   async install(names, { env, silent }) {
     if (!silent) {
@@ -505,6 +511,9 @@ const task = {
       console.log(logArr.join('\r\n'));
     }
     return r;
+  },
+  fn: {
+
   }
 };
 module.exports = task;
