@@ -1,4 +1,6 @@
 # 更新日志
+## 0.4.2 (2020-01-16)
+* feat: node 方法 `initMe.init(targetPath, { env, inset})` 添加 inset 字段
 ## 0.4.1 (2020-01-15)
 * fix: 修复 init 不显示本地包的问题
 
