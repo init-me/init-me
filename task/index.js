@@ -77,17 +77,24 @@ const task = {
   async clear ({ env }) {
     preRun({ env });
     print.log.info(LANG.CLEAR.START);
-    const removes = await extFs.removeFiles(CONFIG_PATH, true);
+    let removes = [];
+    try {
+      removes = await extFs.removeFiles(CONFIG_PATH, true);
+    } catch (er) {
+      throw er;
+    }
     removes.forEach((iPath) => {
       print.log.del(iPath);
     });
     print.log.success(LANG.CLEAR.FINISHED);
   },
-  async version({ env }) {
-    await print.borderBox([
-      `init-me ${chalk.yellow.bold(pkg.version)}`
-    ], env);
-    return pkg.version;
+  version({ env }) {
+    if (!env.silent) {
+      print.borderBox([
+        `init-me ${chalk.yellow.bold(pkg.version)}`
+      ]);
+    }
+    return Promise.resolve(pkg.version);
   },
   path({ env }) {
     const r = {
@@ -116,13 +123,18 @@ const task = {
       print.log.info(LANG.INIT.LIST_START);
     }
 
-    const seeds = await listSeed();
+    let seeds = [];
+    try {
+      seeds = await listSeed();
+    } catch (er) {
+      throw er;
+    }
 
     if (!inset) {
       print.log.success(LANG.INIT.LIST_FINISHED);
     }
 
-    const config = (await localConfig.get()) || {};
+    const config = await localConfig.get() || {};
     const installedSeeds = config.seeds || [];
 
     let seedItems = installedSeeds.map((seed) => {
@@ -201,11 +213,13 @@ const task = {
     // 判断选中的 seed 是否已经安装
     if (!seedInfo.installed) {
       printInfo({ env, str: `${LANG.INIT.SEED_INSTALLING}: ${chalk.green(iSeed)}`});
-      await task.install([`${seedInfo.name} --silent`], { env, silent: true });
+      await task.install([`${seedInfo.name} --silent`], { env, silent: true }).catch((er) => {
+        throw er;
+      });
       printSuccess({ env, str: `${LANG.INIT.SEED_INSTALLED}: ${chalk.green(iSeed)}`});
     }
 
-    const seedConfig = (await localConfig.get());
+    const seedConfig = await localConfig.get();
     const iSeedConfig = seedConfig.seedMap[iSeed];
 
     printInfo({ env, str: `${LANG.INIT.SEED_LOADING}: ${chalk.green(iSeed)}`});
@@ -226,10 +240,17 @@ const task = {
       printSuccess({ env, str: LANG.INIT.SKIP_CHECK_VERSION});
     } else {
       printInfo({ env, str: LANG.INIT.CHECK_VERSION_START});
-      const latestVersion = await getPkgLatestVersion(iSeedConfig.name);
+      let latestVersion;
+      try {
+        latestVersion = await getPkgLatestVersion(iSeedConfig.name);
+      } catch (er) {
+        throw er;
+      }
       if (iSeedConfig.version !== latestVersion) {
         printInfo({ env, str: LANG.INIT.UPDATE_PKG_VERSION_START});
-        await task.install([`${iSeedConfig.name}@${latestVersion} --silent`], { env, silent: true });
+        await task.install([`${iSeedConfig.name}@${latestVersion} --silent`], { env, silent: true }).catch((er) => {
+          throw er;
+        });
         printSuccess({ env, str: `${LANG.INIT.UPDATE_PKG_VERSION_FINISHED}: ${chalk.green(latestVersion)}`});
       } else {
         printSuccess({ env, str: `${LANG.INIT.PKG_IS_LATEST}: ${chalk.green(latestVersion)}`});
@@ -244,12 +265,10 @@ const task = {
     // 启动前 hooks
     if (iSeedPack.hooks && iSeedPack.hooks.beforeStart) {
       print.log.info(LANG.INIT.HOOKS_BEFORE_START_RUN);
-      try {
-        await iSeedPack.hooks.beforeStart({ env, targetPath });
-      } catch (er) {
+      await iSeedPack.hooks.beforeStart({ env, targetPath }).catch((er) => {
         print.log.error(er);
         return;
-      }
+      });
       print.log.info(LANG.INIT.HOOKS_BEFORE_START_FINISHED);
     }
 
@@ -268,7 +287,13 @@ const task = {
       return;
     }
 
-    const files = await extFs.readFilePaths(seedSourcePath);
+    let files = [];
+    try {
+      files = await extFs.readFilePaths(seedSourcePath);
+    } catch (er) {
+      throw er;
+    }
+
     files.forEach((iPath) => {
       fileMap[iPath] = [path.resolve(targetPath, path.relative(seedSourcePath, iPath))];
     });
@@ -276,7 +301,12 @@ const task = {
     // 复制前 hooks
     if (iSeedPack.hooks && iSeedPack.hooks.beforeCopy) {
       print.log.info(LANG.INIT.HOOKS_BEFORE_COPY_RUN);
-      const rMap = await iSeedPack.hooks.beforeCopy({ fileMap, env, targetPath });
+      let rMap;
+      try {
+        rMap = await iSeedPack.hooks.beforeCopy({ fileMap, env, targetPath });
+      } catch (er) {
+        throw er;
+      }
       if (typeof rMap === 'object') {
         // eslint-disable-next-line require-atomic-updates
         fileMap = rMap;
@@ -291,7 +321,12 @@ const task = {
     });
 
     // 复制
-    const iLog = await extFs.copyFiles(fileMap);
+    let iLog;
+    try {
+      iLog = await extFs.copyFiles(fileMap);
+    } catch (er) {
+      throw er;
+    }
 
     iLog.add.forEach((iPath) => {
       print.log.add(iPath);
@@ -304,7 +339,9 @@ const task = {
     // 复制后 hooks
     if (iSeedPack.hooks && iSeedPack.hooks.afterCopy) {
       print.log.info(LANG.INIT.HOOKS_AFTER_COPY_RUN);
-      await iSeedPack.hooks.afterCopy({ fileMap, env, targetPath });
+      await iSeedPack.hooks.afterCopy({ fileMap, env, targetPath }).catch((er) => {
+        throw er;
+      });
       print.log.info(LANG.INIT.HOOKS_AFTER_COPY_FINISHED);
     }
 
@@ -318,9 +355,22 @@ const task = {
       print.log.info(LANG.INSTALL.START);
     }
 
-    await extOs.runCMD(`npm install ${names.join(' ')} --save ${env.silent ? '--silent' : ''}`, CONFIG_PLUGIN_PATH);
+    if (!fs.existsSync(CONFIG_PLUGIN_PATH)) {
+      await extFs.mkdirSync(CONFIG_PLUGIN_PATH).catch((er) => {
+        throw er;
+      });
+      await task.reset({ env, silent }).catch((er) => {
+        throw er;
+      });
+    }
 
-    await localConfig.updateSeedInfo();
+    await extOs.runCMD(`npm install ${names.join(' ')} --save ${env.silent ? '--silent' : ''}`, CONFIG_PLUGIN_PATH).catch((er) => {
+      throw er;
+    });
+
+    await localConfig.updateSeedInfo().catch((er) => {
+      throw er;
+    });
 
     if (!silent) {
       print.log.success(LANG.INSTALL.FINISHED);
@@ -330,16 +380,26 @@ const task = {
     preRun({ env });
     print.log.info(LANG.UNINSTALL.START);
 
-    await extOs.runCMD(`npm uninstall ${names.join(' ')} --save ${env.silent ? '--silent' : ''}`, CONFIG_PLUGIN_PATH);
+    await extOs.runCMD(`npm uninstall ${names.join(' ')} --save ${env.silent ? '--silent' : ''}`, CONFIG_PLUGIN_PATH).catch((er) => {
+      throw er;
+    });
 
-    await localConfig.updateSeedInfo();
+    await localConfig.updateSeedInfo().catch((er) => {
+      throw er;
+    });
 
     print.log.success(LANG.UNINSTALL.FINISHED);
   },
 
   async list({ env }) {
     preRun({ env });
-    const iPkg = await localConfig.get();
+    let iPkg;
+    try {
+      iPkg = await localConfig.get();
+    } catch (er) {
+      throw er;
+    }
+
     let keys = [];
     if (typeof iPkg.seedMap === 'object') {
       keys = Object.keys(iPkg.seedMap);
@@ -390,7 +450,9 @@ const task = {
   async reset({ env }) {
     preRun({ env });
     print.log.info(LANG.RESET.START);
-    await localConfig.reset();
+    await localConfig.reset().catch((er) => {
+      throw er;
+    });
     print.log.success(LANG.RESET.FINISHED);
   },
 
@@ -431,6 +493,8 @@ const task = {
       main: entryPath,
       version: pkg.version,
       dev: true
+    }).catch((er) => {
+      throw er;
     });
 
     print.log.success(`${LANG.LINK.FINISHED}: ${pkg.name}`);
@@ -450,7 +514,9 @@ const task = {
       return;
     }
 
-    await localConfig.removeLocalSeed(pkg.name);
+    await localConfig.removeLocalSeed(pkg.name).catch((er) => {
+      throw er;
+    });
 
     print.log.success(`${LANG.UNLINK.FINISHED}: ${pkg.name}`);
   },
@@ -463,15 +529,20 @@ const task = {
     const { searchNpm, searchYyNpm } = require('../lib/search');
     print.log.info(LANG.RECOMMEND.SEARCH_NPM_START);
 
-    const r1 = await searchNpm(keyword);
+    let r1;
+    try {
+      r1 = await searchNpm(keyword);
+    } catch (er) {
+      throw er;
+    }
 
     let r2 = [];
     if (IN_YY) {
-      r2 = await searchYyNpm(keyword);
-      // await util.forEach(r2, async (item) => {
-      //   // eslint-disable-next-line require-atomic-updates
-      //   item.version = await getPkgLatestVersion(item.name);
-      // });
+      try {
+        r2 = await searchYyNpm(keyword);
+      } catch (er) {
+        throw er;
+      }
     }
     print.log.success(LANG.RECOMMEND.SEARCH_NPM_FINISHED);
 

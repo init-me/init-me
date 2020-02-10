@@ -13,10 +13,11 @@ const CONFIG_PATH = path.join(USERPROFILE, '.init-me');
 jest.setTimeout(30000);
 
 test('task.init(targetPath, { env })', async () => {
-  await extFs.removeFiles(CONFIG_PATH, true);
+  if (fs.existsSync(CONFIG_PATH)) {
+    await extFs.removeFiles(CONFIG_PATH, true);
+  }
 
   await task.reset({ env });
-  await task.install([SEED_NAME], { env });
 
   if (fs.existsSync(FRAG_PATH)) {
     await extFs.removeFiles(FRAG_PATH, true);

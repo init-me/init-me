@@ -1,4 +1,8 @@
 # 更新日志
+## 0.4.3 (2020-02-10)
+* feat: 完善 错误 显示逻辑
+* feat: 完善 单元测试
+
 ## 0.4.2 (2020-01-16)
 * feat: node 方法 `initMe.init(targetPath, { env, inset})` 添加 inset 字段
 ## 0.4.1 (2020-01-15)

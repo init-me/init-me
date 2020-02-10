@@ -70,7 +70,7 @@ cmder
   .action(() => {
     fn.printHeader({ env });
     task.clear({ env }).catch((er) => {
-      throw er;
+      print.log.error(env.logLevel === 2 ? er : er.message);
     });
     isBlock = true;
   });
@@ -82,7 +82,7 @@ cmder
   .action((pkgName) => {
     fn.printHeader({ env });
     task.install(pkgName.split(/\s+/), { env }).catch((er) => {
-      throw er;
+      print.log.error(env.logLevel === 2 ? er : er.message);
     });
     isBlock = true;
   });
@@ -93,7 +93,7 @@ cmder
   .action((pkgName) => {
     fn.printHeader({ env });
     task.uninstall(pkgName.split(/\s+/), { env }).catch((er) => {
-      throw er;
+      print.log.error(env.logLevel === 2 ? er : er.message);
     });
     isBlock = true;
   });
@@ -104,7 +104,7 @@ cmder
   .action(() => {
     fn.printHeader({ env });
     task.reset({ env }).catch((er) => {
-      throw er;
+      print.log.error(env.logLevel === 2 ? er : er.message);
     });
     isBlock = true;
   });
@@ -115,7 +115,7 @@ cmder
   .description(LANG.DESCRIPTION.RECOMMEND)
   .action(() => {
     task.recommend({ env }).catch((er) => {
-      throw er;
+      print.log.error(env.logLevel === 2 ? er : er.message);
     });
     isBlock = true;
   });
@@ -125,7 +125,7 @@ cmder
   .description(LANG.DESCRIPTION.LIST)
   .action(() => {
     task.list({ env }).catch((er) => {
-      throw er;
+      print.log.error(env.logLevel === 2 ? er : er.message);
     });
     isBlock = true;
   });
@@ -138,7 +138,7 @@ cmder
       targetPath: process.cwd(),
       env
     }).catch((er) => {
-      throw er;
+      print.log.error(env.logLevel === 2 ? er : er.message);
     });
     isBlock = true;
   });
@@ -151,7 +151,7 @@ cmder
       targetPath: process.cwd(),
       env
     }).catch((er) => {
-      throw er;
+      print.log.error(env.logLevel === 2 ? er : er.message);
     });
     isBlock = true;
   });
@@ -184,7 +184,7 @@ if (
   if (isPath(targetPath)) {
     fn.printHeader({ env });
     task.init(targetPath, { env }).catch((er) => {
-      throw er;
+      print.log.error(env.logLevel === 2 ? er : er.message);
     });
   } else {
     cmder.outputHelp();
