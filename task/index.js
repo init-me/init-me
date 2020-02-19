@@ -10,7 +10,7 @@ const pkg = require('../package.json');
 const LANG = require('../lang/index');
 const LocalConfig = require('../lib/localConfig');
 
-const { getPkgLatestVersion, listSeed, inYY } = require('../lib/search');
+const { getPkgLatestVersion, listSeed, inYY, REG_IS_YY_PKG, REGISTRY_OPTION } = require('../lib/search');
 const { seedFull2Short } = require('../lib/formatter');
 
 const USERPROFILE = process.env[process.platform == 'win32' ? 'USERPROFILE' : 'HOME'];
@@ -213,7 +213,9 @@ const task = {
     // 判断选中的 seed 是否已经安装
     if (!seedInfo.installed) {
       printInfo({ env, str: `${LANG.INIT.SEED_INSTALLING}: ${chalk.green(iSeed)}`});
-      await task.install([`${seedInfo.name} --silent`], { env, silent: true }).catch((er) => {
+      const isYYPkg = seedInfo.name.match(REG_IS_YY_PKG);
+
+      await task.install([`${seedInfo.name} --silent ${isYYPkg ? REGISTRY_OPTION : ''}`], { env, silent: true }).catch((er) => {
         throw er;
       });
       printSuccess({ env, str: `${LANG.INIT.SEED_INSTALLED}: ${chalk.green(iSeed)}`});
