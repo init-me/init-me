@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-catch */
 const print = require('yyl-print');
 const path = require('path');
 const fs = require('fs');
