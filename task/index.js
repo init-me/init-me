@@ -130,7 +130,6 @@ const task = {
     } catch (er) {
       throw er;
     }
-    console.log('seeds', seeds);
 
     if (!inset) {
       print.log.success(LANG.INIT.LIST_FINISHED);
