@@ -1,4 +1,6 @@
 # 更新日志
+## 0.4.8 (2020-09-22)
+* fix: 修复 lib 内 `seedFull2Short` `seedShort2Full` 错误问题
 ## 0.4.7 (2020-03-29)
 * fix: 去除多余的log
 
