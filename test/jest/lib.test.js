@@ -1,6 +1,4 @@
-const { parseExpectedArgs } = require("commander");
-const { TestScheduler } = require("jest");
-const {seedFull2Short, seedShort2Full } = require('../../lib/formatter')
+const { seedFull2Short, seedShort2Full } = require('../../lib/formatter')
 test('lib test', () => {
   expect(seedFull2Short('@yy/init-me-seed-yyl-other')).toEqual('@yy/yyl-other')
   expect(seedFull2Short('init-me-seed-yyl-other')).toEqual('yyl-other')
