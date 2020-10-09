@@ -18,7 +18,8 @@ module.exports = {
     FORCE: '跳过检查 seed 包版本逻辑直接运行初始化'
   },
   SEARCH: {
-    NPM_SEARCH_ERROR: 'npm search init-me-seed- 执行失败，请检查本地 npm 配置'
+    NPM_SEARCH_ERROR:
+      'npm search init-me-seed- 执行失败，请检查本地 npm 配置, 可参考 http://fet.yy.com/init-me/wiki/custom-qa/'
   },
   INIT: {
     BLANK_SEED: 'init 运行失败，seed 列表为空，请先安装 seed 再运行',
@@ -102,4 +103,4 @@ module.exports = {
     START: '清理 init-me 配置文件 开始',
     FINISHED: '清理 init-me 配置文件 完成'
   }
-};
+}

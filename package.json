@@ -1,10 +1,12 @@
 {
   "name": "init-me",
-  "version": "0.4.8",
+  "version": "0.4.10",
   "description": "init program",
   "main": "task/index.js",
   "types": "task/index.d.ts",
   "scripts": {
+    "eslint": "eslint ./",
+    "prettier": "prettier --write ./**/*.js",
     "test": "jest ./test/jest",
     "test:init": "jest ./test/jest/init.test.js",
     "test:install": "jest ./test/jest/install.test.js",
@@ -16,7 +18,26 @@
     "test:path": "jest ./test/jest/path.test.js",
     "test:recommend": "jest ./test/jest/recommend.test.js",
     "test:case-relative-path": "jest ./test/jest/case-relative-path.test.js",
-    "test:lib": "jest ./test/jest/lib.test.js"
+    "test:lib": "jest ./test/jest/lib.test.js",
+    "prepublishOnly": "npm run prettier"
+  },
+  "eslintConfig": {
+    "extends": [
+      "yyl-node"
+    ],
+    "env": {
+      "jest": true
+    }
+  },
+  "eslintIgnore": [
+    "node_modules"
+  ],
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "jsxSingleQuote": true,
+    "endOfLine": "lf",
+    "trailingComma": "none"
   },
   "repository": {
     "type": "git",
@@ -49,7 +70,10 @@
     "yyl-util": "2.3.6"
   },
   "devDependencies": {
+    "eslint": "^7.10.0",
+    "eslint-config-yyl-node": "^0.1.2",
     "eslint-plugin-node": "^11.0.0",
-    "jest": "24.9.0"
+    "jest": "26.5.2",
+    "prettier": "^2.1.2"
   }
 }

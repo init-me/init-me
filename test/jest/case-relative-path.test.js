@@ -2,10 +2,10 @@ const path = require('path')
 const extFs = require('yyl-fs')
 const fs = require('fs')
 
-const task = require('../../task/index.js');
-const FRAG_PATH = path.join(__dirname, '../../../__frag ', 'case-relative-path');
+const task = require('../../task/index.js')
+const FRAG_PATH = path.join(__dirname, '../../../__frag ', 'case-relative-path')
 
-const CASE_PATH = path.join(__dirname, '../test-case/relative-path');
+const CASE_PATH = path.join(__dirname, '../test-case/relative-path')
 
 test('case relative-path', async () => {
   await task.link({
@@ -19,15 +19,12 @@ test('case relative-path', async () => {
   await extFs.mkdirSync(FRAG_PATH)
   await extFs.removeFiles(FRAG_PATH)
 
-  await task.init(
-    FRAG_PATH,
-    {
-      env: {
-        seed: seedName,
-        silent: true
-      }
+  await task.init(FRAG_PATH, {
+    env: {
+      seed: seedName,
+      silent: true
     }
-  )
+  })
 
   expect(fs.existsSync(path.join(FRAG_PATH, 'hello-world.html'))).toEqual(true)
 
