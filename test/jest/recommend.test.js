@@ -1,4 +1,5 @@
 const task = require('../../task/index')
+const { inYY } = require('../../lib/search')
 const env = { silent: true }
 
 const SEED_NAME = 'init-me-seed-helloworld'
@@ -19,7 +20,9 @@ test('task.recommend({ env })', async () => {
       return !/^@yy/.test(name)
     })
 
-  expect(yyPkgNames.length).not.toEqual(0)
+  if (await inYY()) {
+    expect(yyPkgNames.length).not.toEqual(0)
+  }
   expect(normalPkgNames.length).not.toEqual(0)
 
   await task.install([SEED_NAME], { env })

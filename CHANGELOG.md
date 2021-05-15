@@ -1,4 +1,17 @@
 # 更新日志
+## 1.0.0 (2021-05-15)
+* feat: task 新增 logger 入参
+* feat: seed 文件的 beforeCopy, afterCopy 新增logger 入参
+* feat: 更换 `yyl-request` -> `axios`
+* fix: 修复 判断是否处于 yy 环境 超时不返回问题
+* feat: 更新 `commander@7.2.0`
+* feat: 更新 `chalk@4.1.1`
+* feat: 更新 `inquirer@8.0.0`
+* feat: 更新 `yyl-os@0.14.0`
+* feat: 更新 `yyl-print@0.9.1`
+* feat: 更新 `yyl-util@2.3.9`
+* feat: 更新 `eslint@7.26.0`
+* feat: 更新 `jest@26.6.3`
 ## 0.4.10 (2020-10-09)
 * feat: 完善 prettier、 eslint
 

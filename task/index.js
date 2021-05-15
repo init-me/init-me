@@ -1,5 +1,4 @@
 /* eslint-disable no-useless-catch */
-const print = require('yyl-print')
 const path = require('path')
 const fs = require('fs')
 const extOs = require('yyl-os')
@@ -27,63 +26,29 @@ const CONFIG_PLUGIN_PATH = path.join(CONFIG_PATH, 'plugins')
 
 const localConfig = new LocalConfig()
 
-print.log.init({
-  keyword: {
-    开始: chalk.cyan,
-    完成: chalk.green,
-    为空: chalk.red,
-    不存在: chalk.red
-  },
-  type: {
-    ver: {
-      name: 'INIT',
-      color: 'white',
-      bgColor: 'bgBlue'
-    },
-    cmd: {
-      name: 'CMD>',
-      color: 'white',
-      bgColor: 'bgBlack'
-    },
-    create: {
-      name: 'ADD>',
-      color: chalk.bgGreen.white
-    },
-    del: {
-      name: 'DEL>',
-      color: chalk.bgWhite.black
+// + fn
+const preRun = ({ env, logger }) => {
+  if (logger) {
+    if (env.silent) {
+      logger.setLogLevel(0)
+    } else if (env.logLevel) {
+      logger.setLogLevel(env.logLevel)
+    } else {
+      logger.setLogLevel(1)
     }
   }
-})
-
-// + fn
-const preRun = ({ env }) => {
-  if (env.silent) {
-    print.log.setLogLevel(0)
-  } else if (env.logLevel) {
-    print.log.setLogLevel(env.logLevel)
-  } else {
-    print.log.setLogLevel(1)
-  }
 }
-
-function printInfo({ env, str }) {
-  if (!env.silent) {
-    console.log(`${chalk.yellow('!')} ${str}`)
-  }
-}
-
-function printSuccess({ env, str }) {
-  if (!env.silent) {
-    console.log(`${chalk.green('Y')} ${str}`)
-  }
+const blankLogger = {
+  log() {},
+  setLogLevel() {},
+  setProgress() {}
 }
 // - fn
 
 const task = {
-  async clear({ env }) {
-    preRun({ env })
-    print.log.info(LANG.CLEAR.START)
+  async clear({ env, logger = blankLogger }) {
+    preRun({ env, logger })
+    logger.log('info', [LANG.CLEAR.START])
     let removes = []
     try {
       removes = await extFs.removeFiles(CONFIG_PATH, true)
@@ -91,13 +56,14 @@ const task = {
       throw er
     }
     removes.forEach((iPath) => {
-      print.log.del(iPath)
+      logger.log('del', [iPath])
     })
-    print.log.success(LANG.CLEAR.FINISHED)
+    logger.log('success', [LANG.CLEAR.FINISHED])
   },
-  version({ env }) {
+  version({ env, logger = blankLogger }) {
     if (!env.silent) {
-      print.borderBox([`init-me ${chalk.yellow.bold(pkg.version)}`])
+      logger &&
+        logger.log('info', [`init-me ${chalk.yellow.bold(pkg.version)}`])
     }
     return Promise.resolve(pkg.version)
   },
@@ -123,11 +89,12 @@ const task = {
     }
     return Promise.resolve(r)
   },
-  async init(targetPath, { env, inset }) {
-    preRun({ env })
+  async init(targetPath, { env, inset, logger = blankLogger }) {
+    preRun({ env, logger })
     if (!inset) {
-      print.log.info(LANG.INIT.START)
-      print.log.info(LANG.INIT.LIST_START)
+      logger.log('info', [LANG.INIT.START])
+      logger.setProgress('start', ['info', [LANG.INIT.LIST_START]])
+      logger.log('info', [LANG.INIT.LIST_START])
     }
 
     let seeds = []
@@ -138,7 +105,9 @@ const task = {
     }
 
     if (!inset) {
-      print.log.success(LANG.INIT.LIST_FINISHED)
+      logger.log('success', [LANG.INIT.LIST_FINISHED])
+      logger &&
+        logger.setProgress('finished', ['success', [LANG.INIT.LIST_FINISHED]])
     }
 
     const config = (await localConfig.get()) || {}
@@ -201,7 +170,7 @@ const task = {
       if (matchItem) {
         iSeed = matchItem.name
       } else {
-        print.log.error(LANG.INIT.SEED_NOT_EXISTS)
+        logger.log('error', [LANG.INIT.SEED_NOT_EXISTS])
         return
       }
     } else {
@@ -222,99 +191,124 @@ const task = {
 
     // 判断选中的 seed 是否已经安装
     if (!seedInfo.installed) {
-      printInfo({
-        env,
-        str: `${LANG.INIT.SEED_INSTALLING}: ${chalk.green(iSeed)}`
-      })
+      logger.setProgress('start', [])
+      logger &&
+        logger.log('info', [
+          `${LANG.INIT.SEED_INSTALLING}: ${chalk.green(iSeed)}`
+        ])
       const isYYPkg = seedInfo.name.match(REG_IS_YY_PKG)
 
       await task
-        .install(
-          [`${seedInfo.name} --silent ${isYYPkg ? REGISTRY_OPTION : ''}`],
-          { env, silent: true }
-        )
+        .install([`${seedInfo.name} ${isYYPkg ? REGISTRY_OPTION : ''}`], {
+          env,
+          silent: true,
+          logger
+        })
         .catch((er) => {
+          logger.setProgress('finished', ['error', [er]])
           throw er
         })
-      printSuccess({
-        env,
-        str: `${LANG.INIT.SEED_INSTALLED}: ${chalk.green(iSeed)}`
-      })
+      logger &&
+        logger.log('success', [
+          `${LANG.INIT.SEED_INSTALLED}: ${chalk.green(iSeed)}`
+        ])
+      logger.setProgress('finished', [])
     }
 
     const seedConfig = await localConfig.get()
     const iSeedConfig = seedConfig.seedMap[iSeed]
 
-    printInfo({ env, str: `${LANG.INIT.SEED_LOADING}: ${chalk.green(iSeed)}` })
+    logger.setProgress('start', [])
+    logger &&
+      logger.log('info', [`${LANG.INIT.SEED_LOADING}: ${chalk.green(iSeed)}`])
 
     if (!iSeedConfig) {
-      print.log.error(`${LANG.INIT.SEED_MAP_NOT_EXISTS}: ${iSeed}`)
+      logger &&
+        logger.log('error', [`${LANG.INIT.SEED_MAP_NOT_EXISTS}: ${iSeed}`])
+      logger.setProgress('finished', [])
       return
     }
 
-    print.log.info(
-      `${LANG.INIT.SEED_MAIN_PRINT}: ${chalk.yellow(iSeedConfig.main)}`
-    )
+    logger &&
+      logger.log('info', [
+        `${LANG.INIT.SEED_MAIN_PRINT}: ${chalk.yellow(iSeedConfig.main)}`
+      ])
+
     if (!fs.existsSync(iSeedConfig.main)) {
-      print.log.error(`${LANG.INIT.SEED_MAP_MAIN_NOT_EXISTS}: ${iSeed}`)
+      logger &&
+        logger.log('error', [`${LANG.INIT.SEED_MAP_MAIN_NOT_EXISTS}: ${iSeed}`])
+      logger.setProgress('finished', [])
       return
     }
 
     // + 非 dev seed 自动安装 最新版
     if (iSeedConfig.dev || env.force) {
-      printSuccess({ env, str: LANG.INIT.SKIP_CHECK_VERSION })
+      logger.log('success', [LANG.INIT.SKIP_CHECK_VERSION])
+      logger.setProgress('finished', [])
+    } else if (seedInfo.name.match(REG_IS_YY_PKG) && !(await inYY())) {
+      // 是 yy pkg 但又不在 yy 域下 跳过
+      logger &&
+        logger.log('success', [LANG.INIT.SKIP_CHECK_VERSION_CAUSE_NOT_IN_YY])
+      logger.setProgress('finished', [])
     } else {
-      printInfo({ env, str: LANG.INIT.CHECK_VERSION_START })
+      logger.log('info', [LANG.INIT.CHECK_VERSION_START])
       let latestVersion
       try {
         latestVersion = await getPkgLatestVersion(iSeedConfig.name)
       } catch (er) {
+        logger.log('error', [er])
+        logger.setProgress('finished', [])
         throw er
       }
       if (iSeedConfig.version !== latestVersion) {
-        printInfo({ env, str: LANG.INIT.UPDATE_PKG_VERSION_START })
+        logger.log('info', [LANG.INIT.UPDATE_PKG_VERSION_START])
         await task
-          .install([`${iSeedConfig.name}@${latestVersion} --silent`], {
+          .install([`${iSeedConfig.name}@${latestVersion}`], {
             env,
             silent: true
           })
           .catch((er) => {
+            logger.log('error', [er])
+            logger.setProgress('finished')
             throw er
           })
-        printSuccess({
-          env,
-          str: `${LANG.INIT.UPDATE_PKG_VERSION_FINISHED}: ${chalk.green(
-            latestVersion
-          )}`
-        })
+        logger &&
+          logger.log('success', [
+            `${LANG.INIT.UPDATE_PKG_VERSION_FINISHED}: ${chalk.green(
+              latestVersion
+            )}`
+          ])
+        logger.setProgress('finished', [])
       } else {
-        printSuccess({
-          env,
-          str: `${LANG.INIT.PKG_IS_LATEST}: ${chalk.green(latestVersion)}`
-        })
+        logger &&
+          logger.log('success', [
+            `${LANG.INIT.PKG_IS_LATEST}: ${chalk.green(latestVersion)}`
+          ])
+        logger.setProgress('finished', [])
       }
     }
     // - 非 dev seed 自动安装 最新版
 
     const iSeedPack = require(iSeedConfig.main)
 
-    printSuccess({ env, str: LANG.INIT.SEED_LOAD_FINISHED })
+    logger.log('success', [LANG.INIT.SEED_LOAD_FINISHED])
 
     // 启动前 hooks
     if (iSeedPack.hooks && iSeedPack.hooks.beforeStart) {
-      print.log.info(LANG.INIT.HOOKS_BEFORE_START_RUN)
+      logger.log('info', [LANG.INIT.HOOKS_BEFORE_START_RUN])
       await iSeedPack.hooks.beforeStart({ env, targetPath }).catch((er) => {
-        print.log.error(er)
+        logger.log('error', [er])
         return
       })
-      print.log.info(LANG.INIT.HOOKS_BEFORE_START_FINISHED)
+      logger.log('info', [LANG.INIT.HOOKS_BEFORE_START_FINISHED])
     }
 
     // 准备需要复制的文件
     if (!iSeedPack.path) {
-      print.log.error(
-        `${LANG.INIT.SEED_COPY_PATH_UNDEFINED}: ${chalk.green(iSeed)}`
-      )
+      logger &&
+        logger.log('error', [
+          `${LANG.INIT.SEED_COPY_PATH_UNDEFINED}: ${chalk.green(iSeed)}`
+        ])
       return
     }
     let fileMap = {}
@@ -323,16 +317,18 @@ const task = {
       iSeedPack.path
     )
 
-    print.log.info(
-      `${LANG.INIT.SEED_COPY_PATH_PRINT}: ${chalk.yellow(seedSourcePath)}`
-    )
+    logger &&
+      logger.log('info', [
+        `${LANG.INIT.SEED_COPY_PATH_PRINT}: ${chalk.yellow(seedSourcePath)}`
+      ])
 
     if (!fs.existsSync(seedSourcePath)) {
-      print.log.error(
-        `${LANG.INIT.SEED_COPY_PATH_NOT_EXISTS}: ${chalk.yellow(
-          seedSourcePath
-        )}`
-      )
+      logger &&
+        logger.log('error', [
+          `${LANG.INIT.SEED_COPY_PATH_NOT_EXISTS}: ${chalk.yellow(
+            seedSourcePath
+          )}`
+        ])
       return
     }
 
@@ -351,10 +347,15 @@ const task = {
 
     // 复制前 hooks
     if (iSeedPack.hooks && iSeedPack.hooks.beforeCopy) {
-      print.log.info(LANG.INIT.HOOKS_BEFORE_COPY_RUN)
+      logger.log('info', [LANG.INIT.HOOKS_BEFORE_COPY_RUN])
       let rMap
       try {
-        rMap = await iSeedPack.hooks.beforeCopy({ fileMap, env, targetPath })
+        rMap = await iSeedPack.hooks.beforeCopy({
+          fileMap,
+          env,
+          targetPath,
+          logger
+        })
       } catch (er) {
         throw er
       }
@@ -363,14 +364,15 @@ const task = {
         fileMap = rMap
       }
 
-      print.log.info(LANG.INIT.HOOKS_BEFORE_COPY_FINISHED)
+      logger.log('info', [LANG.INIT.HOOKS_BEFORE_COPY_FINISHED])
     }
 
-    print.log.info(`${LANG.INIT.SEED_COPY_MAP_PRINT}:`)
+    logger.log('info', [`${LANG.INIT.SEED_COPY_MAP_PRINT}:`])
     Object.keys(fileMap).forEach((iPath) => {
-      print.log.info(
-        `${chalk.yellow(iPath)} => ${chalk.green(fileMap[iPath].join(','))}`
-      )
+      logger &&
+        logger.log('info', [
+          `${chalk.yellow(iPath)} => ${chalk.green(fileMap[iPath].join(','))}`
+        ])
     })
 
     // 复制
@@ -382,47 +384,50 @@ const task = {
     }
 
     iLog.add.forEach((iPath) => {
-      print.log.add(iPath)
+      logger.log('add', [iPath])
     })
 
     iLog.update.forEach((iPath) => {
-      print.log.update(iPath)
+      logger.log('update', [iPath])
     })
 
     // 复制后 hooks
     if (iSeedPack.hooks && iSeedPack.hooks.afterCopy) {
-      print.log.info(LANG.INIT.HOOKS_AFTER_COPY_RUN)
+      logger.log('info', [LANG.INIT.HOOKS_AFTER_COPY_RUN])
       await iSeedPack.hooks
-        .afterCopy({ fileMap, env, targetPath })
+        .afterCopy({ fileMap, env, targetPath, logger })
         .catch((er) => {
           throw er
         })
-      print.log.info(LANG.INIT.HOOKS_AFTER_COPY_FINISHED)
+      logger.log('info', [LANG.INIT.HOOKS_AFTER_COPY_FINISHED])
     }
 
     if (!inset) {
-      print.log.success(LANG.INIT.FINISHED)
+      logger.log('success', [LANG.INIT.FINISHED])
     }
   },
-  async install(names, { env, silent }) {
+  async install(names, { env, silent, logger = blankLogger }) {
     if (!silent) {
-      preRun({ env })
-      print.log.info(LANG.INSTALL.START)
+      preRun({ env, logger })
+      logger.log('info', [LANG.INSTALL.START])
     }
 
     if (!fs.existsSync(CONFIG_PLUGIN_PATH)) {
       await extFs.mkdirSync(CONFIG_PLUGIN_PATH).catch((er) => {
         throw er
       })
-      await task.reset({ env, silent }).catch((er) => {
+      await task.reset({ env, silent, logger }).catch((er) => {
         throw er
       })
     }
 
     await extOs
-      .runCMD(
+      .runSpawn(
         `npm install ${names.join(' ')} --save ${env.silent ? '--silent' : ''}`,
-        CONFIG_PLUGIN_PATH
+        CONFIG_PLUGIN_PATH,
+        (msg) => {
+          logger.log('info', [msg.toString()])
+        }
       )
       .catch((er) => {
         throw er
@@ -433,19 +438,22 @@ const task = {
     })
 
     if (!silent) {
-      print.log.success(LANG.INSTALL.FINISHED)
+      logger.log('success', [LANG.INSTALL.FINISHED])
     }
   },
-  async uninstall(names, { env }) {
-    preRun({ env })
-    print.log.info(LANG.UNINSTALL.START)
+  async uninstall(names, { env, logger = blankLogger }) {
+    preRun({ env, logger })
+    logger.log('info', [LANG.UNINSTALL.START])
 
     await extOs
-      .runCMD(
+      .runSpawn(
         `npm uninstall ${names.join(' ')} --save ${
           env.silent ? '--silent' : ''
         }`,
-        CONFIG_PLUGIN_PATH
+        CONFIG_PLUGIN_PATH,
+        (msg) => {
+          logger.log('info', [msg.toString()])
+        }
       )
       .catch((er) => {
         throw er
@@ -455,11 +463,11 @@ const task = {
       throw er
     })
 
-    print.log.success(LANG.UNINSTALL.FINISHED)
+    logger.log('success', [LANG.UNINSTALL.FINISHED])
   },
 
-  async list({ env }) {
-    preRun({ env })
+  async list({ env, logger = blankLogger }) {
+    preRun({ env, logger })
     let iPkg
     try {
       iPkg = await localConfig.get()
@@ -520,44 +528,49 @@ const task = {
       return {}
     }
   },
-  async reset({ env }) {
-    preRun({ env })
-    print.log.info(LANG.RESET.START)
+  async reset({ env, logger = blankLogger }) {
+    preRun({ env, logger })
+    logger.setProgress('start', [])
+    logger.log('info', [LANG.RESET.START])
     await localConfig.reset().catch((er) => {
+      logger.log('error', [er])
+      logger.setProgress('finished', [])
       throw er
     })
-    print.log.success(LANG.RESET.FINISHED)
+    logger.log('success', [LANG.RESET.FINISHED])
+    logger.setProgress('finished', [])
   },
 
-  async link({ targetPath, env }) {
-    preRun({ env })
-    print.log.info(LANG.LINK.START)
+  async link({ targetPath, env, logger = blankLogger }) {
+    preRun({ env, logger })
+    logger.log('info', [LANG.LINK.START])
     const pkgPath = path.join(targetPath, 'package.json')
     if (!fs.existsSync(pkgPath)) {
-      print.log.error(LANG.LINK.PKG_NOT_FOUND)
+      logger.log('error', [LANG.LINK.PKG_NOT_FOUND])
       return
     }
     const pkg = require(pkgPath)
 
     if (!pkg.name) {
-      print.log.error(LANG.LINK.PKG_NAME_IS_BLANK)
+      logger.log('error', [LANG.LINK.PKG_NAME_IS_BLANK])
       return
     }
 
     if (!pkg.version) {
-      print.log.error(LANG.LINK.PKG_VERSION_IS_BLANK)
+      logger.log('error', [LANG.LINK.PKG_VERSION_IS_BLANK])
       return
     }
 
     if (!pkg.main) {
-      print.log.error(LANG.LINK.PKG_ENTRY_IS_BLANK)
+      logger.log('error', [LANG.LINK.PKG_ENTRY_IS_BLANK])
       return
     }
 
     const entryPath = path.resolve(targetPath, pkg.main)
 
     if (!fs.existsSync(entryPath)) {
-      print.log.error(`${LANG.LINK.PKG_ENTRY_NOT_EXISTS}: ${entryPath}`)
+      logger &&
+        logger.log('error', [`${LANG.LINK.PKG_ENTRY_NOT_EXISTS}: ${entryPath}`])
       return
     }
 
@@ -571,20 +584,20 @@ const task = {
         throw er
       })
 
-    print.log.success(`${LANG.LINK.FINISHED}: ${pkg.name}`)
+    logger.log('success', [`${LANG.LINK.FINISHED}: ${pkg.name}`])
   },
-  async unlink({ targetPath, env }) {
-    preRun({ env })
-    print.log.info(LANG.UNLINK.START)
+  async unlink({ targetPath, env, logger = blankLogger }) {
+    preRun({ env, logger })
+    logger.log('info', [LANG.UNLINK.START])
     const pkgPath = path.join(targetPath, 'package.json')
     if (!fs.existsSync(pkgPath)) {
-      print.log.error(LANG.UNLINK.PKG_NOT_FOUND)
+      logger.log('error', [LANG.UNLINK.PKG_NOT_FOUND])
       return
     }
     const pkg = require(pkgPath)
 
     if (!pkg.name) {
-      print.log.error(LANG.UNLINK.PKG_NAME_IS_BLANK)
+      logger.log('error', [LANG.UNLINK.PKG_NAME_IS_BLANK])
       return
     }
 
@@ -592,16 +605,16 @@ const task = {
       throw er
     })
 
-    print.log.success(`${LANG.UNLINK.FINISHED}: ${pkg.name}`)
+    logger.log('success', [`${LANG.UNLINK.FINISHED}: ${pkg.name}`])
   },
-  async recommend({ env }) {
+  async recommend({ env, logger = blankLogger }) {
     if (env.silent) {
-      print.log.setLogLevel(0)
+      logger.setLogLevel(0)
     }
     const keyword = 'init-me-seed-'
     const IN_YY = await inYY()
     const { searchNpm, searchYyNpm } = require('../lib/search')
-    print.log.info(LANG.RECOMMEND.SEARCH_NPM_START)
+    logger.log('info', [LANG.RECOMMEND.SEARCH_NPM_START])
 
     let r1
     try {
@@ -618,7 +631,7 @@ const task = {
         throw er
       }
     }
-    print.log.success(LANG.RECOMMEND.SEARCH_NPM_FINISHED)
+    logger.log('success', [LANG.RECOMMEND.SEARCH_NPM_FINISHED])
 
     const { seedMap } = await localConfig.get()
 
