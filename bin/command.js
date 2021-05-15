@@ -1,5 +1,5 @@
 const cmder = require('commander')
-const print = require('yyl-print')
+const YylCmdLogger = require('yyl-cmd-logger')
 const chalk = require('chalk')
 const LANG = require('../lang/index')
 const task = require('../task/index')
@@ -7,6 +7,18 @@ const pkg = require('../package.json')
 const path = require('path')
 const util = require('yyl-util')
 const fs = require('fs')
+
+const logger = new YylCmdLogger({
+  lite: true,
+  type: {
+    ver: {
+      name: 'INIT',
+      shortName: 'i',
+      color: chalk.bgBlue.white,
+      shortColor: chalk.blue
+    }
+  }
+})
 
 const isPath = function (ctx) {
   if (typeof ctx === 'string') {
@@ -29,7 +41,7 @@ const fn = {
     if (env.silent) {
       return
     }
-    print.log.ver(`init-me ${chalk.yellow.bold(pkg.version)}`)
+    logger.log('ver', [`init-me ${chalk.yellow.bold(pkg.version)}`])
 
     let keyIndex = -1
     process.argv.forEach((str, index) => {
@@ -39,18 +51,18 @@ const fn = {
     })
     if (keyIndex != -1) {
       const cmds = process.argv.slice(keyIndex + 1)
-      print.log.cmd(`init ${cmds.join(' ')}`)
+      logger.log('cmd', [`init ${cmds.join(' ')}`])
     }
   }
 }
 
 cmder.option('-p, --path', LANG.DESCRIPTION.PATH, () => {
-  task.path({ env })
+  task.path({ env, logger })
   isBlock = true
 })
 
 cmder.option('-v, --version', LANG.DESCRIPTION.VERSION, () => {
-  task.version({ env })
+  task.version({ env, logger })
   isBlock = true
 })
 
@@ -65,8 +77,8 @@ cmder
   .description(LANG.DESCRIPTION.CLEAR)
   .action(() => {
     fn.printHeader({ env })
-    task.clear({ env }).catch((er) => {
-      print.log.error(env.logLevel === 2 ? er : er.message)
+    task.clear({ env, logger }).catch((er) => {
+      logger.log('error', [er])
     })
     isBlock = true
   })
@@ -77,8 +89,8 @@ cmder
   .description(LANG.DESCRIPTION.INSTALL)
   .action((pkgName) => {
     fn.printHeader({ env })
-    task.install(pkgName.split(/\s+/), { env }).catch((er) => {
-      print.log.error(env.logLevel === 2 ? er : er.message)
+    task.install(pkgName.split(/\s+/), { env, logger }).catch((er) => {
+      logger.log('error', [er])
     })
     isBlock = true
   })
@@ -88,8 +100,8 @@ cmder
   .description(LANG.DESCRIPTION.UNINSTALL)
   .action((pkgName) => {
     fn.printHeader({ env })
-    task.uninstall(pkgName.split(/\s+/), { env }).catch((er) => {
-      print.log.error(env.logLevel === 2 ? er : er.message)
+    task.uninstall(pkgName.split(/\s+/), { env, logger }).catch((er) => {
+      logger.log('error', [er])
     })
     isBlock = true
   })
@@ -99,8 +111,8 @@ cmder
   .description(LANG.DESCRIPTION.RESET)
   .action(() => {
     fn.printHeader({ env })
-    task.reset({ env }).catch((er) => {
-      print.log.error(env.logLevel === 2 ? er : er.message)
+    task.reset({ env, logger }).catch((er) => {
+      logger.log('error', [er])
     })
     isBlock = true
   })
@@ -110,8 +122,8 @@ cmder
   .alias('r')
   .description(LANG.DESCRIPTION.RECOMMEND)
   .action(() => {
-    task.recommend({ env }).catch((er) => {
-      print.log.error(env.logLevel === 2 ? er : er.message)
+    task.recommend({ env, logger }).catch((er) => {
+      logger.log('error', [er])
     })
     isBlock = true
   })
@@ -120,8 +132,8 @@ cmder
   .command('list')
   .description(LANG.DESCRIPTION.LIST)
   .action(() => {
-    task.list({ env }).catch((er) => {
-      print.log.error(env.logLevel === 2 ? er : er.message)
+    task.list({ env, logger }).catch((er) => {
+      logger.log('error', [er])
     })
     isBlock = true
   })
@@ -133,10 +145,11 @@ cmder
     task
       .link({
         targetPath: process.cwd(),
-        env
+        env,
+        logger
       })
       .catch((er) => {
-        print.log.error(env.logLevel === 2 ? er : er.message)
+        logger.log('error', [er])
       })
     isBlock = true
   })
@@ -148,10 +161,11 @@ cmder
     task
       .unlink({
         targetPath: process.cwd(),
-        env
+        env,
+        logger
       })
       .catch((er) => {
-        print.log.error(env.logLevel === 2 ? er : er.message)
+        logger.log('error', [er])
       })
     isBlock = true
   })
@@ -177,8 +191,8 @@ if (
   }
   if (isPath(targetPath)) {
     fn.printHeader({ env })
-    task.init(targetPath, { env }).catch((er) => {
-      print.log.error(env.logLevel === 2 ? er : er.message)
+    task.init(targetPath, { env, logger }).catch((er) => {
+      logger.log('error', [er])
     })
   } else {
     cmder.outputHelp()

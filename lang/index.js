@@ -29,6 +29,7 @@ module.exports = {
     QUEATION_SELECT_TYPE: '请选择初始化的 seed 包',
 
     SKIP_CHECK_VERSION: '跳过检查 seed 包版本',
+    SKIP_CHECK_VERSION_CAUSE_NOT_IN_YY: '不在 YY 域下, 跳过检查 seed 包版本',
     CHECK_VERSION_START: '正在检查 seed 包版本是否最新',
     CHECK_VERSION_FINISHED: '检查 seed 包版本完成',
     PKG_IS_LATEST: '已是最新版',
