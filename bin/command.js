@@ -1,5 +1,5 @@
 const cmder = require('commander')
-const YylCmdLogger = require('yyl-cmd-logger')
+const { YylCmdLogger } = require('yyl-cmd-logger')
 const chalk = require('chalk')
 const LANG = require('../lang/index')
 const task = require('../task/index')

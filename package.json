@@ -1,6 +1,6 @@
 {
   "name": "init-me",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "init program",
   "main": "task/index.js",
   "types": "task/index.d.ts",
@@ -64,7 +64,7 @@
     "chalk": "^4.1.1",
     "commander": "^3.0.1",
     "inquirer": "^8.0.0",
-    "yyl-cmd-logger": "^0.1.6",
+    "yyl-cmd-logger": "^0.2.1",
     "yyl-fs": "0.3.3",
     "yyl-os": "^0.14.0",
     "yyl-util": "^2.3.9"

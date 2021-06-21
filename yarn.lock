@@ -701,6 +701,11 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-15.3.0.tgz#d6fed7d6bc6854306da3dea1af9f874b00783e26"
   integrity sha512-8/bnjSZD86ZfpBsDlCIkNXIvm+h6wi9g7IqL+kmFkQ+Wvu3JrasgLElfiPgoo8V8vVfnEi0QVS12gbl94h9YsQ==
 
+"@types/node@^15.3.0":
+  version "15.12.4"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-15.12.4.tgz#e1cf817d70a1e118e81922c4ff6683ce9d422e26"
+  integrity sha512-zrNj1+yqYF4WskCMOHwN+w9iuD12+dGm0rQ35HLl9/Ouuq52cEtd0CH9qMgrdNmi5ejC1/V7vKEXYubB+65DkA==
+
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/@types/normalize-package-data/-/normalize-package-data-2.4.0.tgz#e486d0d97396d79beedd0a6e33f4534ff6b4973e"
@@ -1096,7 +1101,7 @@ caseless@~0.12.0:
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha1-G2gcIf+EAzyCZUMJBolCDRhxUdw=
 
-chalk@^2.0.0, chalk@^2.4.2:
+chalk@^2.0.0:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.2.tgz#cd42541677a54333cf541a49108c1432b44c9424"
   integrity sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==
@@ -4386,11 +4391,12 @@ yargs@^15.4.1:
     y18n "^4.0.0"
     yargs-parser "^18.1.2"
 
-yyl-cmd-logger@^0.1.6:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/yyl-cmd-logger/-/yyl-cmd-logger-0.1.6.tgz#ae9e7409a7cb5e76391239a86fe9e7d60a524b65"
-  integrity sha512-W/UHVhFWpUeQljVf0H9n3yjE9qd2iIS0tqQmy9SEna78FiIhXeID6/1/tgwmpANut2Q5dT0LQv4maDsBnQPb+A==
+yyl-cmd-logger@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/yyl-cmd-logger/-/yyl-cmd-logger-0.2.1.tgz#96031bccf60c60157559cbc28541a8aa2c3e2ba9"
+  integrity sha512-nKmb55vUFnQgm6oolK2vxywUH23+TtGR9PlklW6R0lHAd5UyFYQ39RTVZK4H6Re+OdE3UACJYirvzTaYX+nA4g==
   dependencies:
+    "@types/node" "^15.3.0"
     chalk "^4.1.0"
 
 yyl-fs@0.3.3:
@@ -4404,13 +4410,6 @@ yyl-os@^0.14.0:
   integrity sha512-qxAi3wiFRKLsQ95j5Oun6H2uiIwKGAn5U8fjaq7kFmQT7pSaEEKhJnALUkFDf4TLlXYVJbmtIgxfYtqnEHwuCw==
   dependencies:
     yyl-util "^2.3.5"
-
-yyl-print@^0.9.1:
-  version "0.9.1"
-  resolved "https://registry.yarnpkg.com/yyl-print/-/yyl-print-0.9.1.tgz#05db00a432f8f15d90a3d387b6531006415a58ee"
-  integrity sha512-LY/D9xPxmcjdcMgAkR8ah0oq3vr/IBjnwzl7GNV46yenvMAjWOiJkp147ztOTpDmufCYSERs3dtzBYqxyH2/lA==
-  dependencies:
-    chalk "^2.4.2"
 
 yyl-util@^2.3.5, yyl-util@^2.3.9:
   version "2.3.9"
