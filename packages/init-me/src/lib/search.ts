@@ -1,13 +1,25 @@
 /* eslint-disable no-useless-catch */
-const extOs = require('yyl-os')
-const axios = require('axios')
-const LANG = require('../lang/index')
-const decolor = require('./decolor')
+import extOs from 'yyl-os'
+import axios from 'axios'
+import { Lang } from '../lang/index'
+import { decolor } from './decolor'
 
-const REG_IS_YY_PKG = /^@yy/
-const REGISTRY_OPTION = '--registry=https://npm-registry.yy.com'
+export const REG_IS_YY_PKG = /^@yy/
+export const REGISTRY_OPTION = '--registry=https://npm-registry.yy.com'
 
-async function getPkgLatestVersion(pkgName) {
+export async function inYY() {
+  try {
+    const rs = await axios.get('http://fet.yy.com', {
+      timeout: 2000
+    })
+    // const [, res] = await extRequest.get()
+    return rs.status === 200
+  } catch (er) {
+    return false
+  }
+}
+
+export async function getPkgLatestVersion(pkgName: string) {
   let r = ''
   try {
     const isYYSeed = pkgName.match(REG_IS_YY_PKG)
@@ -26,43 +38,44 @@ async function getPkgLatestVersion(pkgName) {
   return r.replace(/[\r\n]/g, '')
 }
 
-async function inYY() {
-  try {
-    const rs = await axios.get('http://fet.yy.com', {
-      timeout: 2000
-    })
-    // const [, res] = await extRequest.get()
-    return rs.status === 200
-  } catch (er) {
-    return false
-  }
+export type NpmSearchLogKeys = 'date' | 'version'
+export interface NpmSearchLogItem {
+  date: string
+  version: string
+  name: string
+  install?: string
+  [key: string]: string | undefined
 }
 
-async function searchNpm(key) {
+export async function searchNpm(key: string) {
   const cmd = `npm search ${key}`
   let npmLogStr = ''
 
   try {
     npmLogStr = await extOs.runCMD(cmd, __dirname, false)
   } catch (er) {
-    throw new Error(LANG.SEARCH.NPM_SEARCH_ERROR)
+    throw new Error(Lang.SEARCH.NPM_SEARCH_ERROR)
   }
-  function parseLog(ctx) {
-    let keys = []
-    const items = []
-    const r = []
+  function parseLog(ctx: string) {
+    let keys: NpmSearchLogKeys[] = []
+    const items: string[][] = []
+    const r: NpmSearchLogItem[] = []
 
     ctx.split(/[\r\n]+/).forEach((str, i) => {
       const strArr = decolor(str.trim()).split(/\s*\|\s*/)
       if (i === 0) {
-        keys = strArr.map((str) => str.toLowerCase())
+        keys = strArr.map((str) => str.toLowerCase()) as NpmSearchLogKeys[]
       } else {
         items.push(strArr)
       }
     })
     items.forEach((strArr) => {
       if (strArr.length === keys.length) {
-        const iItem = {}
+        const iItem: NpmSearchLogItem = {
+          date: '',
+          version: '',
+          name: ''
+        }
         strArr.forEach((str, i) => {
           iItem[keys[i]] = str
         })
@@ -83,15 +96,12 @@ async function searchNpm(key) {
   return parseLog(npmLogStr)
 }
 
-async function searchYyNpm(key) {
+export async function searchYyNpm(key: string) {
   try {
-    const rs = await axios.get(
-      `https://npm.yy.com/browse/keyword/${key}?type=json`,
-      {
-        timeout: 8000
-      }
-    )
-    let r = []
+    const rs = await axios.get(`https://npm.yy.com/browse/keyword/${key}?type=json`, {
+      timeout: 8000
+    })
+    let r: NpmSearchLogItem[] = []
     if (!rs || rs.status !== 200) {
       return r
     }
@@ -100,10 +110,6 @@ async function searchYyNpm(key) {
 
     r = data.packages || []
 
-    // await util.forEach(r, async (item) => {
-    //   item.version = await getPkgLatestVersion(item.name)
-    // })
-
     // 匹配
     return r
   } catch (er) {
@@ -111,35 +117,23 @@ async function searchYyNpm(key) {
   }
 }
 
-async function listSeed() {
+export async function listSeed() {
   const IN_YY = await inYY()
-  let npmSeeds = []
+  let npmSeeds: NpmSearchLogItem[] = []
   try {
     npmSeeds = await searchNpm('init-me-seed-')
   } catch (er) {
     throw er
   }
-  let yySeeds = []
+  let yySeeds: NpmSearchLogItem[] = []
   if (IN_YY) {
     try {
       yySeeds = await searchYyNpm('init-me-seed-')
-    } catch (er) {
-      er
-    }
+    } catch (er) {}
   }
   let r = npmSeeds.concat(yySeeds).map((item) => item.name)
 
   r = Array.from(new Set(r))
 
   return r
-}
-
-module.exports = {
-  inYY,
-  searchNpm,
-  searchYyNpm,
-  getPkgLatestVersion,
-  listSeed,
-  REG_IS_YY_PKG,
-  REGISTRY_OPTION
 }

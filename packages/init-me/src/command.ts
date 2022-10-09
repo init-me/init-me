@@ -1,12 +1,16 @@
-const cmder = require('commander')
-const { YylCmdLogger } = require('yyl-cmd-logger')
-const chalk = require('chalk')
-const LANG = require('../lang/index')
-const task = require('../task/index')
+import cmder from 'commander'
+import { YylCmdLogger } from 'yyl-cmd-logger'
+import chalk from 'chalk'
+import { Lang } from './lang/index'
+import { task } from './task/index'
+import path from 'path'
+import util from 'yyl-util'
+import fs from 'fs'
 const pkg = require('../package.json')
-const path = require('path')
-const util = require('yyl-util')
-const fs = require('fs')
+
+interface AnyObj {
+  [key: string]: any
+}
 
 const logger = new YylCmdLogger({
   lite: true,
@@ -20,7 +24,7 @@ const logger = new YylCmdLogger({
   }
 })
 
-const isPath = function (ctx) {
+const isPath = function (ctx?: string) {
   if (typeof ctx === 'string') {
     const rPath = path.resolve(process.cwd(), ctx)
     if (fs.existsSync(rPath)) {
@@ -37,7 +41,7 @@ let isBlock = false
 const env = util.envParse(process.argv)
 
 const fn = {
-  printHeader({ env }) {
+  printHeader(op: { env: AnyObj }) {
     if (env.silent) {
       return
     }
@@ -49,32 +53,32 @@ const fn = {
         keyIndex = index
       }
     })
-    if (keyIndex != -1) {
+    if (keyIndex !== -1) {
       const cmds = process.argv.slice(keyIndex + 1)
       logger.log('cmd', [`init ${cmds.join(' ')}`])
     }
   }
 }
 
-cmder.option('-p, --path', LANG.DESCRIPTION.PATH, () => {
-  task.path({ env, logger })
+cmder.option('-p, --path', Lang.DESCRIPTION.PATH, () => {
+  task.path({ env })
   isBlock = true
 })
 
-cmder.option('-v, --version', LANG.DESCRIPTION.VERSION, () => {
+cmder.option('-v, --version', Lang.DESCRIPTION.VERSION, () => {
   task.version({ env, logger })
   isBlock = true
 })
 
 cmder
-  .option('-q, --silent', LANG.DESCRIPTION.SILENT)
-  .option('--seed <name>', LANG.DESCRIPTION.SEED)
-  .option('--force', LANG.DESCRIPTION.FORCE)
-  .option('--logLevel <level>', LANG.DESCRIPTION.LOG_LEVEL)
+  .option('-q, --silent', Lang.DESCRIPTION.SILENT)
+  .option('--seed <name>', Lang.DESCRIPTION.SEED)
+  .option('--force', Lang.DESCRIPTION.FORCE)
+  .option('--logLevel <level>', Lang.DESCRIPTION.LOG_LEVEL)
 
 cmder
   .command('clear')
-  .description(LANG.DESCRIPTION.CLEAR)
+  .description(Lang.DESCRIPTION.CLEAR)
   .action(() => {
     fn.printHeader({ env })
     task.clear({ env, logger }).catch((er) => {
@@ -86,7 +90,7 @@ cmder
 cmder
   .command('install <pkgName>')
   .alias('i')
-  .description(LANG.DESCRIPTION.INSTALL)
+  .description(Lang.DESCRIPTION.INSTALL)
   .action((pkgName) => {
     fn.printHeader({ env })
     task.install(pkgName.split(/\s+/), { env, logger }).catch((er) => {
@@ -97,7 +101,7 @@ cmder
 
 cmder
   .command('uninstall <pkgName>')
-  .description(LANG.DESCRIPTION.UNINSTALL)
+  .description(Lang.DESCRIPTION.UNINSTALL)
   .action((pkgName) => {
     fn.printHeader({ env })
     task.uninstall(pkgName.split(/\s+/), { env, logger }).catch((er) => {
@@ -108,7 +112,7 @@ cmder
 
 cmder
   .command('reset')
-  .description(LANG.DESCRIPTION.RESET)
+  .description(Lang.DESCRIPTION.RESET)
   .action(() => {
     fn.printHeader({ env })
     task.reset({ env, logger }).catch((er) => {
@@ -120,7 +124,7 @@ cmder
 cmder
   .command('recommend')
   .alias('r')
-  .description(LANG.DESCRIPTION.RECOMMEND)
+  .description(Lang.DESCRIPTION.RECOMMEND)
   .action(() => {
     task.recommend({ env, logger }).catch((er) => {
       logger.log('error', [er])
@@ -130,7 +134,7 @@ cmder
 
 cmder
   .command('list')
-  .description(LANG.DESCRIPTION.LIST)
+  .description(Lang.DESCRIPTION.LIST)
   .action(() => {
     task.list({ env, logger }).catch((er) => {
       logger.log('error', [er])
@@ -140,7 +144,7 @@ cmder
 
 cmder
   .command('link')
-  .description(LANG.DESCRIPTION.LINK)
+  .description(Lang.DESCRIPTION.LINK)
   .action(() => {
     task
       .link({
@@ -156,7 +160,7 @@ cmder
 
 cmder
   .command('unlink')
-  .description(LANG.DESCRIPTION.UNLINK)
+  .description(Lang.DESCRIPTION.UNLINK)
   .action(() => {
     task
       .unlink({
@@ -171,20 +175,13 @@ cmder
   })
 
 cmder.on('--help', () => {
-  console.log(
-    ['', 'Examples:', '  $ init --logLevel 2', '  $ init path/to/dir', ''].join(
-      '\r\n'
-    )
-  )
+  console.log(['', 'Examples:', '  $ init --logLevel 2', '  $ init path/to/dir', ''].join('\r\n'))
   isBlock = true
 })
 
 cmder.parse(process.argv)
 
-if (
-  !isBlock &&
-  (!cmder.args.length || typeof cmder.args[cmder.args.length - 1] !== 'object')
-) {
+if (!isBlock && (!cmder.args.length || typeof cmder.args[cmder.args.length - 1] !== 'object')) {
   let targetPath = process.cwd()
   if (cmder.args[0]) {
     targetPath = cmder.args[0]

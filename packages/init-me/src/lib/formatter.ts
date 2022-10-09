@@ -8,28 +8,20 @@ const REG = {
   SEED_FULL_PREFIX: new RegExp(`^${SEED_FULL_PREFIX}`)
 }
 
-function seedFull2Short(name) {
+export function seedFull2Short(name: string) {
   return name
     .replace(REG.YY_SEED_FULL_PREFIX, YY_SEED_SHORT_PREFIX)
     .replace(REG.SEED_FULL_PREFIX, '')
 }
 
-function seedShort2Full(name) {
+export function seedShort2Full(name: string) {
   if (name.match(REG.YY_SEED_FULL_PREFIX) || name.match(REG.SEED_FULL_PREFIX)) {
     return name
   } else {
     if (name.match(REG.YY_SEED_SHORT_PREFIX)) {
-      return `${YY_SEED_FULL_PREFIX}${name.replace(
-        REG.YY_SEED_SHORT_PREFIX,
-        ''
-      )}`
+      return `${YY_SEED_FULL_PREFIX}${name.replace(REG.YY_SEED_SHORT_PREFIX, '')}`
     } else {
       return `${SEED_FULL_PREFIX}${name}`
     }
   }
-}
-
-module.exports = {
-  seedFull2Short,
-  seedShort2Full
 }

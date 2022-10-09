@@ -1,4 +1,4 @@
-module.exports = {
+export const Lang = {
   DESCRIPTION: {
     PATH: '显示 并打开 init-me 工具所在路径',
     INSTALL: '安装 init-me seed 包',

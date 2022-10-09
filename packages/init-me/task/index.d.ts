@@ -3,11 +3,11 @@ export interface InitMe {
   /** 打印版本信息 */
   version({ env: Env, logger: YylCmdLogger }): Promise<string>
   /** 获取工具所在目录 */
-  path({ env: Env }): Promise<{app: string, config: string}>
+  path({ env: Env }): Promise<{ app: string; config: string }>
   /**
    * 项目初始化
    * @param targetPath 初始化路径
-   * @param op.env 参数; op.inset 是否内嵌 
+   * @param op.env 参数; op.inset 是否内嵌
    */
   init(targetPath: string, { env: Env, inset: boolean, logger: YylCmdLogger }): Promise<any>
   /**
@@ -55,13 +55,13 @@ export interface SeedConfig {
 }
 export interface SeedMap {
   [seedName: string]: {
-    version: string,
+    version: string
     main: string
   }
 }
 export interface Env {
-  silent?: boolean;
-  logLevel?: number;
+  silent?: boolean
+  logLevel?: number
 }
 declare const initMe: InitMe
-export= initMe
+export = initMe

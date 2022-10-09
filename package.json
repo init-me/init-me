@@ -1,6 +1,11 @@
 {
   "name": "init-me-root",
   "private": true,
+  "eslintIgnore": [
+    "node_modules",
+    "output",
+    "test"
+  ],
   "workspaces": [
     "packages/*"
   ],

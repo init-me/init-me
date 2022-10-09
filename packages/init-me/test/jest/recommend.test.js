@@ -29,7 +29,5 @@ test('task.recommend({ env })', async () => {
 
   const nItems = await task.recommend({ env })
   expect(pkgNames.length === nItems.length).toEqual(true)
-  expect(
-    pkgNames.length > nItems.filter((item) => !item.installed).length
-  ).toEqual(true)
+  expect(pkgNames.length > nItems.filter((item) => !item.installed).length).toEqual(true)
 })

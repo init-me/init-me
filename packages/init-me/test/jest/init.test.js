@@ -7,8 +7,7 @@ const SEED_NAME = 'init-me-seed-helloworld'
 const FRAG_PATH = path.join(__dirname, '../../../__frag')
 const env = { silent: true }
 
-const USERPROFILE =
-  process.env[process.platform == 'win32' ? 'USERPROFILE' : 'HOME']
+const USERPROFILE = process.env[process.platform == 'win32' ? 'USERPROFILE' : 'HOME']
 const CONFIG_PATH = path.join(USERPROFILE, '.init-me')
 
 jest.setTimeout(30000)
