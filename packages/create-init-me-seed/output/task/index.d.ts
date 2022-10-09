@@ -2,6 +2,7 @@ import { YylCmdLogger, LogLevel } from 'yyl-cmd-logger';
 export interface Env {
     silent?: boolean;
     logLevel?: LogLevel;
+    name?: string;
 }
 export interface TaskOption {
     env: Env;

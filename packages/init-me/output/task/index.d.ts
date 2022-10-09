@@ -7,55 +7,35 @@ export interface Env {
     seed?: string;
     force?: boolean;
 }
+interface TaskOption {
+    env: Env;
+    logger?: YylCmdLogger;
+}
 export declare const task: {
-    clear(op: {
-        env: Env;
-        logger: YylCmdLogger;
-    }): Promise<void>;
-    version(op: {
-        env: Env;
-        logger: YylCmdLogger;
-    }): Promise<string>;
-    path(op: {
-        env: Env;
-    }): Promise<{
+    clear(op: TaskOption): Promise<void>;
+    version(op: TaskOption): Promise<string>;
+    path(op: Omit<TaskOption, 'logger'>): Promise<{
         app: string;
         config: string;
     }>;
-    init(targetPath: string, op: {
-        env: Env;
+    init(targetPath: string, op: TaskOption & {
         inset?: boolean;
-        logger: YylCmdLogger;
     }): Promise<void>;
-    install(names: string[], op: {
-        env: Env;
+    install(names: string[], op: TaskOption & {
         silent?: boolean;
-        logger: YylCmdLogger;
     }): Promise<void>;
-    uninstall(names: string[], op: {
-        env: Env;
-        logger: YylCmdLogger;
-    }): Promise<void>;
-    list(op: {
-        env: Env;
-        logger: YylCmdLogger;
-    }): Promise<{
+    uninstall(names: string[], op: TaskOption): Promise<void>;
+    list(op: TaskOption): Promise<{
         [pkgName: string]: InitMeSeedObj;
     }>;
-    reset(op: {
-        env: Env;
-        logger: YylCmdLogger;
+    reset(op: TaskOption & {
         silent?: boolean;
     }): Promise<void>;
-    link(op: {
+    link(op: TaskOption & {
         targetPath: string;
-        env: Env;
-        logger: YylCmdLogger;
     }): Promise<void>;
-    unlink(op: {
+    unlink(op: TaskOption & {
         targetPath: string;
-        env: Env;
-        logger: YylCmdLogger;
     }): Promise<void>;
     recommend(op: {
         env: Env;
@@ -63,3 +43,4 @@ export declare const task: {
     }): Promise<NpmSearchLogItem[]>;
     fn: {};
 };
+export {};

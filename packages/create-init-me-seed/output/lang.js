@@ -7,5 +7,8 @@ exports.Lang = {
         VERSION: '显示 create-init-me-seed 版本',
         LOG_LEVEL: 'log 类型: 0|1|2',
         SILENT: '静默输出'
+    },
+    QUESTION: {
+        NAME: '项目名称'
     }
 };

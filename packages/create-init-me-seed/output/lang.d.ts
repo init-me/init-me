@@ -5,4 +5,7 @@ export declare const Lang: {
         LOG_LEVEL: string;
         SILENT: string;
     };
+    QUESTION: {
+        NAME: string;
+    };
 };

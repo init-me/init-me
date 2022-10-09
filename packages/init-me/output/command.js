@@ -4,13 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const commander_1 = __importDefault(require("commander"));
-const yyl_cmd_logger_1 = require("yyl-cmd-logger");
 const chalk_1 = __importDefault(require("chalk"));
-const index_1 = require("./lang/index");
-const index_2 = require("./task/index");
 const path_1 = __importDefault(require("path"));
 const yyl_util_1 = __importDefault(require("yyl-util"));
 const fs_1 = __importDefault(require("fs"));
+const yyl_cmd_logger_1 = require("yyl-cmd-logger");
+const index_1 = require("./lang/index");
+const index_2 = require("./task/index");
 const pkg = require('../package.json');
 const logger = new yyl_cmd_logger_1.YylCmdLogger({
     lite: true,

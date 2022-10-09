@@ -9,6 +9,7 @@ import { Lang } from '../lang/index'
 import { InitMeSeedConfig, InitMeSeedObj, LocalConfig, pkg } from '../lib/localConfig'
 import { CONFIG_PATH } from '../lib/localStorage'
 import { YylCmdLogger, LogLevel } from 'yyl-cmd-logger'
+import { InitMeSeed } from 'init-me-seed-types'
 import {
   getPkgLatestVersion,
   listSeed,
@@ -304,7 +305,7 @@ export const task = {
     }
     // - 非 dev seed 自动安装 最新版
 
-    const iSeedPack = require(iSeedConfig.main)
+    const iSeedPack = require(iSeedConfig.main) as InitMeSeed.Config
 
     logger.log('success', [Lang.INIT.SEED_LOAD_FINISHED])
 
@@ -405,7 +406,7 @@ export const task = {
       logger.log('success', [Lang.INIT.FINISHED])
     }
   },
-  async install(names: string[], op: TaskOption & { silent: boolean }) {
+  async install(names: string[], op: TaskOption & { silent?: boolean }) {
     const { silent } = op
     const { env, logger } = formatTaskOption(op)
     if (!silent) {

@@ -16,6 +16,8 @@ exports.task = void 0;
 const path_1 = __importDefault(require("path"));
 const yyl_os_1 = __importDefault(require("yyl-os"));
 const chalk_1 = __importDefault(require("chalk"));
+const inquirer_1 = __importDefault(require("inquirer"));
+const lang_1 = require("../lang");
 const pkg = require('../../package.json');
 const blankLogger = {
     log() {
@@ -25,10 +27,11 @@ const blankLogger = {
     setProgress() { }
 };
 function formatOption(op) {
-    var _a;
+    var _a, _b;
     const env = {
         silent: !!(op === null || op === void 0 ? void 0 : op.env.silent),
-        logLevel: ((_a = op === null || op === void 0 ? void 0 : op.env) === null || _a === void 0 ? void 0 : _a.logLevel) === undefined ? 1 : op.env.logLevel
+        logLevel: ((_a = op === null || op === void 0 ? void 0 : op.env) === null || _a === void 0 ? void 0 : _a.logLevel) === undefined ? 1 : op.env.logLevel,
+        name: ((_b = op === null || op === void 0 ? void 0 : op.env) === null || _b === void 0 ? void 0 : _b.name) || ''
     };
     const logger = (op === null || op === void 0 ? void 0 : op.logger) || blankLogger;
     if (logger) {
@@ -51,7 +54,26 @@ exports.task = {
     init(targetPath, op) {
         return __awaiter(this, void 0, void 0, function* () {
             const { env, logger } = formatOption(op);
-            console.log(targetPath);
+            const questions = [];
+            const pjName = `${targetPath.split(/[\\/]/).pop()}`;
+            let rData = {
+                name: ''
+            };
+            if (!env.name) {
+                questions.push({
+                    type: 'input',
+                    name: 'name',
+                    default: pjName,
+                    message: lang_1.Lang.QUESTION.NAME
+                });
+            }
+            else {
+                rData.name = env.name;
+            }
+            if (questions.length) {
+                const anwser = yield inquirer_1.default.prompt(questions);
+                rData = Object.assign(Object.assign({}, rData), anwser);
+            }
             // TODO:
         });
     },

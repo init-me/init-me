@@ -1,0 +1,46 @@
+{
+  "name": "init-me-seed-types",
+  "version": "1.0.0",
+  "description": "types for init-me-seed",
+  "main": "output/index.js",
+  "types": "output/index.d.js",
+  "eslintConfig": {
+    "env": {
+      "jest": true
+    },
+    "extends": [
+      "yyl-react"
+    ]
+  },
+  "eslintIgnore": [
+    "node_modules",
+    "output",
+    "test"
+  ],
+  "prettier": {
+    "tabWidth": 2,
+    "semi": false,
+    "singleQuote": true,
+    "jsxSingleQuote": true,
+    "quoteProps": "consistent",
+    "trailingComma": "none",
+    "printWidth": 100
+  },
+  "scripts": {
+    "eslint": "eslint --ext=jsx,ts,tsx ./",
+    "prettier": "prettier --write ./**",
+    "prepublishOnly": "tsc",
+    "d": "tsc",
+    "test": "eslint ./test/index.test.ts --no-ignore"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "yyl-cmd-logger": "^0.2.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.7.0",
+    "eslint-config-yyl-react": "^2.0.0",
+    "prettier": "^2.5.1"
+  }
+}

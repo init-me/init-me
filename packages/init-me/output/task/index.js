@@ -28,8 +28,21 @@ const formatter_1 = require("../lib/formatter");
 const CONFIG_PLUGIN_PATH = path_1.default.join(localStorage_1.CONFIG_PATH, 'plugins');
 const localConfig = new localConfig_1.LocalConfig();
 // + fn
-const preRun = (op) => {
-    const { env, logger } = op;
+const blankLogger = {
+    log() {
+        return [];
+    },
+    setLogLevel() { },
+    setProgress() { }
+};
+const formatTaskOption = (op) => {
+    const env = {
+        silent: !!(op === null || op === void 0 ? void 0 : op.env.silent),
+        logLevel: (op === null || op === void 0 ? void 0 : op.env.logLevel) === undefined ? 1 : op.env.logLevel,
+        seed: (op === null || op === void 0 ? void 0 : op.env.seed) || '',
+        force: !!(op === null || op === void 0 ? void 0 : op.env.force)
+    };
+    const logger = (op === null || op === void 0 ? void 0 : op.logger) || blankLogger;
     if (logger) {
         if (env.silent) {
             logger.setLogLevel(0);
@@ -41,23 +54,16 @@ const preRun = (op) => {
             logger.setLogLevel(1);
         }
     }
-};
-const blankLogger = {
-    log() {
-        return [];
-    },
-    setLogLevel() { },
-    setProgress() { }
+    return {
+        env,
+        logger
+    };
 };
 // - fn
 exports.task = {
     clear(op) {
         return __awaiter(this, void 0, void 0, function* () {
-            let { env, logger } = op;
-            if (!logger) {
-                logger = blankLogger;
-            }
-            preRun({ env, logger });
+            const { env, logger } = formatTaskOption(op);
             logger.log('info', [index_1.Lang.CLEAR.START]);
             let removes = [];
             try {
@@ -73,10 +79,7 @@ exports.task = {
         });
     },
     version(op) {
-        let { env, logger } = op;
-        if (!logger) {
-            logger = blankLogger;
-        }
+        const { env, logger } = formatTaskOption(op);
         if (!env.silent) {
             logger && logger.log('info', [`init-me ${chalk_1.default.yellow.bold(localConfig_1.pkg.version)}`]);
         }
@@ -105,11 +108,8 @@ exports.task = {
     },
     init(targetPath, op) {
         return __awaiter(this, void 0, void 0, function* () {
-            let { env, inset, logger } = op;
-            if (!logger) {
-                logger = blankLogger;
-            }
-            preRun({ env, logger });
+            const { inset } = op;
+            const { env, logger } = formatTaskOption(op);
             if (!inset) {
                 logger.log('info', [index_1.Lang.INIT.START]);
                 logger.setProgress('start', 'info', [index_1.Lang.INIT.LIST_START]);
@@ -373,12 +373,9 @@ exports.task = {
     },
     install(names, op) {
         return __awaiter(this, void 0, void 0, function* () {
-            let { env, silent, logger } = op;
-            if (!logger) {
-                logger = blankLogger;
-            }
+            const { silent } = op;
+            const { env, logger } = formatTaskOption(op);
             if (!silent) {
-                preRun({ env, logger });
                 logger.log('info', [index_1.Lang.INSTALL.START]);
             }
             if (!fs_1.default.existsSync(CONFIG_PLUGIN_PATH)) {
@@ -406,11 +403,7 @@ exports.task = {
     },
     uninstall(names, op) {
         return __awaiter(this, void 0, void 0, function* () {
-            let { env, logger } = op;
-            if (!logger) {
-                logger = blankLogger;
-            }
-            preRun({ env, logger });
+            const { env, logger } = formatTaskOption(op);
             logger.log('info', [index_1.Lang.UNINSTALL.START]);
             yield yyl_os_1.default
                 .runSpawn(`npm uninstall ${names.join(' ')} --save ${env.silent ? '--silent' : ''}`, CONFIG_PLUGIN_PATH, (msg) => {
@@ -427,11 +420,7 @@ exports.task = {
     },
     list(op) {
         return __awaiter(this, void 0, void 0, function* () {
-            let { env, logger } = op;
-            if (!logger) {
-                logger = blankLogger;
-            }
-            preRun({ env, logger });
+            const { env, logger } = formatTaskOption(op);
             let iPkg;
             try {
                 iPkg = yield localConfig.get();
@@ -487,11 +476,7 @@ exports.task = {
     },
     reset(op) {
         return __awaiter(this, void 0, void 0, function* () {
-            let { env, logger } = op;
-            if (!logger) {
-                logger = blankLogger;
-            }
-            preRun({ env, logger });
+            const { env, logger } = formatTaskOption(op);
             logger.setProgress('start');
             logger.log('info', [index_1.Lang.RESET.START]);
             yield localConfig.reset().catch((er) => {
@@ -505,11 +490,8 @@ exports.task = {
     },
     link(op) {
         return __awaiter(this, void 0, void 0, function* () {
-            let { targetPath, env, logger } = op;
-            if (!logger) {
-                logger = blankLogger;
-            }
-            preRun({ env, logger });
+            const { targetPath } = op;
+            const { env, logger } = formatTaskOption(op);
             logger.log('info', [index_1.Lang.LINK.START]);
             const pkgPath = path_1.default.join(targetPath, 'package.json');
             if (!fs_1.default.existsSync(pkgPath)) {
@@ -549,11 +531,8 @@ exports.task = {
     },
     unlink(op) {
         return __awaiter(this, void 0, void 0, function* () {
-            let { targetPath, env, logger } = op;
-            if (!logger) {
-                logger = blankLogger;
-            }
-            preRun({ env, logger });
+            const { targetPath } = op;
+            const { env, logger } = formatTaskOption(op);
             logger.log('info', [index_1.Lang.UNLINK.START]);
             const pkgPath = path_1.default.join(targetPath, 'package.json');
             if (!fs_1.default.existsSync(pkgPath)) {
