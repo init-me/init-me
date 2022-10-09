@@ -2,8 +2,8 @@
   "name": "init-me",
   "version": "1.0.1",
   "description": "init program",
-  "main": "task/index.js",
-  "types": "task/index.d.ts",
+  "main": "output/task/index.js",
+  "types": "output/task/index.d.ts",
   "scripts": {
     "eslint": "eslint --ext=jsx,ts,tsx ./",
     "prettier": "prettier --write ./**",
@@ -64,7 +64,7 @@
     "node": ">= 8.0.0"
   },
   "bin": {
-    "init": "bin/index.js"
+    "init": "bin.js"
   },
   "dependencies": {
     "@types/inquirer": "8.2.4",

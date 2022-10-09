@@ -6,7 +6,7 @@ import chalk from 'chalk'
 import inquirer from 'inquirer'
 import extFs from 'yyl-fs'
 import { Lang } from '../lang/index'
-import { InitMeSeedConfig, InitMeSeedObj, LocalConfig } from '../lib/localConfig'
+import { InitMeSeedConfig, InitMeSeedObj, LocalConfig, pkg } from '../lib/localConfig'
 import { CONFIG_PATH } from '../lib/localStorage'
 import { YylCmdLogger, LogLevel } from 'yyl-cmd-logger'
 import {
@@ -27,8 +27,6 @@ export interface Env {
   seed?: string
   force?: boolean
 }
-
-const pkg = require('../package.json')
 
 const CONFIG_PLUGIN_PATH = path.join(CONFIG_PATH, 'plugins')
 

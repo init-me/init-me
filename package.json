@@ -11,5 +11,9 @@
   ],
   "devDependencies": {
     "lerna": "^5.4.0"
+  },
+  "scripts": {
+    "l": "cd packages/init-me && npm link --force",
+    "d": "lerna run d"
   }
 }

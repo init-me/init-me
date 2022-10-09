@@ -1,8 +1,8 @@
 import path from 'path'
 import fs from 'fs'
 import { LocalStorage } from './localStorage'
-const pkg = require('../package.json')
 
+export const pkg = require('../../package.json') as PkgConfig
 export interface InitMeSeedConfig {
   seeds: string[]
   seedMap: {

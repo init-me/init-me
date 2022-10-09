@@ -25,7 +25,6 @@ const localConfig_1 = require("../lib/localConfig");
 const localStorage_1 = require("../lib/localStorage");
 const search_1 = require("../lib/search");
 const formatter_1 = require("../lib/formatter");
-const pkg = require('../package.json');
 const CONFIG_PLUGIN_PATH = path_1.default.join(localStorage_1.CONFIG_PATH, 'plugins');
 const localConfig = new localConfig_1.LocalConfig();
 // + fn
@@ -79,9 +78,9 @@ exports.task = {
             logger = blankLogger;
         }
         if (!env.silent) {
-            logger && logger.log('info', [`init-me ${chalk_1.default.yellow.bold(pkg.version)}`]);
+            logger && logger.log('info', [`init-me ${chalk_1.default.yellow.bold(localConfig_1.pkg.version)}`]);
         }
-        return Promise.resolve(pkg.version);
+        return Promise.resolve(localConfig_1.pkg.version);
     },
     path(op) {
         const { env } = op;

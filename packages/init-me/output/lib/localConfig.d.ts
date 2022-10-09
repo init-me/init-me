@@ -1,3 +1,4 @@
+export declare const pkg: PkgConfig;
 export interface InitMeSeedConfig {
     seeds: string[];
     seedMap: {

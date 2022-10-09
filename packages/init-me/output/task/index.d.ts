@@ -15,7 +15,7 @@ export declare const task: {
     version(op: {
         env: Env;
         logger: YylCmdLogger;
-    }): Promise<any>;
+    }): Promise<string>;
     path(op: {
         env: Env;
     }): Promise<{
