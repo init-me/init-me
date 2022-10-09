@@ -14,10 +14,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.task = void 0;
 const path_1 = __importDefault(require("path"));
+const fs_1 = __importDefault(require("fs"));
 const yyl_os_1 = __importDefault(require("yyl-os"));
 const chalk_1 = __importDefault(require("chalk"));
 const inquirer_1 = __importDefault(require("inquirer"));
+const yyl_fs_1 = __importDefault(require("yyl-fs"));
 const lang_1 = require("../lang");
+const yyl_replacer_1 = __importDefault(require("yyl-replacer"));
 const pkg = require('../../package.json');
 const blankLogger = {
     log() {
@@ -56,7 +59,7 @@ exports.task = {
             const { env, logger } = formatOption(op);
             const questions = [];
             const pjName = `${targetPath.split(/[\\/]/).pop()}`;
-            let rData = {
+            let initData = {
                 name: ''
             };
             if (!env.name) {
@@ -68,13 +71,50 @@ exports.task = {
                 });
             }
             else {
-                rData.name = env.name;
+                initData.name = env.name;
             }
             if (questions.length) {
                 const anwser = yield inquirer_1.default.prompt(questions);
-                rData = Object.assign(Object.assign({}, rData), anwser);
+                initData = Object.assign(Object.assign({}, initData), anwser);
             }
-            // TODO:
+            // 拷贝文件
+            logger.log('info', [lang_1.Lang.INIT.COPY_START]);
+            const oriPath = path_1.default.join(__dirname, '../../seed');
+            const logs = yield yyl_fs_1.default.copyFiles(oriPath, [targetPath]);
+            logger.log('success', [
+                `${lang_1.Lang.INIT.COPY_FINISHED}(add:${logs.add.length}, update: ${logs.update.length})`
+            ]);
+            // rename 处理
+            logger.log('info', [lang_1.Lang.INIT.RENAME_START]);
+            const renameMap = {};
+            renameMap[path_1.default.join(targetPath, 'gitignore')] = path_1.default.join(targetPath, '.gitignore');
+            renameMap[path_1.default.join(targetPath, 'npmignore')] = path_1.default.join(targetPath, '.npmignore');
+            Object.keys(renameMap).forEach((ori) => {
+                const target = renameMap[ori];
+                fs_1.default.writeFileSync(target, fs_1.default.readFileSync(ori));
+                fs_1.default.unlinkSync(ori);
+                logger.log('info', [
+                    `${path_1.default.relative(targetPath, ori)} => ${path_1.default.relative(targetPath, target)}`
+                ]);
+            });
+            logger.log('success', [lang_1.Lang.INIT.RENAME_FINISHED]);
+            logger.log('info', [lang_1.Lang.INIT.REPLACE_START]);
+            // pkg 处理
+            const pkgPath = path_1.default.join(targetPath, 'package.json');
+            const targetPkg = require(pkgPath);
+            console.log('===', targetPkg);
+            targetPkg.name = initData.name;
+            targetPkg.dependencies['init-me-seed-types'] = pkg.dependencies['init-me-seed-types'];
+            fs_1.default.writeFileSync(pkgPath, JSON.stringify(targetPkg, null, 2));
+            logger.log('info', [lang_1.Lang.INIT.PKG_EDITED]);
+            // data 替换
+            const rPaths = [path_1.default.join(targetPath, 'README.md'), pkgPath];
+            rPaths.forEach((iPath) => {
+                const cnt = fs_1.default.readFileSync(iPath).toString();
+                fs_1.default.writeFileSync(iPath, yyl_replacer_1.default.dataRender(cnt, initData));
+                logger.log('update', [iPath]);
+            });
+            logger.log('success', [lang_1.Lang.INIT.REPLACE_FINISHED]);
         });
     },
     version(op) {

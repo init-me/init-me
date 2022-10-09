@@ -9,9 +9,12 @@ export const Lang = {
     NAME: '项目名称'
   },
   INIT: {
+    RENAME_START: '开始格式化文件名称',
+    RENAME_FINISHED: '格式化文件名称完成',
     COPY_START: '开始拷贝文件',
     COPY_FINISHED: '拷贝文件完成',
     REPLACE_START: '正在处理文件',
-    REPLACE_FINISHED: '处理文件完成'
+    REPLACE_FINISHED: '处理文件完成',
+    PKG_EDITED: 'package.json 处理完成'
   }
 }

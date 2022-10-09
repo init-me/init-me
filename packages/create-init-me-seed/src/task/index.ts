@@ -88,16 +88,32 @@ export const task = {
       `${Lang.INIT.COPY_FINISHED}(add:${logs.add.length}, update: ${logs.update.length})`
     ])
 
+    // rename 处理
+    logger.log('info', [Lang.INIT.RENAME_START])
+    const renameMap: { [key: string]: string } = {}
+    renameMap[path.join(targetPath, 'gitignore')] = path.join(targetPath, '.gitignore')
+    renameMap[path.join(targetPath, 'npmignore')] = path.join(targetPath, '.npmignore')
+    Object.keys(renameMap).forEach((ori) => {
+      const target = renameMap[ori]
+      fs.writeFileSync(target, fs.readFileSync(ori))
+      fs.unlinkSync(ori)
+      logger.log('info', [
+        `${path.relative(targetPath, ori)} => ${path.relative(targetPath, target)}`
+      ])
+    })
+    logger.log('success', [Lang.INIT.RENAME_FINISHED])
+
     logger.log('info', [Lang.INIT.REPLACE_START])
     // pkg 处理
     const pkgPath = path.join(targetPath, 'package.json')
     const targetPkg = require(pkgPath)
     targetPkg.name = initData.name
     targetPkg.dependencies['init-me-seed-types'] = pkg.dependencies['init-me-seed-types']
-    fs.writeFileSync(targetPath, JSON.stringify(targetPkg, null, 2))
+    fs.writeFileSync(pkgPath, JSON.stringify(targetPkg, null, 2))
+    logger.log('info', [Lang.INIT.PKG_EDITED])
 
     // data 替换
-    const rPaths = [path.join(targetPath, 'README.md')]
+    const rPaths = [path.join(targetPath, 'README.md'), pkgPath]
     rPaths.forEach((iPath) => {
       const cnt = fs.readFileSync(iPath).toString()
       fs.writeFileSync(iPath, rp.dataRender(cnt, initData))

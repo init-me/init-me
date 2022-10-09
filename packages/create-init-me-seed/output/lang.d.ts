@@ -8,4 +8,13 @@ export declare const Lang: {
     QUESTION: {
         NAME: string;
     };
+    INIT: {
+        RENAME_START: string;
+        RENAME_FINISHED: string;
+        COPY_START: string;
+        COPY_FINISHED: string;
+        REPLACE_START: string;
+        REPLACE_FINISHED: string;
+        PKG_EDITED: string;
+    };
 };
