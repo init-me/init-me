@@ -2636,6 +2636,7 @@
     "axios" "^0.21.1"
     "chalk" "^4.1.1"
     "commander" "^3.0.1"
+    "init-me-seed-types" "^1.0.0"
     "inquirer" "^8.2.4"
     "yyl-cmd-logger" "^0.2.1"
     "yyl-fs" "0.3.3"
@@ -3907,6 +3908,8 @@
 "init-me-seed-types@^1.0.0", "init-me-seed-types@file:/Users/jackness/work/github/init-me/init-me/packages/init-me-seed-types":
   "resolved" "file:packages/init-me-seed-types"
   "version" "1.0.0"
+  dependencies:
+    "yyl-cmd-logger" "^0.2.1"
 
 "init-me@file:/Users/jackness/work/github/init-me/init-me/packages/init-me":
   "resolved" "file:packages/init-me"
@@ -7070,6 +7073,11 @@
   "version" "0.14.4"
   dependencies:
     "yyl-util" "^2.3.5"
+
+"yyl-replacer@^0.3.1":
+  "integrity" "sha512-QPnQoIIE+E7TMW52LAi3lOq2dLbbrTnZFjcqqYpL+lKtOGdcZYh9ogwsUXJMcfQJ129uiBF3ymHudlY41bbGkQ=="
+  "resolved" "https://registry.npmjs.org/yyl-replacer/-/yyl-replacer-0.3.1.tgz"
+  "version" "0.3.1"
 
 "yyl-util@^2.3.5", "yyl-util@^2.3.9":
   "integrity" "sha512-sKNudT5RApLNLDnHSppoR+K9yslDmof57gQ5yHDcX8xRADIv8r218DHIsyksSnlEmlld9TXAMYLeazAu4ufW0A=="

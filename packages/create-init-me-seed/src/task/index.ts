@@ -6,6 +6,7 @@ import inquirer, { InputQuestion } from 'inquirer'
 import extFs from 'yyl-fs'
 import { YylCmdLogger, LogLevel } from 'yyl-cmd-logger'
 import { Lang } from '../lang'
+import rp from 'yyl-replacer'
 const pkg = require('../../package.json')
 export interface Env {
   silent?: boolean
@@ -50,6 +51,7 @@ export interface TaskOption {
 
 interface InitData {
   name: string
+  [key: string]: string
 }
 
 export const task = {
@@ -57,7 +59,7 @@ export const task = {
     const { env, logger } = formatOption(op)
     const questions: InputQuestion[] = []
     const pjName = `${targetPath.split(/[\\/]/).pop()}`
-    let rData: InitData = {
+    let initData: InitData = {
       name: ''
     }
     if (!env.name) {
@@ -68,17 +70,40 @@ export const task = {
         message: Lang.QUESTION.NAME
       })
     } else {
-      rData.name = env.name
+      initData.name = env.name
     }
     if (questions.length) {
       const anwser = await inquirer.prompt<{ name: string }>(questions)
-      rData = {
-        ...rData,
+      initData = {
+        ...initData,
         ...anwser
       }
     }
 
-    // TODO:
+    // 拷贝文件
+    logger.log('info', [Lang.INIT.COPY_START])
+    const oriPath = path.join(__dirname, '../../seed')
+    const logs = await extFs.copyFiles(oriPath, [targetPath])
+    logger.log('success', [
+      `${Lang.INIT.COPY_FINISHED}(add:${logs.add.length}, update: ${logs.update.length})`
+    ])
+
+    logger.log('info', [Lang.INIT.REPLACE_START])
+    // pkg 处理
+    const pkgPath = path.join(targetPath, 'package.json')
+    const targetPkg = require(pkgPath)
+    targetPkg.name = initData.name
+    targetPkg.dependencies['init-me-seed-types'] = pkg.dependencies['init-me-seed-types']
+    fs.writeFileSync(targetPath, JSON.stringify(targetPkg, null, 2))
+
+    // data 替换
+    const rPaths = [path.join(targetPath, 'README.md')]
+    rPaths.forEach((iPath) => {
+      const cnt = fs.readFileSync(iPath).toString()
+      fs.writeFileSync(iPath, rp.dataRender(cnt, initData))
+      logger.log('update', [iPath])
+    })
+    logger.log('success', [Lang.INIT.REPLACE_FINISHED])
   },
   version(op: TaskOption) {
     const { env, logger } = formatOption(op)

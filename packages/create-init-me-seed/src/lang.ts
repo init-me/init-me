@@ -7,5 +7,11 @@ export const Lang = {
   },
   QUESTION: {
     NAME: '项目名称'
+  },
+  INIT: {
+    COPY_START: '开始拷贝文件',
+    COPY_FINISHED: '拷贝文件完成',
+    REPLACE_START: '正在处理文件',
+    REPLACE_FINISHED: '处理文件完成'
   }
 }
