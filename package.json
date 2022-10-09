@@ -1,79 +1,10 @@
 {
-  "name": "init-me",
-  "version": "1.0.1",
-  "description": "init program",
-  "main": "task/index.js",
-  "types": "task/index.d.ts",
-  "scripts": {
-    "eslint": "eslint ./",
-    "prettier": "prettier --write ./**/*.js",
-    "test": "jest ./test/jest",
-    "test:init": "jest ./test/jest/init.test.js",
-    "test:install": "jest ./test/jest/install.test.js",
-    "test:uninstall": "jest ./test/jest/uninstall.test.js",
-    "test:link": "jest ./test/jest/link.test.js",
-    "test:unlink": "jest ./test/jest/unlink.test.js",
-    "test:version": "jest ./test/jest/version.test.js",
-    "test:reset": "jest ./test/jest/reset.test.js",
-    "test:path": "jest ./test/jest/path.test.js",
-    "test:recommend": "jest ./test/jest/recommend.test.js",
-    "test:case-relative-path": "jest ./test/jest/case-relative-path.test.js",
-    "test:lib": "jest ./test/jest/lib.test.js",
-    "prepublishOnly": "npm run prettier"
-  },
-  "eslintConfig": {
-    "extends": [
-      "yyl-node"
-    ],
-    "env": {
-      "jest": true
-    }
-  },
-  "eslintIgnore": [
-    "node_modules"
+  "name": "init-me-root",
+  "private": true,
+  "workspaces": [
+    "packages/*"
   ],
-  "prettier": {
-    "semi": false,
-    "singleQuote": true,
-    "jsxSingleQuote": true,
-    "endOfLine": "lf",
-    "trailingComma": "none"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jackness1208/init-me.git"
-  },
-  "keywords": [
-    "init"
-  ],
-  "author": "jackness",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/jackness1208/init-me/issues"
-  },
-  "homepage": "https://github.com/jackness1208/init-me#readme",
-  "preferGlobal": true,
-  "engines": {
-    "node": ">= 8.0.0"
-  },
-  "bin": {
-    "init": "bin/index.js"
-  },
-  "dependencies": {
-    "axios": "^0.21.1",
-    "chalk": "^4.1.1",
-    "commander": "^3.0.1",
-    "inquirer": "^8.0.0",
-    "yyl-cmd-logger": "^0.2.1",
-    "yyl-fs": "0.3.3",
-    "yyl-os": "^0.14.0",
-    "yyl-util": "^2.3.9"
-  },
   "devDependencies": {
-    "eslint": "^7.26.0",
-    "eslint-config-yyl-node": "^0.1.2",
-    "eslint-plugin-node": "^11.0.0",
-    "jest": "^26.6.3",
-    "prettier": "^2.1.2"
+    "lerna": "^5.4.0"
   }
 }
