@@ -1,11 +1,11 @@
 import cmder from 'commander'
-import { YylCmdLogger } from 'yyl-cmd-logger'
 import chalk from 'chalk'
-import { Lang } from './lang/index'
-import { task } from './task/index'
 import path from 'path'
 import util from 'yyl-util'
 import fs from 'fs'
+import { YylCmdLogger } from 'yyl-cmd-logger'
+import { Lang } from './lang/index'
+import { task } from './task/index'
 const pkg = require('../package.json')
 
 interface AnyObj {

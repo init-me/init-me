@@ -36,9 +36,27 @@ interface InitMeSeedFileMap {
   [key: string]: string[]
 }
 
+interface TaskOption {
+  env: Env
+  logger?: YylCmdLogger
+}
+
 // + fn
-const preRun = (op: { env: Env; logger: YylCmdLogger }) => {
-  const { env, logger } = op
+const blankLogger: YylCmdLogger = {
+  log() {
+    return []
+  },
+  setLogLevel() {},
+  setProgress() {}
+} as unknown as YylCmdLogger
+const formatTaskOption = (op?: TaskOption) => {
+  const env: Required<Env> = {
+    silent: !!op?.env.silent,
+    logLevel: op?.env.logLevel === undefined ? 1 : op.env.logLevel,
+    seed: op?.env.seed || '',
+    force: !!op?.env.force
+  }
+  const logger = op?.logger || blankLogger
   if (logger) {
     if (env.silent) {
       logger.setLogLevel(0)
@@ -48,23 +66,17 @@ const preRun = (op: { env: Env; logger: YylCmdLogger }) => {
       logger.setLogLevel(1)
     }
   }
+  return {
+    env,
+    logger
+  }
 }
-const blankLogger: YylCmdLogger = {
-  log() {
-    return []
-  },
-  setLogLevel() {},
-  setProgress() {}
-} as unknown as YylCmdLogger
+
 // - fn
 
 export const task = {
-  async clear(op: { env: Env; logger: YylCmdLogger }) {
-    let { env, logger } = op
-    if (!logger) {
-      logger = blankLogger
-    }
-    preRun({ env, logger })
+  async clear(op: TaskOption) {
+    const { env, logger } = formatTaskOption(op)
     logger.log('info', [Lang.CLEAR.START])
     let removes = []
     try {
@@ -77,17 +89,14 @@ export const task = {
     })
     logger.log('success', [Lang.CLEAR.FINISHED])
   },
-  version(op: { env: Env; logger: YylCmdLogger }) {
-    let { env, logger } = op
-    if (!logger) {
-      logger = blankLogger
-    }
+  version(op: TaskOption) {
+    const { env, logger } = formatTaskOption(op)
     if (!env.silent) {
       logger && logger.log('info', [`init-me ${chalk.yellow.bold(pkg.version)}`])
     }
     return Promise.resolve(pkg.version)
   },
-  path(op: { env: Env }) {
+  path(op: Omit<TaskOption, 'logger'>) {
     const { env } = op
     const r = {
       app: path.join(__dirname, '../'),
@@ -110,12 +119,9 @@ export const task = {
     }
     return Promise.resolve(r)
   },
-  async init(targetPath: string, op: { env: Env; inset?: boolean; logger: YylCmdLogger }) {
-    let { env, inset, logger } = op
-    if (!logger) {
-      logger = blankLogger
-    }
-    preRun({ env, logger })
+  async init(targetPath: string, op: TaskOption & { inset?: boolean }) {
+    const { inset } = op
+    const { env, logger } = formatTaskOption(op)
     if (!inset) {
       logger.log('info', [Lang.INIT.START])
       logger.setProgress('start', 'info', [Lang.INIT.LIST_START])
@@ -399,13 +405,10 @@ export const task = {
       logger.log('success', [Lang.INIT.FINISHED])
     }
   },
-  async install(names: string[], op: { env: Env; silent?: boolean; logger: YylCmdLogger }) {
-    let { env, silent, logger } = op
-    if (!logger) {
-      logger = blankLogger
-    }
+  async install(names: string[], op: TaskOption & { silent: boolean }) {
+    const { silent } = op
+    const { env, logger } = formatTaskOption(op)
     if (!silent) {
-      preRun({ env, logger })
       logger.log('info', [Lang.INSTALL.START])
     }
 
@@ -438,12 +441,8 @@ export const task = {
       logger.log('success', [Lang.INSTALL.FINISHED])
     }
   },
-  async uninstall(names: string[], op: { env: Env; logger: YylCmdLogger }) {
-    let { env, logger } = op
-    if (!logger) {
-      logger = blankLogger
-    }
-    preRun({ env, logger })
+  async uninstall(names: string[], op: TaskOption) {
+    const { env, logger } = formatTaskOption(op)
     logger.log('info', [Lang.UNINSTALL.START])
 
     await extOs
@@ -465,12 +464,8 @@ export const task = {
     logger.log('success', [Lang.UNINSTALL.FINISHED])
   },
 
-  async list(op: { env: Env; logger: YylCmdLogger }) {
-    let { env, logger } = op
-    if (!logger) {
-      logger = blankLogger
-    }
-    preRun({ env, logger })
+  async list(op: TaskOption) {
+    const { env, logger } = formatTaskOption(op)
     let iPkg: InitMeSeedConfig
     try {
       iPkg = await localConfig.get()
@@ -525,12 +520,8 @@ export const task = {
       return {}
     }
   },
-  async reset(op: { env: Env; logger: YylCmdLogger; silent?: boolean }) {
-    let { env, logger } = op
-    if (!logger) {
-      logger = blankLogger
-    }
-    preRun({ env, logger })
+  async reset(op: TaskOption & { silent?: boolean }) {
+    const { env, logger } = formatTaskOption(op)
     logger.setProgress('start')
     logger.log('info', [Lang.RESET.START])
     await localConfig.reset().catch((er) => {
@@ -542,12 +533,9 @@ export const task = {
     logger.setProgress('finished')
   },
 
-  async link(op: { targetPath: string; env: Env; logger: YylCmdLogger }) {
-    let { targetPath, env, logger } = op
-    if (!logger) {
-      logger = blankLogger
-    }
-    preRun({ env, logger })
+  async link(op: TaskOption & { targetPath: string }) {
+    const { targetPath } = op
+    const { env, logger } = formatTaskOption(op)
     logger.log('info', [Lang.LINK.START])
     const pkgPath = path.join(targetPath, 'package.json')
     if (!fs.existsSync(pkgPath)) {
@@ -591,12 +579,9 @@ export const task = {
 
     logger.log('success', [`${Lang.LINK.FINISHED}: ${pkg.name}`])
   },
-  async unlink(op: { targetPath: string; env: Env; logger: YylCmdLogger }) {
-    let { targetPath, env, logger } = op
-    if (!logger) {
-      logger = blankLogger
-    }
-    preRun({ env, logger })
+  async unlink(op: TaskOption & { targetPath: string }) {
+    const { targetPath } = op
+    const { env, logger } = formatTaskOption(op)
     logger.log('info', [Lang.UNLINK.START])
     const pkgPath = path.join(targetPath, 'package.json')
     if (!fs.existsSync(pkgPath)) {

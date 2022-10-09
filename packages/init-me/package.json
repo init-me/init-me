@@ -30,6 +30,12 @@
     },
     "extends": [
       "yyl-react"
+    ],
+    "prettier/prettier": [
+      "error",
+      {
+        "singleQuote": false
+      }
     ]
   },
   "eslintIgnore": [
