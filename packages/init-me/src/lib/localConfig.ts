@@ -73,7 +73,7 @@ export class LocalConfig {
     const setting = await this.handle.get()
     const pluginPkg = await this.pkgHandle.get()
 
-    setting.seeds = Object.keys(pluginPkg.dependencies) as string[]
+    setting.seeds = Object.keys(pluginPkg.dependencies || {})
     setting.seedMap = {}
     setting.seeds.forEach((seedName: string) => {
       const seedPath = path.join(path.dirname(this.pkgHandle.savePath), 'node_modules', seedName)

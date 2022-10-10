@@ -101,7 +101,7 @@ export const task = {
   path(op: Omit<TaskOption, 'logger'>) {
     const { env } = op
     const r = {
-      app: path.join(__dirname, '../'),
+      app: path.join(__dirname, '../../'),
       config: CONFIG_PATH
     }
     if (!env.silent) {
