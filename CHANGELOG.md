@@ -1,4 +1,6 @@
 # 更新日志
+## 2.0.1 (2022-10-10)
+- feat: `create-init-me-seed` 调整seed包内容
 ## 2.0.0 (2022-10-10)
 - feat: use lerna to command project
 - add: `create-init-me-seed`
