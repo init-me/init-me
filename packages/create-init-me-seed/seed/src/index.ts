@@ -152,4 +152,4 @@ const seed: InitMeSeed.Config = {
   }
 }
 
-export default seed
+module.exports = seed
