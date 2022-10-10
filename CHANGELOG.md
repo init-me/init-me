@@ -1,4 +1,8 @@
 # 更新日志
+## 2.0.0 (2022-10-10)
+- feat: use lerna to command project
+- add: `create-init-me-seed`
+- add: `init-me-seed-types`
 
 ## 1.0.0 (2021-05-15)
 
