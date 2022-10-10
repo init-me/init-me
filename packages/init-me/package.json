@@ -24,6 +24,9 @@
     "test:case-relative-path": "jest ./test/jest/case-relative-path.test.js",
     "test:lib": "jest ./test/jest/lib.test.js"
   },
+  "jest": {
+    "preset": "ts-jest"
+  },
   "eslintConfig": {
     "env": {
       "jest": true
