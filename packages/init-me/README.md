@@ -8,7 +8,7 @@ npm install init-me -g
 
 ## usage
 
-### 
+###
 
 ### seed 包安装
 
@@ -75,8 +75,9 @@ init unlink
 ```
 
 ## seed 包开发
+
 初始化
+
 ```
 yarn create init-me-seed
 ```
-

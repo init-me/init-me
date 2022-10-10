@@ -71,7 +71,7 @@
     "init"
   ],
   "author": "jackness",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/jackness1208/init-me/issues"
   },
@@ -105,5 +105,5 @@
     "prettier": "^2.5.1",
     "ts-jest": "^29.0.1"
   },
-  "gitHead": "b05890520bd2f1222a3485b54a4e3c452d00ea3a"
+  "gitHead": "0a60ab0a24432460332339152d34b035451814df"
 }

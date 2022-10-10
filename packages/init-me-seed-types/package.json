@@ -40,7 +40,7 @@
     "test": "eslint ./test/index.test.ts --no-ignore"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "yyl-cmd-logger": "^0.2.1"
   },
@@ -49,5 +49,5 @@
     "eslint-config-yyl-react": "^2.0.0",
     "prettier": "^2.5.1"
   },
-  "gitHead": "b05890520bd2f1222a3485b54a4e3c452d00ea3a"
+  "gitHead": "0a60ab0a24432460332339152d34b035451814df"
 }

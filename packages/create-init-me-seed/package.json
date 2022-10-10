@@ -44,7 +44,7 @@
     "trailingComma": "none",
     "printWidth": 100
   },
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@types/inquirer": "8.2.4",
     "@types/node": "^18.8.3",
@@ -68,5 +68,5 @@
     "prettier": "^2.5.1",
     "ts-jest": "^29.0.1"
   },
-  "gitHead": "b05890520bd2f1222a3485b54a4e3c452d00ea3a"
+  "gitHead": "0a60ab0a24432460332339152d34b035451814df"
 }
