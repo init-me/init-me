@@ -14,6 +14,9 @@
     "create-init-me-seed": "bin.js",
     "cims": "bin.js"
   },
+  "jest": {
+    "preset": "ts-jest"
+  },
   "scripts": {
     "eslint": "eslint --ext=jsx,ts,tsx ./",
     "prettier": "prettier --write ./**",

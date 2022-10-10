@@ -93,6 +93,7 @@ export const task = {
     const renameMap: { [key: string]: string } = {}
     renameMap[path.join(targetPath, 'gitignore')] = path.join(targetPath, '.gitignore')
     renameMap[path.join(targetPath, 'npmignore')] = path.join(targetPath, '.npmignore')
+    renameMap[path.join(targetPath, 'prettierignore')] = path.join(targetPath, '.prettierignore')
     Object.keys(renameMap).forEach((ori) => {
       const target = renameMap[ori]
       fs.writeFileSync(target, fs.readFileSync(ori))
