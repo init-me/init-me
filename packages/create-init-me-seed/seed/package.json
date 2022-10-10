@@ -8,7 +8,7 @@
     "eslint": "eslint --ext=jsx,ts,tsx ./",
     "prettier": "prettier --write ./**",
     "d": "tsc",
-    "prepublishOnly": "npm run prettier && npm run d && npm test"
+    "prepublishOnly": "yarn prettier && yarn d"
   },
   "eslintConfig": {
     "env": {

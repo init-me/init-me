@@ -48,5 +48,6 @@
     "eslint": "^8.7.0",
     "eslint-config-yyl-react": "^2.0.0",
     "prettier": "^2.5.1"
-  }
+  },
+  "gitHead": "b05890520bd2f1222a3485b54a4e3c452d00ea3a"
 }

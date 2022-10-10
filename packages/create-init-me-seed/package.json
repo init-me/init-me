@@ -19,7 +19,7 @@
     "dev": "tsc",
     "d": "tsc",
     "build": "tsc",
-    "prepublishOnly": "npm run prettier && npm run d && npm test"
+    "prepublishOnly": "yarn prettier && yarn d"
   },
   "author": "jackness",
   "eslintConfig": {
@@ -67,5 +67,6 @@
     "jest": "^29.0.3",
     "prettier": "^2.5.1",
     "ts-jest": "^29.0.1"
-  }
+  },
+  "gitHead": "b05890520bd2f1222a3485b54a4e3c452d00ea3a"
 }
