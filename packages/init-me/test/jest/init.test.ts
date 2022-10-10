@@ -1,14 +1,12 @@
-const task = require('../../task/index.js')
-const path = require('path')
-const fs = require('fs')
-const extFs = require('yyl-fs')
+import { task } from '../../'
+import path from 'path'
+import fs from 'fs'
+import extFs from 'yyl-fs'
+import { CONFIG_PATH } from '../../output/lib/localStorage'
 
 const SEED_NAME = 'init-me-seed-helloworld'
-const FRAG_PATH = path.join(__dirname, '../../../__frag')
+const FRAG_PATH = path.join(__dirname, '../__frag')
 const env = { silent: true }
-
-const USERPROFILE = process.env[process.platform == 'win32' ? 'USERPROFILE' : 'HOME']
-const CONFIG_PATH = path.join(USERPROFILE, '.init-me')
 
 jest.setTimeout(30000)
 

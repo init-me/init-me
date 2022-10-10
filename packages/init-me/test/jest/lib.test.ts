@@ -1,4 +1,4 @@
-const { seedFull2Short, seedShort2Full } = require('../../lib/formatter')
+import { seedFull2Short, seedShort2Full } from '../../output/lib/formatter'
 test('lib test', () => {
   expect(seedFull2Short('@yy/init-me-seed-yyl-other')).toEqual('@yy/yyl-other')
   expect(seedFull2Short('init-me-seed-yyl-other')).toEqual('yyl-other')

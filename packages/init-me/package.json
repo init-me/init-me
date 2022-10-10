@@ -31,12 +31,14 @@
     "extends": [
       "yyl-react"
     ],
-    "prettier/prettier": [
-      "error",
-      {
-        "singleQuote": false
-      }
-    ]
+    "rules": {
+      "prettier/prettier": [
+        "error",
+        {
+          "singleQuote": true
+        }
+      ]
+    }
   },
   "eslintIgnore": [
     "node_modules",

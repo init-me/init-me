@@ -1,6 +1,5 @@
-const path = require('path')
-
-const task = require('../../task/index')
+import path from 'path'
+import { task } from '../../'
 const env = { silent: true }
 
 jest.setTimeout(30000)

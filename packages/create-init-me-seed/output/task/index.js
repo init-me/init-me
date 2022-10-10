@@ -102,7 +102,6 @@ exports.task = {
             // pkg 处理
             const pkgPath = path_1.default.join(targetPath, 'package.json');
             const targetPkg = require(pkgPath);
-            console.log('===', targetPkg);
             targetPkg.name = initData.name;
             targetPkg.dependencies['init-me-seed-types'] = pkg.dependencies['init-me-seed-types'];
             fs_1.default.writeFileSync(pkgPath, JSON.stringify(targetPkg, null, 2));

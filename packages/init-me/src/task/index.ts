@@ -27,6 +27,7 @@ export interface Env {
   logLevel?: LogLevel
   seed?: string
   force?: boolean
+  [key: string]: any
 }
 
 const CONFIG_PLUGIN_PATH = path.join(CONFIG_PATH, 'plugins')
@@ -602,7 +603,7 @@ export const task = {
 
     logger.log('success', [`${Lang.UNLINK.FINISHED}: ${pkg.name}`])
   },
-  async recommend(op: { env: Env; logger: YylCmdLogger }) {
+  async recommend(op: TaskOption) {
     let { env, logger } = op
     if (!logger) {
       logger = blankLogger

@@ -1,5 +1,5 @@
-const task = require('../../task/index')
-const { inYY } = require('../../lib/search')
+import { task } from '../../'
+import { inYY } from '../../output/lib/search'
 const env = { silent: true }
 
 const SEED_NAME = 'init-me-seed-helloworld'

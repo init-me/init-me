@@ -1,9 +1,8 @@
-const path = require('path')
-const extFs = require('yyl-fs')
-const fs = require('fs')
-
-const task = require('../../task/index.js')
-const FRAG_PATH = path.join(__dirname, '../../../__frag ', 'case-relative-path')
+import path from 'path'
+import extFs from 'yyl-fs'
+import fs from 'fs'
+import { task } from '../../'
+const FRAG_PATH = path.join(__dirname, '../__frag ', 'case-relative-path')
 
 const CASE_PATH = path.join(__dirname, '../test-case/relative-path')
 

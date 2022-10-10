@@ -1,4 +1,4 @@
-const task = require('../../task/index')
+import { task } from '../../'
 const env = { silent: true }
 
 const SEED_NAME = 'init-me-seed-helloworld'

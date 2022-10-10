@@ -6,6 +6,7 @@ export interface Env {
     logLevel?: LogLevel;
     seed?: string;
     force?: boolean;
+    [key: string]: any;
 }
 interface TaskOption {
     env: Env;
@@ -37,10 +38,7 @@ export declare const task: {
     unlink(op: TaskOption & {
         targetPath: string;
     }): Promise<void>;
-    recommend(op: {
-        env: Env;
-        logger: YylCmdLogger;
-    }): Promise<NpmSearchLogItem[]>;
+    recommend(op: TaskOption): Promise<NpmSearchLogItem[]>;
     fn: {};
 };
 export {};

@@ -1,4 +1,4 @@
-const task = require('../../task/index')
+import { task } from '../../'
 const pkg = require('../../package.json')
 
 test('task.version({ env })', async () => {
