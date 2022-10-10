@@ -1,12 +1,14 @@
 {
   "name": "create-init-me-seed",
-  "version": "1.0.0",
+  "version": "2.0.0-alpha.0",
   "description": "create init-me seed",
   "main": "index.js",
-  "maintainers": [{
-    "name": "jackness",
-    "email": "jackness1208@qq.com"
-  }],
+  "maintainers": [
+    {
+      "name": "jackness",
+      "email": "jackness1208@qq.com"
+    }
+  ],
   "bin": {
     "create-init-me-seed": "bin.js",
     "cims": "bin.js"
@@ -49,7 +51,7 @@
     "axios": "^0.21.1",
     "chalk": "^4.1.1",
     "commander": "^3.0.1",
-    "init-me-seed-types": "^1.0.0",
+    "init-me-seed-types": "^2.0.0-alpha.0",
     "inquirer": "^8.2.4",
     "yyl-cmd-logger": "^0.2.1",
     "yyl-fs": "0.3.3",

@@ -1,13 +1,15 @@
 {
   "name": "init-me-seed-types",
-  "version": "1.0.0",
+  "version": "2.0.0-alpha.0",
   "description": "types for init-me-seed",
   "main": "output/index.js",
   "types": "output/index.d.js",
-  "maintainers": [{
-    "name": "jackness",
-    "email": "jackness1208@qq.com"
-  }],
+  "maintainers": [
+    {
+      "name": "jackness",
+      "email": "jackness1208@qq.com"
+    }
+  ],
   "eslintConfig": {
     "env": {
       "jest": true

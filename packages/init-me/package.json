@@ -1,13 +1,15 @@
 {
   "name": "init-me",
-  "version": "1.0.1",
+  "version": "2.0.0-alpha.0",
   "description": "init program",
   "main": "output/task/index.js",
   "types": "output/task/index.d.ts",
-  "maintainers": [{
-    "name": "jackness",
-    "email": "jackness1208@qq.com"
-  }],
+  "maintainers": [
+    {
+      "name": "jackness",
+      "email": "jackness1208@qq.com"
+    }
+  ],
   "scripts": {
     "eslint": "eslint --ext=jsx,ts,tsx ./",
     "prettier": "prettier --write ./**",
@@ -87,7 +89,7 @@
     "axios": "^0.21.1",
     "chalk": "^4.1.1",
     "commander": "^3.0.1",
-    "init-me-seed-types": "^1.0.0",
+    "init-me-seed-types": "^2.0.0-alpha.0",
     "inquirer": "^8.2.4",
     "yyl-cmd-logger": "^0.2.1",
     "yyl-fs": "0.3.3",
