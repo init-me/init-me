@@ -1,6 +1,6 @@
 {
   "name": "init-me",
-  "version": "2.0.0-alpha.3",
+  "version": "2.0.0-alpha.4",
   "description": "init program",
   "main": "output/task/index.js",
   "types": "output/task/index.d.ts",
@@ -89,7 +89,7 @@
     "axios": "^0.21.1",
     "chalk": "^4.1.1",
     "commander": "^3.0.1",
-    "init-me-seed-types": "^2.0.0-alpha.3",
+    "init-me-seed-types": "^2.0.0-alpha.4",
     "inquirer": "^8.2.4",
     "yyl-cmd-logger": "^0.2.1",
     "yyl-fs": "0.3.3",
