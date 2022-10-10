@@ -4,6 +4,10 @@
   "description": "types for init-me-seed",
   "main": "output/index.js",
   "types": "output/index.d.js",
+  "maintainers": [{
+    "name": "jackness",
+    "email": "jackness1208@qq.com"
+  }],
   "eslintConfig": {
     "env": {
       "jest": true

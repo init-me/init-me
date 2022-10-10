@@ -4,6 +4,10 @@
   "description": "init program",
   "main": "output/task/index.js",
   "types": "output/task/index.d.ts",
+  "maintainers": [{
+    "name": "jackness",
+    "email": "jackness1208@qq.com"
+  }],
   "scripts": {
     "eslint": "eslint --ext=jsx,ts,tsx ./",
     "prettier": "prettier --write ./**",

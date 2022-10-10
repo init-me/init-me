@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "create init-me seed",
   "main": "index.js",
+  "maintainers": [{
+    "name": "jackness",
+    "email": "jackness1208@qq.com"
+  }],
   "bin": {
     "create-init-me-seed": "bin.js",
     "cims": "bin.js"
