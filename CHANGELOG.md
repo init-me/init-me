@@ -1,4 +1,6 @@
 # 更新日志
+## 2.0.3 (2022-10-11)
+- feat: `create-init-me-seed` 调整seed包内容
 ## 2.0.2 (2022-10-10)
 - feat: `create-init-me-seed` 调整seed包内容
 ## 2.0.0 (2022-10-10)

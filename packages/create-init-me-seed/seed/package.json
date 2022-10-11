@@ -8,6 +8,7 @@
     "eslint": "eslint --ext=jsx,ts,tsx ./",
     "prettier": "prettier --write ./**",
     "d": "tsc",
+    "w": "tsc --watch",
     "prepublishOnly": "yarn prettier && yarn d",
     "test": "jest ./test"
   },
