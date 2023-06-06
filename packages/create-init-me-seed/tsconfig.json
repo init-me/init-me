@@ -4,6 +4,7 @@
     "target": "es6",
     "module": "CommonJS",
     "strict": true,
+    "resolveJsonModule": true,
     "jsx": "react",
     "esModuleInterop": true,
     "skipLibCheck": true,

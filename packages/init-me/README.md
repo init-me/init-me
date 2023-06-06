@@ -1,9 +1,10 @@
 # init-me
+项目初始化 seed 管理脚手架，会读取 `init-me-seed-` 开头的所有 npm 包, 根据协定内容对项目进行初始化
 
 ## 安装
 
 ```
-npm install init-me -g
+yarn global add init-me
 ```
 
 ## usage
@@ -76,7 +77,7 @@ init unlink
 
 ## seed 包开发
 
-初始化
+seed 包初始化
 
 ```
 yarn create init-me-seed

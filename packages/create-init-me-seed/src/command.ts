@@ -1,4 +1,4 @@
-import cmder from 'commander'
+import { Command } from 'commander'
 import chalk from 'chalk'
 import path from 'path'
 import util from 'yyl-util'
@@ -6,7 +6,9 @@ import fs from 'fs'
 import { YylCmdLogger } from 'yyl-cmd-logger'
 import { Lang } from './lang'
 import { task } from './task/index'
-const pkg = require('../package.json')
+import pkg from '../package.json'
+
+const cmder = new Command('init-me')
 
 interface AnyObj {
   [key: string]: any

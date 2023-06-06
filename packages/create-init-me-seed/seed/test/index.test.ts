@@ -8,7 +8,7 @@ import { YylCmdLogger } from 'yyl-cmd-logger'
 const logger = new YylCmdLogger()
 logger.setLogLevel(0)
 
-it('hooks test', async() => {
+it('hooks test', async () => {
   const SEED_PATH = path.join(__dirname, '../seeds')
   const FRAG_PATH = path.join(__dirname, '../../__frag')
 
@@ -25,11 +25,11 @@ it('hooks test', async() => {
 
   // 清除 seed 包里面的 node_modules 文件夹
   const types = fs.readdirSync(SEED_PATH).filter((iPath) => {
-    return !(/^\./.test(iPath))
+    return !/^\./.test(iPath)
   })
 
   await util.forEach(types, async (type) => {
-    const nodePath = path.join(SEED_PATH, type,  'node_modules')
+    const nodePath = path.join(SEED_PATH, type, 'node_modules')
     if (fs.existsSync(nodePath)) {
       await extFs.removeFiles(nodePath, true)
     }
@@ -44,8 +44,8 @@ it('hooks test', async() => {
     expect(seed.path).toEqual(path.join(SEED_PATH, 'base'))
   }
 
-  let rMap: {[key: string]: string[]} = {}
-  
+  let rMap: { [key: string]: string[] } = {}
+
   if (seed.hooks?.beforeCopy) {
     const fileMap = {}
     const files = await extFs.readFilePaths(seed.path)
@@ -64,7 +64,6 @@ it('hooks test', async() => {
     expect(rMap[path.join(seed.path, 'npmignore')]).toEqual([path.join(FRAG_PATH, '.npmignore')])
   }
 
-  
   if (seed.hooks?.afterCopy) {
     await extFs.copyFiles(rMap)
     // check hooks.afterCopy

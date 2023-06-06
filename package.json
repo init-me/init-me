@@ -10,9 +10,10 @@
     "packages/*"
   ],
   "devDependencies": {
-    "lerna": "^5.4.0"
+    "lerna": "^6.6.2"
   },
   "scripts": {
+    "u": "yarn upgrade-interactive --latest",
     "l": "cd packages/init-me && npm link --force",
     "d": "lerna run d",
     "prettier": "lerna run prettier"
