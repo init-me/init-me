@@ -13,6 +13,6 @@
     "declarationDir": "./output",
     "declaration": true
   },
-  "include": ["src/**/*", "typing/**/*"],
-  "exclude": ["output"]
+  "include": ["src/"],
+  "exclude": ["output", "package.json"]
 }

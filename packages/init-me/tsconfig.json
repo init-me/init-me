@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "rootDir": "./src",
     "moduleResolution": "node",
     "target": "es6",
     "module": "CommonJS",
@@ -11,7 +12,7 @@
     "lib": ["dom", "es2015", "scripthost"],
     "outDir": "./output",
     "declarationDir": "./output",
-    "declaration": true
+    "declaration": true,
   },
   "include": ["src/**/*", "typing/**/*"],
   "exclude": ["output"]

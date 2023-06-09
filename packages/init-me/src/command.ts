@@ -6,7 +6,7 @@ import fs from 'fs'
 import { YylCmdLogger } from 'yyl-cmd-logger'
 import { Lang } from './lang/index'
 import { task } from './task/index'
-import pkg from '../package.json'
+const pkg = require('../package.json')
 
 const cmder = new Command('init')
 
