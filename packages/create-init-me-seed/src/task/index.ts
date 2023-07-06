@@ -7,7 +7,7 @@ import extFs from 'yyl-fs'
 import { YylCmdLogger, LogLevel } from 'yyl-cmd-logger'
 import { Lang } from '../lang'
 import rp from 'yyl-replacer'
-import pkg from '../../package.json'
+const pkg = require('../../package.json')
 export interface Env {
   silent?: boolean
   logLevel?: LogLevel
