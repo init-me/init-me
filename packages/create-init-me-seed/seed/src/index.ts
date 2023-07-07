@@ -84,11 +84,6 @@ const seed: InitMeSeed.Config = {
       if (questions.length) {
         const r = await inquirer.prompt(questions)
         if (r.name) {
-          r.componentPrefix = `${r.componentName
-            .substring(0, 1)
-            .toUpperCase()}${r.componentName.substring(1)}`.replace(/[-_]+(\w)/gi, (ctx, $1) => {
-            return $1.toUpperCase()
-          })
           initData = Object.assign(initData, r)
         }
       }
