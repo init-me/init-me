@@ -139,7 +139,11 @@ export function initSeedConfig(op: InitMeSeed.Config) {
       async afterCopy({ targetPath, logger, initData, env, fileMap }) {
         // + format
         logger.log('info', [lang.FORMAT_FILE_START])
-        const rPaths = [path.join(targetPath, 'package.json'), path.join(targetPath, 'README.md')]
+        const rPaths = [
+          path.join(targetPath, 'package.json'),
+          path.join(targetPath, 'README.md'),
+          path.join(targetPath, 'GettingStarted.md')
+        ]
         rPaths.forEach((iPath) => {
           const cnt = fs.readFileSync(iPath).toString()
           fs.writeFileSync(iPath, replacer.dataRender(cnt, initData))
