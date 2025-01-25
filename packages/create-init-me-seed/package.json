@@ -1,0 +1,77 @@
+{
+  "name": "create-init-me-seed",
+  "version": "2.0.9",
+  "description": "create init-me seed",
+  "main": "output/task/index.js",
+  "types": "output/task/index.d.ts",
+  "maintainers": [
+    {
+      "name": "jackness",
+      "email": "jackness1208@qq.com"
+    }
+  ],
+  "bin": {
+    "create-init-me-seed": "bin.js",
+    "cims": "bin.js"
+  },
+  "jest": {
+    "preset": "ts-jest"
+  },
+  "scripts": {
+    "eslint": "eslint --ext=jsx,ts,tsx ./",
+    "prettier": "prettier --write ./",
+    "dev": "tsc",
+    "d": "tsc",
+    "build": "tsc",
+    "prepublishOnly": "yarn prettier && yarn d"
+  },
+  "author": "jackness",
+  "eslintConfig": {
+    "env": {
+      "jest": true
+    },
+    "extends": [
+      "yyl-react"
+    ]
+  },
+  "eslintIgnore": [
+    "node_modules",
+    "output",
+    "test"
+  ],
+  "prettier": {
+    "tabWidth": 2,
+    "semi": false,
+    "singleQuote": true,
+    "jsxSingleQuote": true,
+    "quoteProps": "consistent",
+    "trailingComma": "none",
+    "printWidth": 100
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@types/inquirer": "8.2.4",
+    "@types/node": "^20.2.5",
+    "axios": "^1.4.0",
+    "chalk": "^4.1.1",
+    "commander": "^10.0.1",
+    "init-me-seed-types": "^2.0.5",
+    "inquirer": "^8.2.4",
+    "yyl-cmd-logger": "^0.2.1",
+    "yyl-fs": "0.3.3",
+    "yyl-os": "^0.14.4",
+    "yyl-replacer": "^0.3.1",
+    "yyl-util": "^2.3.9"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.2",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.42.0",
+    "eslint-config-yyl-react": "^2.1.0",
+    "jest": "^29.5.0",
+    "prettier": "^2.8.8",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.1.6"
+  },
+  "gitHead": "b2087a1dbcaf51f9f1d6a5155c075eeb57d82132"
+}

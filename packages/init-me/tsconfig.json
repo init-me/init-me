@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "rootDir": "./src",
+    "moduleResolution": "node",
+    "target": "es6",
+    "module": "CommonJS",
+    "strict": true,
+    "jsx": "react",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "lib": ["dom", "es2015", "scripthost"],
+    "outDir": "./output",
+    "declarationDir": "./output",
+    "declaration": true
+  },
+  "include": ["src/**/*", "typing/**/*"],
+  "exclude": ["output"]
+}
