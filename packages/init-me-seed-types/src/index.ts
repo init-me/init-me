@@ -1,5 +1,8 @@
 import type { YylCmdLogger } from 'yyl-cmd-logger'
 export namespace InitMeSeed {
+  export interface InitData {
+    [key: string]: any
+  }
   /** cmd 参数 */
   export interface Env {
     /** 类型 */
@@ -19,6 +22,7 @@ export namespace InitMeSeed {
     env: E
     /** 初始化路径 */
     targetPath: string
+    initData: InitData
   }
   /**
    * 复制钩子配置
@@ -32,6 +36,8 @@ export namespace InitMeSeed {
     env: E
     /** logger */
     logger: YylCmdLogger
+    /** initData */
+    initData: InitData
   }
   /** 文件map */
   export interface FileMap {
@@ -45,7 +51,7 @@ export namespace InitMeSeed {
      * @param op.env - cmd 参数;
      * @param op.targetPath 初始化路径;
      */
-    beforeStart?(op: HookStartOption<E>): Promise<any>
+    beforeStart?(op: HookStartOption<E>): Promise<InitData | undefined>
     /**
      * seed 包复制前回调函数
      * @param op.env - cmd 参数;

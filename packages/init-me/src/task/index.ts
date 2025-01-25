@@ -126,6 +126,9 @@ export const task = {
   async init(targetPath: string, op: TaskOption & { inset?: boolean }) {
     const { inset } = op
     const { env, logger } = formatTaskOption(op)
+
+    let initData: InitMeSeed.InitData = {}
+
     if (!inset) {
       logger.log('info', [Lang.INIT.START])
       logger.setProgress('start', 'info', [Lang.INIT.LIST_START])
@@ -316,10 +319,18 @@ export const task = {
     // 启动前 hooks
     if (iSeedPack.hooks && iSeedPack.hooks.beforeStart) {
       logger.log('info', [Lang.INIT.HOOKS_BEFORE_START_RUN])
-      await iSeedPack.hooks.beforeStart({ env, targetPath }).catch((er: Error) => {
-        logger.log('error', [er])
-      })
-      logger.log('info', [Lang.INIT.HOOKS_BEFORE_START_FINISHED])
+      try {
+        const r = await iSeedPack.hooks.beforeStart({ env, targetPath, initData })
+        if (r) {
+          initData = {
+            ...initData,
+            ...r
+          }
+        }
+        logger.log('info', [Lang.INIT.HOOKS_BEFORE_START_FINISHED])
+      } catch (er) {
+        throw er
+      }
     }
 
     // 准备需要复制的文件
@@ -359,7 +370,8 @@ export const task = {
           fileMap,
           env,
           targetPath,
-          logger
+          logger,
+          initData
         })
       } catch (er) {
         throw er
@@ -395,9 +407,11 @@ export const task = {
     // 复制后 hooks
     if (iSeedPack.hooks && iSeedPack.hooks.afterCopy) {
       logger.log('info', [Lang.INIT.HOOKS_AFTER_COPY_RUN])
-      await iSeedPack.hooks.afterCopy({ fileMap, env, targetPath, logger }).catch((er: Error) => {
-        throw er
-      })
+      await iSeedPack.hooks
+        .afterCopy({ fileMap, env, targetPath, logger, initData })
+        .catch((er: Error) => {
+          throw er
+        })
       logger.log('info', [Lang.INIT.HOOKS_AFTER_COPY_FINISHED])
     }
 

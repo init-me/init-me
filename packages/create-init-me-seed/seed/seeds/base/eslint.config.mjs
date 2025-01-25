@@ -3,7 +3,7 @@ import yylNodeConfig from 'eslint-config-yyl-node'
 export default [
   ...yylNodeConfig,
   {
-    ignores: ['node_modules/*', 'output/*', 'test/*', 'seed/', 'npmignore', 'gitignore']
+    ignores: ['node_modules/*', 'output/*', 'test/*']
   },
   {
     languageOptions: {

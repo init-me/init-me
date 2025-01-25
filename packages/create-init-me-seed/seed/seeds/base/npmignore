@@ -4,20 +4,20 @@
 /.gitignore
 /.rpt2_cache
 /node_modules
-**/node_modules
+\*\*/node_modules
 /test
 /.tmp
 /src
 /typing
 
-**/__frag
+\*\*/\_\_frag
 
-*.db
-*.bak
-*.tmp
+_.db
+_.bak
+\*.tmp
 
 .DS_Store
-**/.DS_Store
+\*\*/.DS_Store
 rollup.config.js
 tsconfig.json
 .prettierignore

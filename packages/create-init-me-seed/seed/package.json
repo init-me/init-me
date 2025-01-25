@@ -12,33 +12,8 @@
     "prepublishOnly": "yarn prettier && yarn d",
     "test": "jest ./test"
   },
-  "eslintConfig": {
-    "env": {
-      "jest": true
-    },
-    "extends": [
-      "yyl-react"
-    ],
-    "rules": {
-      "indent": 0
-    }
-  },
-  "eslintIgnore": [
-    "node_modules",
-    "output",
-    "test"
-  ],
-  "prettier": {
-    "tabWidth": 2,
-    "semi": false,
-    "singleQuote": true,
-    "jsxSingleQuote": true,
-    "quoteProps": "consistent",
-    "trailingComma": "none",
-    "printWidth": 100
-  },
   "engines": {
-    "node": ">= 8.0.0"
+    "node": ">= 14.0.0"
   },
   "keywords": [
     "init-me",
