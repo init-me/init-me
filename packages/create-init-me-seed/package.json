@@ -1,6 +1,6 @@
 {
   "name": "create-init-me-seed",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "description": "create init-me seed",
   "main": "output/task/index.js",
   "types": "output/task/index.d.ts",
@@ -33,7 +33,7 @@
     "axios": "^1.7.9",
     "chalk": "^4.1.1",
     "commander": "^10.0.1",
-    "init-me-helper": "^2.1.4",
+    "init-me-helper": "^2.1.5",
     "init-me-seed-types": "^2.1.1",
     "inquirer": "^8.2.4",
     "yyl-cmd-logger": "^0.2.1",
