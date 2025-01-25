@@ -1,6 +1,6 @@
 {
   "name": "init-me-seed-types",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "types for init-me-seed",
   "main": "output/index.js",
   "types": "output/index.d.js",

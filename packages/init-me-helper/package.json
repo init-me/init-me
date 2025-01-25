@@ -1,6 +1,6 @@
 {
   "name": "init-me-helper",
-  "version": "5.0.5",
+  "version": "2.1.1",
   "description": "init-me 帮助函数",
   "main": "output/index.js",
   "types": "output/index.d.ts",
@@ -30,7 +30,7 @@
   "license": "ISC",
   "dependencies": {
     "@types/inquirer": "^8.2.4",
-    "init-me-seed-types": "^2.1.0",
+    "init-me-seed-types": "^2.1.1",
     "inquirer": "^8.2.4",
     "typescript": "^5.7.3",
     "yyl-os": "0.14.4",
