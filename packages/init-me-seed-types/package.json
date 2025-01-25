@@ -33,8 +33,8 @@
     "printWidth": 100
   },
   "scripts": {
-    "eslint": "eslint --ext=jsx,ts,tsx ./",
-    "prettier": "prettier --write ./**",
+    "eslint": "eslint ./",
+    "prettier": "prettier --write ./",
     "prepublishOnly": "tsc",
     "d": "tsc",
     "test": "eslint ./test/index.test.ts --no-ignore"
@@ -45,9 +45,9 @@
     "yyl-cmd-logger": "^0.2.1"
   },
   "devDependencies": {
-    "eslint": "^8.42.0",
-    "eslint-config-yyl-react": "^2.1.0",
-    "prettier": "^2.8.8"
+    "eslint": "^9.19.0",
+    "eslint-config-yyl-node": "^5.0.5",
+    "prettier": "^3.4.2"
   },
   "gitHead": "b2087a1dbcaf51f9f1d6a5155c075eeb57d82132"
 }
