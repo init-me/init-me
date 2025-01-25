@@ -87,6 +87,7 @@ export function initSeedConfig(op: InitMeSeed.Config) {
         }
 
         initData.path = path.join(r.path, initData.type)
+        r.path = initData.path
 
         // 对接hooks
         if (op.hooks?.beforeStart) {
