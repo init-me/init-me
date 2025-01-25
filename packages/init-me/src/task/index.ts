@@ -78,7 +78,7 @@ const formatTaskOption = (op?: TaskOption) => {
 
 export const task = {
   async clear(op: TaskOption) {
-    const { env, logger } = formatTaskOption(op)
+    const { logger } = formatTaskOption(op)
     logger.log('info', [Lang.CLEAR.START])
     let removes = []
     try {
@@ -94,7 +94,9 @@ export const task = {
   version(op: TaskOption) {
     const { env, logger } = formatTaskOption(op)
     if (!env.silent) {
-      logger && logger.log('info', [`init-me ${chalk.yellow.bold(pkg.version)}`])
+      if (logger) {
+        logger.log('info', [`init-me ${chalk.yellow.bold(pkg.version)}`])
+      }
     }
     return Promise.resolve(pkg.version)
   },
@@ -139,7 +141,9 @@ export const task = {
 
     if (!inset) {
       logger.log('success', [Lang.INIT.LIST_FINISHED])
-      logger && logger.setProgress('finished', 'success', [Lang.INIT.LIST_FINISHED])
+      if (logger) {
+        logger.setProgress('finished', 'success', [Lang.INIT.LIST_FINISHED])
+      }
     }
 
     const config = (await localConfig.get()) || {}
@@ -224,7 +228,9 @@ export const task = {
     // 判断选中的 seed 是否已经安装
     if (!seedInfo.installed) {
       logger.setProgress('start')
-      logger && logger.log('info', [`${Lang.INIT.SEED_INSTALLING}: ${chalk.green(iSeed)}`])
+      if (logger) {
+        logger.log('info', [`${Lang.INIT.SEED_INSTALLING}: ${chalk.green(iSeed)}`])
+      }
       const isYYPkg = seedInfo.name.match(REG_IS_YY_PKG)
 
       await task
@@ -237,7 +243,7 @@ export const task = {
           logger.setProgress('finished', 'error', [er])
           throw er
         })
-      logger && logger.log('success', [`${Lang.INIT.SEED_INSTALLED}: ${chalk.green(iSeed)}`])
+      logger.log('success', [`${Lang.INIT.SEED_INSTALLED}: ${chalk.green(iSeed)}`])
       logger.setProgress('finished')
     }
 
@@ -245,19 +251,18 @@ export const task = {
     const iSeedConfig = seedConfig.seedMap[iSeed]
 
     logger.setProgress('start')
-    logger && logger.log('info', [`${Lang.INIT.SEED_LOADING}: ${chalk.green(iSeed)}`])
+    logger.log('info', [`${Lang.INIT.SEED_LOADING}: ${chalk.green(iSeed)}`])
 
     if (!iSeedConfig) {
-      logger && logger.log('error', [`${Lang.INIT.SEED_MAP_NOT_EXISTS}: ${iSeed}`])
+      logger.log('error', [`${Lang.INIT.SEED_MAP_NOT_EXISTS}: ${iSeed}`])
       logger.setProgress('finished')
       return
     }
 
-    logger &&
-      logger.log('info', [`${Lang.INIT.SEED_MAIN_PRINT}: ${chalk.yellow(iSeedConfig.main)}`])
+    logger.log('info', [`${Lang.INIT.SEED_MAIN_PRINT}: ${chalk.yellow(iSeedConfig.main)}`])
 
     if (!fs.existsSync(iSeedConfig.main)) {
-      logger && logger.log('error', [`${Lang.INIT.SEED_MAP_MAIN_NOT_EXISTS}: ${iSeed}`])
+      logger.log('error', [`${Lang.INIT.SEED_MAP_MAIN_NOT_EXISTS}: ${iSeed}`])
       logger.setProgress('finished')
       return
     }
@@ -268,7 +273,7 @@ export const task = {
       logger.setProgress('finished')
     } else if (seedInfo.name.match(REG_IS_YY_PKG) && !(await inYY())) {
       // 是 yy pkg 但又不在 yy 域下 跳过
-      logger && logger.log('success', [Lang.INIT.SKIP_CHECK_VERSION_CAUSE_NOT_IN_YY])
+      logger.log('success', [Lang.INIT.SKIP_CHECK_VERSION_CAUSE_NOT_IN_YY])
       logger.setProgress('finished')
     } else {
       logger.log('info', [Lang.INIT.CHECK_VERSION_START])
@@ -293,14 +298,13 @@ export const task = {
             logger.setProgress('finished')
             throw er
           })
-        logger &&
-          logger.log('success', [
-            `${Lang.INIT.UPDATE_PKG_VERSION_FINISHED}: ${chalk.green(latestVersion)}`
-          ])
+
+        logger.log('success', [
+          `${Lang.INIT.UPDATE_PKG_VERSION_FINISHED}: ${chalk.green(latestVersion)}`
+        ])
         logger.setProgress('finished')
       } else {
-        logger &&
-          logger.log('success', [`${Lang.INIT.PKG_IS_LATEST}: ${chalk.green(latestVersion)}`])
+        logger.log('success', [`${Lang.INIT.PKG_IS_LATEST}: ${chalk.green(latestVersion)}`])
         logger.setProgress('finished')
       }
     }
@@ -321,21 +325,18 @@ export const task = {
 
     // 准备需要复制的文件
     if (!iSeedPack.path) {
-      logger &&
-        logger.log('error', [`${Lang.INIT.SEED_COPY_PATH_UNDEFINED}: ${chalk.green(iSeed)}`])
+      logger.log('error', [`${Lang.INIT.SEED_COPY_PATH_UNDEFINED}: ${chalk.green(iSeed)}`])
       return
     }
     let fileMap: InitMeSeedFileMap = {}
     const seedSourcePath = path.resolve(path.dirname(iSeedConfig.main), iSeedPack.path)
 
-    logger &&
-      logger.log('info', [`${Lang.INIT.SEED_COPY_PATH_PRINT}: ${chalk.yellow(seedSourcePath)}`])
+    logger.log('info', [`${Lang.INIT.SEED_COPY_PATH_PRINT}: ${chalk.yellow(seedSourcePath)}`])
 
     if (!fs.existsSync(seedSourcePath)) {
-      logger &&
-        logger.log('error', [
-          `${Lang.INIT.SEED_COPY_PATH_NOT_EXISTS}: ${chalk.yellow(seedSourcePath)}`
-        ])
+      logger.log('error', [
+        `${Lang.INIT.SEED_COPY_PATH_NOT_EXISTS}: ${chalk.yellow(seedSourcePath)}`
+      ])
       return
     }
 
@@ -365,7 +366,6 @@ export const task = {
         throw er
       }
       if (typeof rMap === 'object') {
-        // eslint-disable-next-line require-atomic-updates
         fileMap = rMap
       }
 
@@ -374,8 +374,7 @@ export const task = {
 
     logger.log('info', [`${Lang.INIT.SEED_COPY_MAP_PRINT}:`])
     Object.keys(fileMap).forEach((iPath) => {
-      logger &&
-        logger.log('info', [`${chalk.yellow(iPath)} => ${chalk.green(fileMap[iPath].join(','))}`])
+      logger.log('info', [`${chalk.yellow(iPath)} => ${chalk.green(fileMap[iPath].join(','))}`])
     })
 
     // 复制
@@ -467,7 +466,7 @@ export const task = {
   },
 
   async list(op: TaskOption) {
-    const { env, logger } = formatTaskOption(op)
+    const { env } = formatTaskOption(op)
     let iPkg: InitMeSeedConfig
     try {
       iPkg = await localConfig.get()
@@ -523,7 +522,7 @@ export const task = {
     }
   },
   async reset(op: TaskOption & { silent?: boolean }) {
-    const { env, logger } = formatTaskOption(op)
+    const { logger } = formatTaskOption(op)
     logger.setProgress('start')
     logger.log('info', [Lang.RESET.START])
     await localConfig.reset().catch((er) => {
@@ -537,7 +536,7 @@ export const task = {
 
   async link(op: TaskOption & { targetPath: string }) {
     const { targetPath } = op
-    const { env, logger } = formatTaskOption(op)
+    const { logger } = formatTaskOption(op)
     logger.log('info', [Lang.LINK.START])
     const pkgPath = path.join(targetPath, 'package.json')
     if (!fs.existsSync(pkgPath)) {
@@ -564,7 +563,7 @@ export const task = {
     const entryPath = path.resolve(targetPath, pkg.main)
 
     if (!fs.existsSync(entryPath)) {
-      logger && logger.log('error', [`${Lang.LINK.PKG_ENTRY_NOT_EXISTS}: ${entryPath}`])
+      logger.log('error', [`${Lang.LINK.PKG_ENTRY_NOT_EXISTS}: ${entryPath}`])
       return
     }
 
@@ -583,7 +582,7 @@ export const task = {
   },
   async unlink(op: TaskOption & { targetPath: string }) {
     const { targetPath } = op
-    const { env, logger } = formatTaskOption(op)
+    const { logger } = formatTaskOption(op)
     logger.log('info', [Lang.UNLINK.START])
     const pkgPath = path.join(targetPath, 'package.json')
     if (!fs.existsSync(pkgPath)) {

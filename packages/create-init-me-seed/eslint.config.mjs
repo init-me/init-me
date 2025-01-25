@@ -1,5 +1,14 @@
-import nodePrettierRule from "eslint-config-yyl-node/prettier.config.mjs";
-/** @type {import('prettier').Config} */
-export default {
-  ...nodePrettierRule,
-};
+import yylNodeConfig from 'eslint-config-yyl-node'
+/** @type {import('eslint').Linter.Config[]} */
+export default [
+  ...yylNodeConfig,
+  {
+    ignores: ['node_modules/*', 'output/*', 'test/*']
+  },
+  {
+    languageOptions: {
+      globals: {}
+    },
+    rules: {}
+  }
+]

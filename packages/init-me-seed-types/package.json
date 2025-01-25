@@ -10,28 +10,6 @@
       "email": "jackness1208@qq.com"
     }
   ],
-  "eslintConfig": {
-    "env": {
-      "jest": true
-    },
-    "extends": [
-      "yyl-react"
-    ]
-  },
-  "eslintIgnore": [
-    "node_modules",
-    "output",
-    "test"
-  ],
-  "prettier": {
-    "tabWidth": 2,
-    "semi": false,
-    "singleQuote": true,
-    "jsxSingleQuote": true,
-    "quoteProps": "consistent",
-    "trailingComma": "none",
-    "printWidth": 100
-  },
   "scripts": {
     "eslint": "eslint ./",
     "prettier": "prettier --write ./",

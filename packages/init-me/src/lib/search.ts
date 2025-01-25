@@ -14,7 +14,7 @@ export async function inYY() {
     })
     // const [, res] = await extRequest.get()
     return rs.status === 200
-  } catch (er) {
+  } catch (_er) {
     return false
   }
 }
@@ -53,7 +53,7 @@ export async function searchNpm(key: string) {
 
   try {
     npmLogStr = await extOs.runCMD(cmd, __dirname, false)
-  } catch (er) {
+  } catch (_er) {
     throw new Error(Lang.SEARCH.NPM_SEARCH_ERROR)
   }
   function parseLog(ctx: string) {
@@ -112,7 +112,7 @@ export async function searchYyNpm(key: string) {
 
     // 匹配
     return r
-  } catch (er) {
+  } catch (_er) {
     return []
   }
 }
@@ -129,7 +129,7 @@ export async function listSeed() {
   if (IN_YY) {
     try {
       yySeeds = await searchYyNpm('init-me-seed-')
-    } catch (er) {}
+    } catch (_er) {}
   }
   let r = npmSeeds.concat(yySeeds).map((item) => item.name)
 

@@ -33,36 +33,6 @@
   "jest": {
     "preset": "ts-jest"
   },
-  "eslintConfig": {
-    "env": {
-      "jest": true
-    },
-    "extends": [
-      "yyl-react"
-    ],
-    "rules": {
-      "prettier/prettier": [
-        "error",
-        {
-          "singleQuote": true
-        }
-      ]
-    }
-  },
-  "eslintIgnore": [
-    "node_modules",
-    "output",
-    "test"
-  ],
-  "prettier": {
-    "tabWidth": 2,
-    "semi": false,
-    "singleQuote": true,
-    "jsxSingleQuote": true,
-    "quoteProps": "consistent",
-    "trailingComma": "none",
-    "printWidth": 100
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jackness1208/init-me.git"
@@ -78,7 +48,7 @@
   "homepage": "https://github.com/jackness1208/init-me#readme",
   "preferGlobal": true,
   "engines": {
-    "node": ">= 8.0.0"
+    "node": ">=14.0.0"
   },
   "bin": {
     "init": "bin.js"

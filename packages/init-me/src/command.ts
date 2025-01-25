@@ -43,7 +43,7 @@ let isBlock = false
 const env = util.envParse(process.argv)
 
 const fn = {
-  printHeader(op: { env: AnyObj }) {
+  printHeader(_op: { env: AnyObj }) {
     if (env.silent) {
       return
     }
