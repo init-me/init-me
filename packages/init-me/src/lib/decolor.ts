@@ -1,5 +1,4 @@
-/* eslint-disable no-control-regex */
-const COLOR_REG = /(\u001b\[\d+m|\033\[[0-9;]+m)+/g
+const COLOR_REG = /(\u001b\[\d+m|\x1b\[[0-9;]+m)+/g
 /** 判断是否数组 */
 function isArray(ctx: any) {
   return typeof ctx === 'object' && ctx.splice === Array.prototype.splice

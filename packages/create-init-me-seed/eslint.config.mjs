@@ -1,14 +1,14 @@
-import yylNodeConfig from 'eslint-config-yyl-node'
+import yylNodeConfig from "eslint-config-yyl-node";
 /** @type {import('eslint').Linter.Config[]} */
 export default [
   ...yylNodeConfig,
   {
-    ignores: ['node_modules/*', 'output/*', 'test/*']
+    ignores: ["node_modules/*", "output/*", "test/*", "npmignore", "gitignore"],
   },
   {
     languageOptions: {
-      globals: {}
+      globals: {},
     },
-    rules: {}
-  }
-]
+    rules: {},
+  },
+];
