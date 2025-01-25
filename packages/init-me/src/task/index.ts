@@ -138,7 +138,6 @@ export const task = {
     } catch (er) {
       throw er
     }
-
     if (!inset) {
       logger.log('success', [Lang.INIT.LIST_FINISHED])
       if (logger) {
@@ -159,23 +158,23 @@ export const task = {
         shortName,
         installed: true,
         dev,
-        choice: `${chalk.yellow.bold(shortName)} ${chalk.gray('(')}${
-          dev ? 'local' : version
-        }${chalk.gray(')')}`
+        choice: `${shortName} ${chalk.yellow(dev ? '(local)' : `(${version})`)}`
       }
     })
 
     seedItems = seedItems.concat(
       seeds
-        .filter((name) => installedSeeds.indexOf(name) === -1)
-        .map((name) => {
-          const shortName = seedFull2Short(name)
+        .filter((item) => installedSeeds.indexOf(item.name) === -1)
+        .map((item) => {
+          const shortName = seedFull2Short(item.name)
           return {
-            name,
+            name: item.name,
             shortName,
             installed: false,
             dev: false,
-            choice: chalk.gray(shortName)
+            choice: chalk.gray(
+              `${shortName}${item.version ? `@${item.version}` : ''}${item.date ? ` (${item.date})` : ''}`
+            )
           }
         })
     )
