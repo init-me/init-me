@@ -1,6 +1,6 @@
 {
   "name": "create-init-me-seed",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "description": "create init-me seed",
   "main": "output/task/index.js",
   "types": "output/task/index.d.ts",
