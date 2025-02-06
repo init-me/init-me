@@ -1,9 +1,13 @@
 {
-  "name": "__data('name')",
-  "version": "0.1.0",
-  "description": "init-me seed __data('name')",
+  "name": "init-me-helper",
+  "version": "2.1.5",
+  "description": "init-me 帮助函数",
   "main": "output/index.js",
   "types": "output/index.d.ts",
+  "files": [
+    "output",
+    "README.md"
+  ],
   "scripts": {
     "eslint": "eslint ./",
     "prettier": "prettier --write ./",
@@ -18,23 +22,30 @@
   "keywords": [
     "init-me",
     "seed",
-    "__data('name')"
+    "init-me-seed-node"
   ],
   "jest": {
     "preset": "ts-jest"
   },
   "license": "ISC",
   "dependencies": {
+    "@types/inquirer": "^8.2.4",
     "init-me-seed-types": "^2.1.1",
-    "init-me-helper": "^2.1.1"
+    "inquirer": "^8.2.4",
+    "typescript": "^5.7.3",
+    "yyl-os": "0.14.4",
+    "yyl-print": "0.9.2",
+    "yyl-replacer": "0.3.1"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
     "eslint": "^9.19.0",
     "eslint-config-yyl-node": "^5.0.5",
+    "jest": "^29.0.3",
     "prettier": "^3.4.2",
-    "jest": "^29.7.0",
-    "ts-jest": "^29.0.1",
-    "yyl-fs": "0.3.3"
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.7.3",
+    "yyl-fs": "0.3.3",
+    "yyl-util": "2.3.9"
   }
 }

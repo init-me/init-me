@@ -14,7 +14,7 @@ export async function inYY() {
     })
     // const [, res] = await extRequest.get()
     return rs.status === 200
-  } catch (er) {
+  } catch (_er) {
     return false
   }
 }
@@ -47,19 +47,19 @@ export interface NpmSearchLogItem {
   [key: string]: string | undefined
 }
 
-export async function searchNpm(key: string) {
+export async function searchNpm(key: string, ignores?: string[]) {
   const cmd = `npm search ${key}`
   let npmLogStr = ''
 
   try {
     npmLogStr = await extOs.runCMD(cmd, __dirname, false)
-  } catch (er) {
+  } catch (_er) {
     throw new Error(Lang.SEARCH.NPM_SEARCH_ERROR)
   }
   function parseLog(ctx: string) {
     let keys: NpmSearchLogKeys[] = []
     const items: string[][] = []
-    const r: NpmSearchLogItem[] = []
+    let r: NpmSearchLogItem[] = []
 
     ctx.split(/[\r\n]+/).forEach((str, i) => {
       const strArr = decolor(str.trim()).split(/\s*\|\s*/)
@@ -80,6 +80,15 @@ export async function searchNpm(key: string) {
           iItem[keys[i]] = str
         })
 
+        if (iItem.name && ignores && ignores.includes(iItem.name)) {
+          return
+        }
+
+        // 不以 keyword 开头的, 忽略
+        if (!iItem.name.startsWith(key)) {
+          return
+        }
+
         // 第二行 而非新增
         if (iItem.date === '' && iItem.version === '') {
           const preItem = r[r.length - 1]
@@ -91,6 +100,12 @@ export async function searchNpm(key: string) {
         }
       }
     })
+    // 以时间排序
+    r = r.sort((a, b) => {
+      const d1 = +new Date(b.date)
+      const d2 = +new Date(a.date)
+      return d1 > d2 ? 1 : -1
+    })
     return r
   }
   return parseLog(npmLogStr)
@@ -98,7 +113,7 @@ export async function searchNpm(key: string) {
 
 export async function searchYyNpm(key: string) {
   try {
-    const rs = await axios.get(`https://npm.yy.com/browse/keyword/${key}?type=json`, {
+    const rs = await axios.get(`https://npm.yy.com/browse/keyword/@yy/${key}?type=json`, {
       timeout: 8000
     })
     let r: NpmSearchLogItem[] = []
@@ -112,7 +127,7 @@ export async function searchYyNpm(key: string) {
 
     // 匹配
     return r
-  } catch (er) {
+  } catch (_er) {
     return []
   }
 }
@@ -121,7 +136,7 @@ export async function listSeed() {
   const IN_YY = await inYY()
   let npmSeeds: NpmSearchLogItem[] = []
   try {
-    npmSeeds = await searchNpm('init-me-seed-')
+    npmSeeds = await searchNpm('init-me-seed-', ['init-me-seed-types'])
   } catch (er) {
     throw er
   }
@@ -129,11 +144,8 @@ export async function listSeed() {
   if (IN_YY) {
     try {
       yySeeds = await searchYyNpm('init-me-seed-')
-    } catch (er) {}
+    } catch (_er) {}
   }
-  let r = npmSeeds.concat(yySeeds).map((item) => item.name)
-
-  r = Array.from(new Set(r))
-
+  let r = npmSeeds.concat(yySeeds)
   return r
 }

@@ -1,13 +1,11 @@
-node_modules/*
-**/node_modules/*
+node_modules/
 .bin/
-dist/*
-**/dist/*
+dist/
 .sass-cache/
 .idea/
 config.mine.js
 build/
 .rpt2_cache/
-**/__frag/
+__frag/
 .DS_Store
 **/.DS_Store

@@ -2,16 +2,22 @@
 /.settings
 /.project
 /.gitignore
-/.rpt2cache
-node_modules
+/.rpt2_cache
+/node_modules
+**/node_modules
 /test
 /.tmp
 /src
 /typing
-.db
-.bak
+
+**/__frag
+
+*.db
+*.bak
+*.tmp
 
 .DS_Store
+**/.DS_Store
 rollup.config.js
 tsconfig.json
 .prettierignore

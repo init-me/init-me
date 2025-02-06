@@ -6,7 +6,7 @@ import inquirer, { InputQuestion } from 'inquirer'
 import extFs from 'yyl-fs'
 import { YylCmdLogger, LogLevel } from 'yyl-cmd-logger'
 import { Lang } from '../lang'
-import rp from 'yyl-replacer'
+import { replacer } from 'init-me-helper'
 const pkg = require('../../package.json')
 export interface Env {
   silent?: boolean
@@ -117,7 +117,7 @@ export const task = {
     const rPaths = [path.join(targetPath, 'README.md'), pkgPath]
     rPaths.forEach((iPath) => {
       const cnt = fs.readFileSync(iPath).toString()
-      fs.writeFileSync(iPath, rp.dataRender(cnt, initData))
+      fs.writeFileSync(iPath, replacer.dataRender(cnt, initData))
       logger.log('update', [iPath])
     })
     logger.log('success', [Lang.INIT.REPLACE_FINISHED])
@@ -125,7 +125,7 @@ export const task = {
   version(op: TaskOption) {
     const { env, logger } = formatOption(op)
     if (!env.silent) {
-      logger && logger.log('info', [`create-init-me-seed ${chalk.yellow.bold(pkg.version)}`])
+      logger.log('info', [`create-init-me-seed ${chalk.yellow.bold(pkg.version)}`])
     }
     return Promise.resolve(pkg.version)
   },

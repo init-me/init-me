@@ -26,7 +26,7 @@ export class LocalStorage<D extends AnyObj = AnyObj> {
     if (fs.existsSync(savePath)) {
       try {
         iData = require(savePath)
-      } catch (er) {
+      } catch (_er) {
         iData = data || {}
         fs.writeFileSync(savePath, JSON.stringify(iData, null, 2))
       }
@@ -38,12 +38,12 @@ export class LocalStorage<D extends AnyObj = AnyObj> {
 
   async get() {
     if (fs.existsSync(this.savePath)) {
-      await new Promise((resolve, reject) => {
+      await new Promise((resolve) => {
         fs.readFile(this.savePath, (err, data) => {
           if (!err) {
             try {
               this.data = JSON.parse(data.toString())
-            } catch (er) {
+            } catch (_er) {
               this.data = this.defaultData
             }
           }
