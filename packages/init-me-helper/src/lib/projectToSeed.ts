@@ -31,7 +31,15 @@ export async function projcetToSeed(op: ProjectToSeedOptions) {
   let r: string[] = []
   for (let i = 0; i < formDirs.length; i++) {
     const from = formDirs[i]
-    const rLogs = await extFs.copyFiles(from, [toDir])
+    const rLogs = await extFs.copyFiles(from, [toDir], (iPath) => {
+      const relativePath = path.relative(context, iPath)
+      if (/node_modules|output/.test(relativePath)) {
+        logger.log('info', [`忽略文件: ${chalk.cyan(relativePath)}`])
+        return false
+      } else {
+        return true
+      }
+    })
     r = r.concat(rLogs.add.concat(rLogs.update))
   }
   logger.log('info', [`拷贝完成，共拷贝了 ${chalk.green(r.length)} 个文件`])
