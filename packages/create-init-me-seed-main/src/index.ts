@@ -8,4 +8,4 @@ const seed: InitMeSeed.Config = initSeedConfig({
   path: SEED_PATH
 })
 
-module.exports = seed
+export default seed
