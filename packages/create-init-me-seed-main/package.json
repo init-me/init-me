@@ -9,9 +9,10 @@
     "prebuild": "ts-node ./prebuild.ts",
     "eslint": "eslint ./",
     "prettier": "prettier --write ./",
-    "d": "tsc",
+    "d": "npm run prebuild && npm run build",
+    "build": "tsc",
     "w": "tsc --watch",
-    "prepublishOnly": "npm run prettier && npm run prebuild && npm run d",
+    "prepublishOnly": "npm run prettier && npm run d",
     "test": "jest ./test"
   },
   "engines": {
