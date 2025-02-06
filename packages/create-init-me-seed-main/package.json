@@ -1,7 +1,7 @@
 {
   "name": "create-init-me-seed-main",
   "private": true,
-  "version": "0.1.0",
+  "version": "2.1.7",
   "description": "init-me seed __data('name')",
   "main": "output/index.js",
   "types": "output/index.d.ts",
@@ -28,15 +28,15 @@
   },
   "license": "ISC",
   "dependencies": {
-    "init-me-seed-types": "^2.1.1",
-    "init-me-helper": "^2.1.1"
+    "init-me-helper": "^2.1.7",
+    "init-me-seed-types": "^2.1.7"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
     "eslint": "^9.19.0",
     "eslint-config-yyl-node": "^5.0.5",
-    "prettier": "^3.4.2",
     "jest": "^29.7.0",
+    "prettier": "^3.4.2",
     "ts-jest": "^29.0.1",
     "ts-node": "^10.9.2",
     "yyl-fs": "0.3.3"
