@@ -72,8 +72,10 @@ export async function projcetToSeed(op: ProjectToSeedOptions) {
   const packageJsonPath = path.resolve(toDir, 'package.json')
   if (fs.existsSync(packageJsonPath)) {
     const pkg = require(packageJsonPath)
-    delete pkg.privite
-    logger.log('info', [`删除 pkg 属性 private`])
+    if ('private' in pkg) {
+      delete pkg.private
+      logger.log('info', [`删除 pkg 属性 ${chalk.cyan('private')}`])
+    }
     const nextName = `__data('name')`
     logger.log('info', [`修改 pkg 属性 name: ${chalk.cyan(pkg.name)} -> ${chalk.yellow(nextName)}`])
     pkg.name = nextName
