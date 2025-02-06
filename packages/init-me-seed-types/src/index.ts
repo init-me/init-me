@@ -1,5 +1,6 @@
 import type { YylCmdLogger } from 'yyl-cmd-logger'
 export namespace InitMeSeed {
+  export interface Logger extends YylCmdLogger {}
   export interface InitData {
     [key: string]: any
   }
@@ -35,7 +36,7 @@ export namespace InitMeSeed {
     /** cmd 参数 */
     env: E
     /** logger */
-    logger: YylCmdLogger
+    logger: Logger
     /** initData */
     initData: InitData
   }

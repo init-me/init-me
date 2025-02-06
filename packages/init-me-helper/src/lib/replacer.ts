@@ -1,5 +1,5 @@
 const REG = {
-  SUGAR_DATA: /\\?_\\?_data\(['"](\w+)["']\)/g
+  SUGAR_DATA: /\\?_\\?_data\(['"]?(\w+)["']?\)/g
 }
 
 interface ReplacerData {
