@@ -312,7 +312,11 @@ export const task = {
     }
     // - 非 dev seed 自动安装 最新版
 
-    const iSeedPack = require(iSeedConfig.main) as InitMeSeed.Config
+    let iSeedPack = require(iSeedConfig.main) as InitMeSeed.Config
+    // 做下兼容处理
+    if (iSeedPack && 'default' in iSeedPack) {
+      iSeedPack = iSeedPack.default as InitMeSeed.Config
+    }
 
     logger.log('success', [Lang.INIT.SEED_LOAD_FINISHED])
 
