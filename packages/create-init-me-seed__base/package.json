@@ -1,5 +1,5 @@
 {
-  "name": "create-init-me-seed-main",
+  "name": "create-init-me-seed__base",
   "private": true,
   "version": "2.1.9",
   "description": "init-me seed __data('name')",
