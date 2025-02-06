@@ -44,6 +44,7 @@
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
+    "create-init-me-seed-main": "^2.1.7",
     "cross-env": "^7.0.3",
     "eslint": "^9.19.0",
     "eslint-config-yyl-node": "^5.0.5",
