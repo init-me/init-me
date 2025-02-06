@@ -1,7 +1,7 @@
 {
   "name": "create-init-me-seed-main",
   "private": true,
-  "version": "2.1.8",
+  "version": "2.1.9",
   "description": "init-me seed __data('name')",
   "main": "output/index.js",
   "types": "output/index.d.ts",
@@ -28,7 +28,7 @@
   },
   "license": "ISC",
   "dependencies": {
-    "init-me-helper": "^2.1.7",
+    "init-me-helper": "^2.1.9",
     "init-me-seed-types": "^2.1.7"
   },
   "devDependencies": {
