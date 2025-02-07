@@ -146,9 +146,11 @@ export function initSeedConfig(op: InitMeSeed.Config) {
           path.join(targetPath, 'GettingStarted.md')
         ]
         rPaths.forEach((iPath) => {
-          const cnt = fs.readFileSync(iPath).toString()
-          fs.writeFileSync(iPath, replacer.dataRender(cnt, initData))
-          logger.log('update', [iPath])
+          if (fs.existsSync(iPath)) {
+            const cnt = fs.readFileSync(iPath).toString()
+            fs.writeFileSync(iPath, replacer.dataRender(cnt, initData))
+            logger.log('update', [iPath])
+          }
         })
         await new Promise((resolve) => {
           setTimeout(resolve)
