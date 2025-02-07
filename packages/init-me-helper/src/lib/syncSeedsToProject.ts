@@ -13,8 +13,16 @@ interface SyncSeedsToProjectOptions {
 export async function syncSeedsToProject(op: SyncSeedsToProjectOptions) {
   const { dirPrefix, fromDir, toDir, context } = op
   const seedPrefix = dirPrefix
+  const fromPath = path.join(context, fromDir)
+  if (!fs.existsSync(fromPath)) {
+    cmdLogger.log('warn', [
+      '初始化项目中 seed 失败，找不到种子文件目录: ',
+      chalk.yellow(path.relative(context, fromPath))
+    ])
+    return []
+  }
   const seedParams = fs
-    .readdirSync(path.join(context, fromDir))
+    .readdirSync(fromPath)
     .filter((dirname) => {
       return dirname.startsWith(seedPrefix)
     })
