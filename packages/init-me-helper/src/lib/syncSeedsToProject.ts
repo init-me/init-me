@@ -19,7 +19,7 @@ export async function syncSeedsToProject(op: SyncSeedsToProjectOptions) {
       '初始化项目中 seed 失败，找不到种子文件目录: ',
       chalk.yellow(path.relative(context, fromPath))
     ])
-    return []
+    return
   }
   const seedParams = fs
     .readdirSync(fromPath)
@@ -37,20 +37,27 @@ export async function syncSeedsToProject(op: SyncSeedsToProjectOptions) {
       }
     })
 
-  cmdLogger.log('info', [
-    `开始初始化项目中 ${chalk.cyan('seed')} 文件, 共 ${chalk.green(seedParams.length)} 个种子文件: ${seedParams.map(({ name }) => chalk.green(name)).join(', ')}`
-  ])
+  if (!seedParams.length) {
+    cmdLogger.log('warn', [
+      `初始化项目中 seed 文件失败，找不到前缀[${chalk.yellow(seedPrefix)}]为种子文件: `,
+      chalk.cyan(path.relative(context, fromPath))
+    ])
+  } else {
+    cmdLogger.log('info', [
+      `开始初始化项目中 ${chalk.cyan('seed')} 文件, 共 ${chalk.green(seedParams.length)} 个种子文件: ${seedParams.map(({ name }) => chalk.green(name)).join(', ')}`
+    ])
 
-  const pms: Promise<string[]>[] = []
-  seedParams.forEach((params) => {
-    pms.push(
-      projcetToSeed({
-        ...params,
-        logger: cmdLogger
-      })
-    )
-  })
-  Promise.all(pms).then(() => {
-    cmdLogger.log('success', ['初始化项目中 seed 文件完成'])
-  })
+    const pms: Promise<string[]>[] = []
+    seedParams.forEach((params) => {
+      pms.push(
+        projcetToSeed({
+          ...params,
+          logger: cmdLogger
+        })
+      )
+    })
+    Promise.all(pms).then(() => {
+      cmdLogger.log('success', ['初始化项目中 seed 文件完成'])
+    })
+  }
 }
