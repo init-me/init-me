@@ -2645,7 +2645,7 @@ cosmiconfig@7.0.0:
   version "2.1.12"
   resolved "file:packages/create-init-me-seed__base"
   dependencies:
-    init-me-helper "^2.1.10"
+    init-me-helper "^2.1.12"
     init-me-seed-types "^2.1.7"
 
 create-init-me-seed-main@^2.1.9:
@@ -2664,7 +2664,7 @@ create-init-me-seed-main@^2.1.9:
     axios "^1.7.9"
     chalk "^4.1.1"
     commander "^10.0.1"
-    init-me-helper "^2.1.10"
+    init-me-helper "^2.1.12"
     init-me-seed-types "^2.1.7"
     inquirer "^8.2.4"
     yyl-cmd-logger "^0.2.1"
@@ -4348,7 +4348,7 @@ init-me-seed-types@^2.1.7, "init-me-seed-types@file:D:\\github-init-me\\init-me\
     yyl-cmd-logger "^0.2.1"
 
 "init-me@file:D:\\github-init-me\\init-me\\packages\\init-me":
-  version "2.1.8"
+  version "2.1.13"
   resolved "file:packages/init-me"
   dependencies:
     "@types/inquirer" "8.2.4"
