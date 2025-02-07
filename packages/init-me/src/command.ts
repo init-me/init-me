@@ -177,7 +177,16 @@ cmder
   })
 
 cmder.on('--help', () => {
-  console.log(['', 'Examples:', '  $ init --logLevel 2', '  $ init path/to/dir', ''].join('\r\n'))
+  console.log(
+    [
+      '',
+      'Examples:',
+      '  $ init --logLevel 2        初始化并打印日志',
+      '  $ init path/to/dir         在特定目录进行初始化',
+      '  $ yarn create init-me-seed 初始化种子工程',
+      ''
+    ].join('\r\n')
+  )
   isBlock = true
 })
 
