@@ -6,12 +6,14 @@ import path from 'path'
 interface SyncSeedsToProjectOptions {
   context: string
   dirPrefix: string
+  /** 同步前是否清空目标文件夹 */
+  clear?: boolean
   fromDir: string
   toDir: string
 }
 /** 同步外面的 seed 项目到 项目中指定的目录内 */
 export async function syncSeedsToProject(op: SyncSeedsToProjectOptions) {
-  const { dirPrefix, fromDir, toDir, context } = op
+  const { dirPrefix, fromDir, toDir, context, clear } = op
   const seedPrefix = dirPrefix
   const fromPath = path.join(context, fromDir)
   if (!fs.existsSync(fromPath)) {
@@ -43,6 +45,16 @@ export async function syncSeedsToProject(op: SyncSeedsToProjectOptions) {
       chalk.cyan(path.relative(context, fromPath))
     ])
   } else {
+    if (clear) {
+      const toPath = path.resolve(context, toDir)
+      if (fs.existsSync(toPath)) {
+        cmdLogger.log('info', [
+          `开始清空项目中 seed 文件目录: ${chalk.cyan(path.relative(context, toPath))}`
+        ])
+        fs.rmSync(toPath, { recursive: true })
+        cmdLogger.log('info', [`清空完成`])
+      }
+    }
     cmdLogger.log('info', [
       `开始初始化项目中 ${chalk.cyan('seed')} 文件, 共 ${chalk.green(seedParams.length)} 个种子文件: ${seedParams.map(({ name }) => chalk.green(name)).join(', ')}`
     ])

@@ -54,7 +54,7 @@
   "homepage": "https://github.com/jackness1208/init-me#readme",
   "preferGlobal": true,
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=15.0.0"
   },
   "bin": {
     "init": "bin.js"
