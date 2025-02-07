@@ -1,7 +1,7 @@
 {
   "name": "create-init-me-seed__base",
   "private": true,
-  "version": "2.1.10",
+  "version": "2.1.11",
   "description": "init-me seed __data('name')",
   "main": "output/index.js",
   "types": "output/index.d.ts",
