@@ -2641,18 +2641,11 @@ cosmiconfig@7.0.0:
     path-type "^4.0.0"
     yaml "^1.10.0"
 
-"create-init-me-seed__base@file:D:\\github-init-me\\init-me\\packages\\create-init-me-seed__base":
+create-init-me-seed__base@^2.1.12, "create-init-me-seed__base@file:D:\\github-init-me\\init-me\\packages\\create-init-me-seed__base":
   version "2.1.12"
   resolved "file:packages/create-init-me-seed__base"
   dependencies:
     init-me-helper "^2.1.12"
-    init-me-seed-types "^2.1.7"
-
-create-init-me-seed-main@^2.1.9:
-  version "2.1.9"
-  resolved "file:packages/create-init-me-seed-main"
-  dependencies:
-    init-me-helper "^2.1.9"
     init-me-seed-types "^2.1.7"
 
 "create-init-me-seed@file:D:\\github-init-me\\init-me\\packages\\create-init-me-seed":
