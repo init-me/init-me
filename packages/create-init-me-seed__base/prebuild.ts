@@ -3,7 +3,7 @@
  *
 import { syncSeedsToProject } from 'init-me-helper'
 syncSeedsToProject({
-  dirPrefix: 'init-me-seed-node__',
+  dirPrefix: '__data("name")__base',
   context: __dirname,
   fromDir: '../',
   toDir: './seeds'

@@ -114,11 +114,17 @@ export const task = {
     logger.log('info', [Lang.INIT.PKG_EDITED])
 
     // data 替换
-    const rPaths = [path.join(targetPath, 'README.md'), pkgPath]
+    const rPaths = [
+      path.join(targetPath, 'README.md'),
+      path.join(targetPath, 'prebuild.ts'),
+      pkgPath
+    ]
     rPaths.forEach((iPath) => {
-      const cnt = fs.readFileSync(iPath).toString()
-      fs.writeFileSync(iPath, replacer.dataRender(cnt, initData))
-      logger.log('update', [iPath])
+      if (fs.existsSync(iPath)) {
+        const cnt = fs.readFileSync(iPath).toString()
+        fs.writeFileSync(iPath, replacer.dataRender(cnt, initData))
+        logger.log('update', [iPath])
+      }
     })
     logger.log('success', [Lang.INIT.REPLACE_FINISHED])
   },

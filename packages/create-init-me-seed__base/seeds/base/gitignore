@@ -1,9 +1,0 @@
-dist/
-.idea/
-build/
-node_modules/
-__frag/
-.bin/
-.sass-cache/
-.rpt2_cache/
-.DS_Store

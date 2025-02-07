@@ -5,6 +5,10 @@
   "description": "init-me seed __data('name')",
   "main": "output/index.js",
   "types": "output/index.d.ts",
+  "files": [
+    "output",
+    "seeds"
+  ],
   "scripts": {
     "prebuild": "ts-node ./prebuild.ts",
     "eslint": "eslint ./",
