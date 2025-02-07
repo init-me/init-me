@@ -1,6 +1,6 @@
 {
   "name": "init-me",
-  "version": "2.1.13",
+  "version": "2.1.15",
   "description": "init program",
   "main": "output/task/index.js",
   "types": "output/task/index.d.ts",
