@@ -1,6 +1,6 @@
 {
   "name": "init-me-helper",
-  "version": "2.1.15",
+  "version": "2.1.16",
   "description": "init-me 帮助函数",
   "main": "output/index.js",
   "types": "output/index.d.ts",
