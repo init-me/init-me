@@ -1,6 +1,6 @@
 {
   "name": "create-init-me-seed",
-  "version": "2.1.12",
+  "version": "2.1.14",
   "description": "create init-me seed",
   "main": "output/task/index.js",
   "types": "output/task/index.d.ts",
@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
-    "create-init-me-seed__base": "^2.1.12",
+    "create-init-me-seed__base": "^2.1.14",
     "cross-env": "^7.0.3",
     "eslint": "^9.19.0",
     "eslint-config-yyl-node": "^5.0.5",
