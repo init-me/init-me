@@ -10,6 +10,7 @@ import { InitMeSeedConfig, InitMeSeedObj, LocalConfig, pkg } from '../lib/localC
 import { CONFIG_PATH } from '../lib/localStorage'
 import { YylCmdLogger, LogLevel } from 'yyl-cmd-logger'
 import { InitMeSeed } from 'init-me-seed-types'
+import { initProjectBySeed } from 'init-me-helper'
 import {
   getPkgLatestVersion,
   listSeed,
@@ -127,13 +128,13 @@ export const task = {
     const { inset } = op
     const { env, logger } = formatTaskOption(op)
 
-    let initData: InitMeSeed.InitData = {}
-
-    if (!inset) {
-      logger.log('info', [Lang.INIT.START])
-      logger.setProgress('start', 'info', [Lang.INIT.LIST_START])
-      logger.log('info', [Lang.INIT.LIST_START])
+    if (inset) {
+      logger.setLogLevel(0)
     }
+
+    logger.log('info', [Lang.INIT.START])
+    logger.setProgress('start', 'info', [Lang.INIT.LIST_START])
+    logger.log('info', [Lang.INIT.LIST_START])
 
     let seeds = []
     try {
@@ -141,11 +142,9 @@ export const task = {
     } catch (er) {
       throw er
     }
-    if (!inset) {
-      logger.log('success', [Lang.INIT.LIST_FINISHED])
-      if (logger) {
-        logger.setProgress('finished', 'success', [Lang.INIT.LIST_FINISHED])
-      }
+    logger.log('success', [Lang.INIT.LIST_FINISHED])
+    if (logger) {
+      logger.setProgress('finished', 'success', [Lang.INIT.LIST_FINISHED])
     }
 
     const config = (await localConfig.get()) || {}
@@ -320,108 +319,15 @@ export const task = {
 
     logger.log('success', [Lang.INIT.SEED_LOAD_FINISHED])
 
-    // 启动前 hooks
-    if (iSeedPack.hooks && iSeedPack.hooks.beforeStart) {
-      logger.log('info', [Lang.INIT.HOOKS_BEFORE_START_RUN])
-      try {
-        const r = await iSeedPack.hooks.beforeStart({ env, targetPath, initData })
-        if (r) {
-          initData = {
-            ...initData,
-            ...r
-          }
-        }
-        logger.log('info', [Lang.INIT.HOOKS_BEFORE_START_FINISHED])
-      } catch (er) {
-        throw er
-      }
-    }
-
-    // 准备需要复制的文件
-    if (!iSeedPack.path) {
-      logger.log('error', [`${Lang.INIT.SEED_COPY_PATH_UNDEFINED}: ${chalk.green(iSeed)}`])
-      return
-    }
-    let fileMap: InitMeSeedFileMap = {}
-    const seedSourcePath = path.resolve(path.dirname(iSeedConfig.main), iSeedPack.path)
-
-    logger.log('info', [`${Lang.INIT.SEED_COPY_PATH_PRINT}: ${chalk.yellow(seedSourcePath)}`])
-
-    if (!fs.existsSync(seedSourcePath)) {
-      logger.log('error', [
-        `${Lang.INIT.SEED_COPY_PATH_NOT_EXISTS}: ${chalk.yellow(seedSourcePath)}`
-      ])
-      return
-    }
-
-    let files = []
-    try {
-      files = await extFs.readFilePaths(seedSourcePath)
-    } catch (er) {
-      throw er
-    }
-
-    files.forEach((iPath) => {
-      fileMap[iPath] = [path.resolve(targetPath, path.relative(seedSourcePath, iPath))]
+    // 初始化 seed 到项目里面
+    await initProjectBySeed({
+      config: iSeedPack,
+      targetPath,
+      env,
+      logger
     })
 
-    // 复制前 hooks
-    if (iSeedPack.hooks && iSeedPack.hooks.beforeCopy) {
-      logger.log('info', [Lang.INIT.HOOKS_BEFORE_COPY_RUN])
-      let rMap
-      try {
-        rMap = await iSeedPack.hooks.beforeCopy({
-          fileMap,
-          env,
-          targetPath,
-          logger,
-          initData
-        })
-      } catch (er) {
-        throw er
-      }
-      if (typeof rMap === 'object') {
-        fileMap = rMap
-      }
-
-      logger.log('info', [Lang.INIT.HOOKS_BEFORE_COPY_FINISHED])
-    }
-
-    logger.log('info', [`${Lang.INIT.SEED_COPY_MAP_PRINT}:`])
-    Object.keys(fileMap).forEach((iPath) => {
-      logger.log('info', [`${chalk.yellow(iPath)} => ${chalk.green(fileMap[iPath].join(','))}`])
-    })
-
-    // 复制
-    let iLog
-    try {
-      iLog = await extFs.copyFiles(fileMap)
-    } catch (er) {
-      throw er
-    }
-
-    iLog.add.forEach((iPath) => {
-      logger.log('add', [iPath])
-    })
-
-    iLog.update.forEach((iPath) => {
-      logger.log('update', [iPath])
-    })
-
-    // 复制后 hooks
-    if (iSeedPack.hooks && iSeedPack.hooks.afterCopy) {
-      logger.log('info', [Lang.INIT.HOOKS_AFTER_COPY_RUN])
-      await iSeedPack.hooks
-        .afterCopy({ fileMap, env, targetPath, logger, initData })
-        .catch((er: Error) => {
-          throw er
-        })
-      logger.log('info', [Lang.INIT.HOOKS_AFTER_COPY_FINISHED])
-    }
-
-    if (!inset) {
-      logger.log('success', [Lang.INIT.FINISHED])
-    }
+    logger.log('success', [Lang.INIT.FINISHED])
   },
   async install(names: string[], op: TaskOption & { silent?: boolean }) {
     const { silent } = op

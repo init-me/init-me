@@ -45,17 +45,7 @@ export const Lang = {
     SEED_LOAD_FINISHED: '加载完成',
     SEED_MAP_NOT_EXISTS: 'seed 配置不存在，请重新安装 seed 包',
     SEED_MAP_MAIN_NOT_EXISTS: 'seed 配置错误，请重新安装 seed 包',
-    SEED_COPY_PATH_NOT_EXISTS: 'seed.path 路径不存在，请联系 seed 包作者',
-    SEED_COPY_PATH_UNDEFINED: 'seed.path 没有设置，请联系 seed 包作者',
-    SEED_COPY_PATH_PRINT: 'seed 待复制原始路径',
-    SEED_COPY_MAP_PRINT: 'seed 复制路径映射预览',
-    SEED_MAIN_PRINT: 'seed 包路径',
-    HOOKS_BEFORE_START_RUN: 'hooks.beforeStart 触发',
-    HOOKS_BEFORE_START_FINISHED: 'hooks.beforeStart 完成',
-    HOOKS_BEFORE_COPY_RUN: 'hooks.beforeCopy 触发',
-    HOOKS_BEFORE_COPY_FINISHED: 'hooks.beforeCopy 完成',
-    HOOKS_AFTER_COPY_RUN: 'hooks.afterCopy 触发',
-    HOOKS_AFTER_COPY_FINISHED: 'hooks.afterCopy 完成'
+    SEED_MAIN_PRINT: 'seed 包路径'
   },
   INSTALL: {
     START: 'install 运行开始',
