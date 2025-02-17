@@ -313,21 +313,25 @@ export const task = {
 
     let iSeedPack = require(iSeedConfig.main) as InitMeSeed.Config
     // 做下兼容处理
-    if (iSeedPack && 'default' in iSeedPack) {
-      iSeedPack = iSeedPack.default as InitMeSeed.Config
+    if (iSeedPack && (('default' in iSeedPack) as unknown as any)) {
+      iSeedPack = (iSeedPack as unknown as { default: InitMeSeed.Config }).default
     }
 
     logger.log('success', [Lang.INIT.SEED_LOAD_FINISHED])
 
     // 初始化 seed 到项目里面
-    await initProjectBySeed({
+    const initRes = await initProjectBySeed({
       config: iSeedPack,
       targetPath,
       env,
       logger
     })
 
-    logger.log('success', [Lang.INIT.FINISHED])
+    if (initRes.errMsg) {
+      logger.log('error', [Lang.INIT.FAIL])
+    } else {
+      logger.log('success', [Lang.INIT.FINISHED])
+    }
   },
   async install(names: string[], op: TaskOption & { silent?: boolean }) {
     const { silent } = op

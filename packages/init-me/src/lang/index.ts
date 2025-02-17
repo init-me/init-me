@@ -39,6 +39,7 @@ export const Lang = {
 
     START: 'init 运行开始',
     FINISHED: 'init 完成',
+    FAIL: 'init 运行失败',
     SEED_INSTALLING: '正在安装 seed 包',
     SEED_INSTALLED: '安装 seed 包 完成',
     SEED_LOADING: '正在加载 seed 包',
